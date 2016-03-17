@@ -14,6 +14,7 @@
 
 #include "IScene.h"
 #include "ShaderWithVariables.h"
+#include "Shape.h"
 
 ///@brief The Scene class renders everything in the VR world that will be the same
 /// in the Oculus and Control windows. The RenderForOneEye function is the display entry point.
@@ -61,6 +62,8 @@ protected:
     ShaderWithVariables m_plane;
 
     float m_phaseVal;
+
+	Shape m_shape;
 
 public:
     float m_amplitude;

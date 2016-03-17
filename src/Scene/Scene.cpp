@@ -28,11 +28,14 @@
 
 #include "Logger.h"
 
+#include "Shape.h"
+
 Scene::Scene()
 : m_basic()
 , m_plane()
 , m_phaseVal(0.0f)
 , m_amplitude(0.01f)
+, m_shape()
 {
 }
 
@@ -102,51 +105,13 @@ void Scene::_InitCubeAttributes()
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, 12*3*sizeof(GLuint), quads, GL_STATIC_DRAW);
 }
 
+
+
+
 void Scene::_InitObjAttributes()
 {
-	const glm::vec3 minPt(0, 0, 0);
-	const glm::vec3 maxPt(1, 4, 1);
-	const glm::vec3 verts[] = {
-		minPt,
-		glm::vec3(maxPt.x, minPt.y, minPt.z),
-		glm::vec3(maxPt.x, maxPt.y, minPt.z),
-		glm::vec3(minPt.x, maxPt.y, minPt.z),
-		glm::vec3(minPt.x, minPt.y, maxPt.z),
-		glm::vec3(maxPt.x, minPt.y, maxPt.z),
-		maxPt,
-		glm::vec3(minPt.x, maxPt.y, maxPt.z)
-	};
-
-	GLuint vertVbo = 0;
-	glGenBuffers(1, &vertVbo);
-	m_basic.AddVbo("vPosition", vertVbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vertVbo);
-	glBufferData(GL_ARRAY_BUFFER, 8 * 3 * sizeof(GLfloat), verts, GL_STATIC_DRAW);
-	glVertexAttribPointer(m_basic.GetAttrLoc("vPosition"), 3, GL_FLOAT, GL_FALSE, 0, NULL);
-
-	GLuint colVbo = 0;
-	glGenBuffers(1, &colVbo);
-	m_basic.AddVbo("vColor", colVbo);
-	glBindBuffer(GL_ARRAY_BUFFER, colVbo);
-	glBufferData(GL_ARRAY_BUFFER, 8 * 3 * sizeof(GLfloat), verts, GL_STATIC_DRAW);
-	glVertexAttribPointer(m_basic.GetAttrLoc("vColor"), 3, GL_FLOAT, GL_FALSE, 0, NULL);
-
-	glEnableVertexAttribArray(m_basic.GetAttrLoc("vPosition"));
-	glEnableVertexAttribArray(m_basic.GetAttrLoc("vColor"));
-
-	const unsigned int quads[] = {
-		0,3,2, 1,0,2, // ccw
-		4,5,6, 7,4,6,
-		1,2,6, 5,1,6,
-		2,3,7, 6,2,7,
-		3,0,4, 7,3,4,
-		0,1,5, 4,0,5,
-	};
-	GLuint quadVbo = 0;
-	glGenBuffers(1, &quadVbo);
-	m_basic.AddVbo("elements", quadVbo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, quadVbo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 12 * 3 * sizeof(GLuint), quads, GL_STATIC_DRAW);
+	m_shape.loadMesh("C:\\Users\\Peter\\Documents\\GitHub\\RiftSkeleton\\resources\\PC31.obj");
+	m_shape.init(m_basic);
 }
 
 ///@brief While the basic VAO is bound, gen and bind all buffers and attribs.
@@ -206,12 +171,7 @@ void Scene::DrawColorCube() const
 
 void Scene::DrawObj() const
 {
-	m_basic.bindVAO();
-	glDrawElements(GL_TRIANGLES,
-		6 * 3 * 2, // 6 triangle pairs
-		GL_UNSIGNED_INT,
-		0);
-	glBindVertexArray(0);
+	m_shape.draw(m_basic);
 }
 
 /// Draw a circle of color cubes(why not)
@@ -223,7 +183,7 @@ void Scene::_DrawBouncingCubes(
 {
     const glm::mat4 ringCenter = glm::translate(modelview, center);
 
-    const int numCubes = 12;
+    const int numCubes = 1;
     for (int i=0; i<numCubes; ++i)
     {
         const float frequency = 3.0f;

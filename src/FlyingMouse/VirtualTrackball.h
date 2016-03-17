@@ -64,8 +64,8 @@ struct Transformation
     virtual void SetPosition(glm::vec3 pos) { m_accumulatedPosition = glm::translate(glm::mat4(1.0f), pos); }
     virtual void SetDefaultPosition(glm::vec3 pos) { m_defaultPosition = glm::translate(glm::mat4(1.0f), pos); }
 
-    virtual void SetOrientation(glm::mat4 ori) { m_accumulatedOrientation = ori; }
-    virtual void SetDefaultOrientation(glm::mat4 ori) { m_defaultOrientation = ori; }
+    virtual void SetOrientation(const glm::mat4 &ori) { m_accumulatedOrientation = ori; }
+    virtual void SetDefaultOrientation(const glm::mat4 &ori) { m_defaultOrientation = ori; }
 
     ///@brief The accumulate functions are effectively a *=, applying the momentary
     /// transforms onto the accumulated ones. The value returned by GetMatrix()
