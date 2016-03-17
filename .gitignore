@@ -3,3 +3,4 @@ autogen
 .DS_Store
 src/.DS_Store
 src/Util/.DS_Store
+CMakeLists.txt

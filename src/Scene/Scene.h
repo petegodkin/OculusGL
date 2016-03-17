@@ -37,6 +37,7 @@ public:
 
 protected:
     void DrawColorCube() const;
+	void DrawObj() const;
     void DrawGrid() const;
     void DrawOrigin() const;
     void DrawScene(
@@ -46,6 +47,7 @@ protected:
 
 protected:
     void _InitCubeAttributes();
+	void _InitObjAttributes();
     void _InitPlaneAttributes();
 
     void _DrawBouncingCubes(
