@@ -64,6 +64,7 @@ protected:
     float m_phaseVal;
 
 	Shape m_shape;
+	Shape m_building;
 
 public:
     float m_amplitude;

@@ -110,8 +110,12 @@ void Scene::_InitCubeAttributes()
 
 void Scene::_InitObjAttributes()
 {
-	m_shape.loadMesh("C:\\Users\\Peter\\Documents\\GitHub\\RiftSkeleton\\resources\\PC31.obj");
+	m_shape.loadMesh("C:\\Users\\President BUH\\Documents\\GitHub\\RiftSkeleton\\resources\\PC31.obj");
 	m_shape.init(m_basic);
+
+
+	/*m_building.loadMesh("C:\\Users\\President BUH\\Documents\\GitHub\\RiftSkeleton\\resources\\RachelBuilding.obj");
+	m_building.init(m_basic);*/
 }
 
 ///@brief While the basic VAO is bound, gen and bind all buffers and attribs.
@@ -200,6 +204,16 @@ void Scene::_DrawBouncingCubes(
         //DrawColorCube();
 		DrawObj();
     }
+
+	//draw building (temporary bullshit) TODO
+	/*glm::mat4 buildingMtx;
+	buildingMtx = glm::translate(
+		ringCenter,
+		glm::vec3(0.0f, 0.0f, 5.0f));
+
+	glUniformMatrix4fv(m_basic.GetUniLoc("mvmtx"), 1, false, glm::value_ptr(buildingMtx));
+
+	m_building.draw(m_basic);*/
 }
 
 
@@ -221,10 +235,10 @@ void Scene::_DrawScenePlanes(const glm::mat4& modelview) const
         glUniformMatrix4fv(m_basic.GetUniLoc("mvmtx"), 1, false, glm::value_ptr(ceilmtx));
 
         // ceiling
-        glDrawElements(GL_TRIANGLES,
-                       3*2, // 2 triangle pairs
-                       GL_UNSIGNED_INT,
-                       0);
+        //glDrawElements(GL_TRIANGLES,
+        //               3*2, // 2 triangle pairs
+        //               GL_UNSIGNED_INT,
+        //               0);
     }
     glBindVertexArray(0);
 }

@@ -542,6 +542,7 @@ void OVRSDK08AppSkeleton::display_sdk() const
             glEnable(GL_SCISSOR_TEST);
 
 
+			//CAMERA WORK HERE I BELIEVE!
             // Render the scene for the current eye
             const ovrPosef& eyePose = m_eyePoses[eye];
             const glm::mat4 viewLocal = makeMatrixFromPose(eyePose);
