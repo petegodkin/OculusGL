@@ -18,6 +18,8 @@
 #include "AppSkeleton.h"
 #include "MatrixFunctions.h"
 
+#include "Collision\ViewFrustumCuller.h"
+
 AppSkeleton::AppSkeleton()
 : m_scene()
 , m_hydraScene()
