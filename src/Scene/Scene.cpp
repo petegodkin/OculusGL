@@ -29,12 +29,26 @@
 #include "Logger.h"
 
 #include "Shape.h"
+#include <iostream>
+
+#include "GLSL.h"
+
+bool check_gl_error(std::string msg) {
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		std::cerr << msg << ": OpenGL Error: " << error << " English: " << gluErrorString(error) << std::endl;
+		return true;
+	}
+
+	return false;
+}
 
 Scene::Scene()
 : m_basic()
 , m_plane()
 , m_phaseVal(0.0f)
 , m_amplitude(0.01f)
+, m_deferred()
 , m_shape()
 {
 }
@@ -45,16 +59,22 @@ Scene::~Scene()
 
 void Scene::initGL()
 {
+	/*check_gl_error("Before basic");
     m_basic.initProgram("basic");
     m_basic.bindVAO();
-    //_InitCubeAttributes();
-	_InitObjAttributes();
-    glBindVertexArray(0);
+	_InitCubeAttributes();
+	glBindVertexArray(0);
 
     m_plane.initProgram("basicplane");
     m_plane.bindVAO();
     _InitPlaneAttributes();
-    glBindVertexArray(0);
+    glBindVertexArray(0);*/
+	GLSL::printError("Boo0");
+	m_deferred = DeferredShader("deferred.vert", "deferred.frag");
+	_InitObjAttributes();
+	check_gl_error("Before deferred");
+	system("PAUSE");
+	//glBindVertexArray(0);
 }
 
 ///@brief While the basic VAO is bound, gen and bind all buffers and attribs.
@@ -111,7 +131,16 @@ void Scene::_InitCubeAttributes()
 void Scene::_InitObjAttributes()
 {
 	m_shape.loadMesh("C:\\Users\\Peter\\Documents\\GitHub\\RiftSkeleton\\resources\\PC31.obj");
-	m_shape.init(m_basic);
+	m_shape.init(false);
+
+	m_light.loadMesh("C:\\Users\\Peter\\Documents\\GitHub\\RiftSkeleton\\resources\\Sphere\\UnitSphere.obj");
+	m_light.init(false);
+
+	m_skybox_box.loadMesh("../resources/Skybox/skybox.obj");
+	m_skybox_box.init(true);
+	skybox = Entity(&m_skybox_box, "../resources/Skybox/Night_01B_back.jpg");
+	skybox.setScale(750.f);
+	m_deferred.setSkybox(&skybox);
 }
 
 ///@brief While the basic VAO is bound, gen and bind all buffers and attribs.
@@ -169,11 +198,6 @@ void Scene::DrawColorCube() const
     glBindVertexArray(0);
 }
 
-void Scene::DrawObj() const
-{
-	m_shape.draw(m_basic);
-}
-
 /// Draw a circle of color cubes(why not)
 void Scene::_DrawBouncingCubes(
     const glm::mat4& modelview,
@@ -197,9 +221,26 @@ void Scene::_DrawBouncingCubes(
         sinmtx = glm::scale(sinmtx, glm::vec3(scale));
 
         glUniformMatrix4fv(m_basic.GetUniLoc("mvmtx"), 1, false, glm::value_ptr(sinmtx));
-        //DrawColorCube();
-		DrawObj();
+        DrawColorCube();
+		//DrawObj();
     }
+}
+
+void Scene::DrawDude(
+	const glm::mat4& modelview,
+	const glm::mat4& projection,
+	glm::vec3 center) const
+{
+		Camera camera(modelview, projection, center);
+		Entity entity(&m_shape);
+		std::vector<Entity*> ents;
+		ents.push_back(&entity);
+
+		Light light(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 10.0f, &m_light);
+		std::vector<Light*> lights;
+		lights.push_back(&light);
+
+		m_deferred.draw(&camera, ents, lights);
 }
 
 
@@ -278,7 +319,8 @@ void Scene::RenderForOneEye(const float* pMview, const float* pPersp) const
     const glm::mat4 projection = glm::make_mat4(pPersp);
     const glm::mat4 object = glm::mat4(1.0f);
 
-    DrawScene(modelview, projection, object);
+    //DrawScene(modelview, projection, object);
+	const_cast<Scene*>(this)->DrawDude(modelview, projection, glm::vec3(0, 0, 0));
 }
 
 void Scene::timestep(double /*absTime*/, double dt)

@@ -15,6 +15,7 @@
 #include "IScene.h"
 #include "ShaderWithVariables.h"
 #include "Shape.h"
+#include "DeferredShader.h"
 
 ///@brief The Scene class renders everything in the VR world that will be the same
 /// in the Oculus and Control windows. The RenderForOneEye function is the display entry point.
@@ -46,6 +47,11 @@ protected:
         const glm::mat4& projection,
         const glm::mat4& object) const;
 
+	void Scene::DrawDude(
+		const glm::mat4& modelview,
+		const glm::mat4& projection,
+		glm::vec3 center);
+
 protected:
     void _InitCubeAttributes();
 	void _InitObjAttributes();
@@ -61,9 +67,15 @@ protected:
     ShaderWithVariables m_basic;
     ShaderWithVariables m_plane;
 
+	DeferredShader m_deferred;
+
     float m_phaseVal;
 
 	Shape m_shape;
+	Shape m_light;
+	Shape m_skybox_box;
+
+	Entity skybox;
 
 public:
     float m_amplitude;

@@ -14,10 +14,11 @@ public:
 	Shape();
 	virtual ~Shape();
 	void loadMesh(const std::string &meshName);
-	void init(ShaderWithVariables &shader);
-	void draw(const ShaderWithVariables &shader) const;
+	void init(bool textured);
+	void draw() const;
+	virtual void bindVAO() const { glBindVertexArray(VAO); }
+	virtual void unbindVAO() const { glBindVertexArray(0); }
 	
-private:
 	std::vector<unsigned int> eleBuf;
 	std::vector<float> posBuf;
 	std::vector<float> norBuf;
@@ -26,6 +27,8 @@ private:
 	unsigned posBufID;
 	unsigned norBufID;
 	unsigned texBufID;
+
+	unsigned VAO;
 };
 
 #endif

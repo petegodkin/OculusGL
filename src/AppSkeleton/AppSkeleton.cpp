@@ -102,17 +102,17 @@ void AppSkeleton::initGL()
         }
     }
 
-    m_presentFbo.initProgram("presentfbo");
-    _initPresentFbo(m_presentFbo);
-    m_presentDistMeshL.initProgram("presentmesh");
-    m_presentDistMeshR.initProgram("presentmesh");
+    //m_presentFbo.initProgram("presentfbo");
+    //_initPresentFbo(m_presentFbo);
+    //m_presentDistMeshL.initProgram("presentmesh");
+    //m_presentDistMeshR.initProgram("presentmesh");
     // Init the present mesh VAO *after* initVR, which creates the mesh
 
     // sensible initial value?
-    allocateFBO(m_renderBuffer, 800, 600);
-    m_fm.Init();
+	//allocateFBO(m_renderBuffer, 800, 600);
+    //m_fm.Init();
 
-    m_spaceCursor.initGL();
+    //m_spaceCursor.initGL();
 }
 
 
@@ -178,13 +178,13 @@ void AppSkeleton::_initPresentFbo(ShaderWithVariables& pres, bool rotateForPortr
 
 void AppSkeleton::_resetGLState() const
 {
-    glClearDepth(1.0f);
+    /*glClearDepth(1.0f);
     glEnable(GL_DEPTH_TEST);
     glDepthRangef(0.0f, 1.0f);
     glDepthFunc(GL_LESS);
 
     glDisable(GL_CULL_FACE);
-    glFrontFace(GL_CCW);
+    glFrontFace(GL_CCW);*/
 }
 
 void AppSkeleton::_DrawScenes(
@@ -239,7 +239,7 @@ void AppSkeleton::_checkSceneIntersections(glm::vec3 origin, glm::vec3 dir)
 void AppSkeleton::_drawSceneMono() const
 {
     _resetGLState();
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClearColor(1.0f, 0.0f, 1.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     const glm::mat4 mvLocal = glm::mat4(1.f);
@@ -260,12 +260,14 @@ void AppSkeleton::display_raw() const
 {
     const glm::ivec2 vp = getRTSize();
     glViewport(0, 0, vp.x, vp.y);
+	//std::cout << "RAWWWWWW" << std::endl;
     _drawSceneMono();
 }
 
 void AppSkeleton::display_buffered(bool setViewport) const
 {
     bindFBO(m_renderBuffer, m_fboScale);
+	//std::cout << "BUFFERED" << std::endl;
     _drawSceneMono();
     unbindFBO();
 

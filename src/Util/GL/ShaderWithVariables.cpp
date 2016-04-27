@@ -140,3 +140,13 @@ GLuint ShaderWithVariables::GetVboLoc(const std::string name) const
         return 0; // -1 values are ignored silently by GL
     return it->second;
 }
+
+bool ShaderWithVariables::check_gl_error(std::string msg) const {
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		std::cerr << msg << ": OpenGL Error: " << error << std::endl;
+		return true;
+	}
+
+	return false;
+}

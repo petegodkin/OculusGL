@@ -1,6 +1,7 @@
 // ShaderWithVariables.h
 
 #pragma once
+#define DEBUG_MODE true
 
 #ifdef _WIN32
 #  define WINDOWS_LEAN_AND_MEAN
@@ -12,6 +13,9 @@
 
 #include <map>
 #include <string>
+
+#define SCREEN_WIDTH 1000//1920
+#define SCREEN_HEIGHT 800//1080
 
 ///@brief 
 class ShaderWithVariables
@@ -32,6 +36,7 @@ public:
 
 protected:
     virtual void findVariables(const char* vertsrc);
+	bool ShaderWithVariables::check_gl_error(std::string msg) const;
 
     GLuint m_program;
     GLuint m_vao;

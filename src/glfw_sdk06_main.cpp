@@ -30,6 +30,7 @@
 #include "Timer.h"
 #include "FPSTimer.h"
 #include "Logger.h"
+#include "GLSL.h"
 
 #if defined(OVRSDK06)
 #  include "OVRSDK06AppSkeleton.h"
@@ -638,19 +639,18 @@ int main(int argc, char** argv)
             useOpenGLCoreContext = false;
         }
     }
-
 #ifdef USE_OCULUSSDK
     g_app.initHMD();
 #else
     g_renderMode.outputType = RenderingMode::Mono_Buffered;
 #endif
-
     GLFWwindow* l_Window = NULL;
     glfwSetErrorCallback(ErrorCallback);
     if (!glfwInit())
     {
         exit(EXIT_FAILURE);
     }
+
 
     // Log system monitor information
     const GLFWmonitor* pPrimary = glfwGetPrimaryMonitor();
@@ -702,6 +702,17 @@ int main(int argc, char** argv)
         exit(EXIT_FAILURE);
     }
 
+
+	/////////////////////////////////////////
+	// OpenGL settings
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glClearColor(1.f, 0.f, 0.f, 1.0f);
+	////////////////////////////
+
     glfwMakeContextCurrent(l_Window);
     glfwSetWindowSizeCallback(l_Window, resize_Aux);
     glfwSetMouseButtonCallback(l_Window, mouseDown_Aux);
@@ -740,6 +751,8 @@ int main(int argc, char** argv)
     // avoid problems fetching function pointers...
     glewExperimental = GL_TRUE;
     const GLenum l_Result = glewInit();
+
+	GLSL::printError("I think we can ignore this one");
     if (l_Result != GLEW_OK)
     {
         LOG_INFO("glewInit() error.");
@@ -762,10 +775,11 @@ int main(int argc, char** argv)
     InitializeBar();
 #endif
 
+	GLSL::printError("Before initGL");
     LOG_INFO("Calling initGL...");
     g_app.initGL();
     LOG_INFO("Calling initVR...");
-    g_app.initVR(swapBackBufferDims);
+    //g_app.initVR(swapBackBufferDims);
     LOG_INFO("initVR(%d) complete.", swapBackBufferDims);
 
     SetVsync(0); // SDK 0.6 requires vsync OFF

@@ -13,7 +13,8 @@ Shape::Shape() :
 	eleBufID(0),
 	posBufID(0),
 	norBufID(0),
-	texBufID(0)
+	texBufID(0),
+	VAO(0)
 {
 }
 
@@ -40,38 +41,48 @@ void Shape::loadMesh(const string &meshName)
 	}
 }
 
-void Shape::init(ShaderWithVariables &shader)
+void Shape::init(bool textured)
 {
-	GLuint vertVbo = 0;
-	glGenBuffers(1, &vertVbo);
-	shader.AddVbo("vPosition", vertVbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vertVbo);
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	glGenBuffers(1, &posBufID);
+	glBindBuffer(GL_ARRAY_BUFFER, posBufID);
 	glBufferData(GL_ARRAY_BUFFER, posBuf.size() * sizeof(float), &posBuf[0], GL_STATIC_DRAW);
-	glVertexAttribPointer(shader.GetAttrLoc("vPosition"), 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 
-	GLuint colVbo = 0;
-	glGenBuffers(1, &colVbo);
-	shader.AddVbo("vColor", colVbo);
-	glBindBuffer(GL_ARRAY_BUFFER, colVbo);
-	glBufferData(GL_ARRAY_BUFFER, norBuf.size() * sizeof(float), &norBuf[0], GL_STATIC_DRAW);
-	glVertexAttribPointer(shader.GetAttrLoc("vColor"), 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	if (norBuf.size() > 0) {
+		glGenBuffers(1, &norBufID);
+		glBindBuffer(GL_ARRAY_BUFFER, norBufID);
+		glBufferData(GL_ARRAY_BUFFER, norBuf.size() * sizeof(float), &norBuf[0], GL_STATIC_DRAW);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	}
 
-	glEnableVertexAttribArray(shader.GetAttrLoc("vPosition"));
-	glEnableVertexAttribArray(shader.GetAttrLoc("vColor"));
+	if (textured && texBuf.size() > 0)
+	{
+		glGenBuffers(1, &texBufID);
+		glBindBuffer(GL_ARRAY_BUFFER, texBufID);
+		glBufferData(GL_ARRAY_BUFFER, texBuf.size() * sizeof(float), &texBuf[0], GL_STATIC_DRAW);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	}
 
-	GLuint quadVbo = 0;
-	glGenBuffers(1, &quadVbo);
-	shader.AddVbo("elements", quadVbo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, quadVbo);
+	glGenBuffers(1, &eleBufID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eleBufID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, eleBuf.size()*sizeof(unsigned int), &eleBuf[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	glBindVertexArray(0);
 }
 
-void Shape::draw(const ShaderWithVariables &shader) const
+void Shape::draw() const
 {
-	shader.bindVAO();
 	glDrawElements(GL_TRIANGLES,
 		eleBuf.size(),
 		GL_UNSIGNED_INT,
 		0);
-	glBindVertexArray(0);
 }
