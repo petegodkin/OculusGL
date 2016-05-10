@@ -122,6 +122,7 @@ public:
       virtual void setPosition(glm::vec3 pos);
     virtual bool positionChanged();
     virtual void setPositionChanged(bool changed);
+	virtual void setBoundingRadius(float rad);
     virtual float getBoundingSphereRadius();
 //    
 //    /// Causes the body to orient towards `pos`.

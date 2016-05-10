@@ -53,7 +53,7 @@ void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents) const
 
 	glDepthMask(GL_TRUE);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);//fixes warnings from next line
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);//fixes warnings from next line
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_DEPTH_TEST);

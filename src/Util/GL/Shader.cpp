@@ -170,7 +170,7 @@ bool Shader::check_gl_error(std::string msg) const {
 		std::cerr << msg << ": OpenGL Error: " << error << " English: " << glewGetErrorString(error)
 			<< " Or: " << gluErrorString(error) << std::endl;
 
-		system("PAUSE");
+		//system("PAUSE");
 		return true;
 	}
 

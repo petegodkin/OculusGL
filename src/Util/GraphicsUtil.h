@@ -95,7 +95,7 @@ namespace GUtils {
 
 	static glm::vec3 gauss(glm::mat3x4 A)
 	{
-		int n = 4;
+		int n = 3;
 
 		for (int i = 0; i < n; i++) {
 			// Search for maximum in this column

@@ -57,7 +57,7 @@ AppSkeleton::AppSkeleton()
     m_scenes.push_back(&m_scene);
     m_scenes.push_back(&m_hydraScene);
 #ifdef USE_OCULUSSDK
-   // m_scenes.push_back(&m_ovrScene);
+    //m_scenes.push_back(&m_ovrScene);
 #endif
 
     // Give this scene a pointer to get live Hydra data for display
@@ -106,15 +106,14 @@ void AppSkeleton::initGL()
 
     m_presentFbo.initProgram("presentfbo");
     _initPresentFbo(m_presentFbo);
-    //m_presentDistMeshL.initProgram("presentmesh");
-    //m_presentDistMeshR.initProgram("presentmesh");
+    m_presentDistMeshL.initProgram("presentmesh");
+    m_presentDistMeshR.initProgram("presentmesh");
     // Init the present mesh VAO *after* initVR, which creates the mesh
+     //sensible initial value?
+	allocateFBO(m_renderBuffer, 1000, 800);
+    m_fm.Init();
 
-    // sensible initial value?
-	//allocateFBO(m_renderBuffer, 800, 600);
-    //m_fm.Init();
-
-    //m_spaceCursor.initGL();
+    m_spaceCursor.initGL();
 }
 
 
@@ -180,13 +179,13 @@ void AppSkeleton::_initPresentFbo(ShaderWithVariables& pres, bool rotateForPortr
 
 void AppSkeleton::_resetGLState() const
 {
-    /*glClearDepth(1.0f);
+    glClearDepth(1.0f);
     glEnable(GL_DEPTH_TEST);
     glDepthRangef(0.0f, 1.0f);
     glDepthFunc(GL_LESS);
 
     glDisable(GL_CULL_FACE);
-    glFrontFace(GL_CCW);*/
+    glFrontFace(GL_CCW);
 }
 
 void AppSkeleton::_DrawScenes(
@@ -268,10 +267,10 @@ void AppSkeleton::display_raw() const
 
 void AppSkeleton::display_buffered(bool setViewport) const
 {
-    //bindFBO(m_renderBuffer, m_fboScale);
+    bindFBO(m_renderBuffer, m_fboScale);
 	//std::cout << "BUFFERED" << std::endl;
     _drawSceneMono();
-    //unbindFBO();
+    unbindFBO();
 
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
@@ -283,8 +282,8 @@ void AppSkeleton::display_buffered(bool setViewport) const
     }
 
     // Present FBO to screen
-    const GLuint prog = m_presentFbo.prog();
-    /*glUseProgram(prog);
+    /*const GLuint prog = m_presentFbo.prog();
+    glUseProgram(prog);
     m_presentFbo.bindVAO();
     {
         glActiveTexture(GL_TEXTURE0);

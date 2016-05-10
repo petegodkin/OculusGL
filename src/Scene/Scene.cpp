@@ -32,6 +32,9 @@
 #include <iostream>
 
 #include "GLSL.h"
+//#include "..\Util\Collision\OctTree.h"
+//#include "..\Util\Collision\ViewFrustumCuller.h"
+
 
 bool check_gl_error(std::string msg) {
 	GLenum error = glGetError();
@@ -55,8 +58,11 @@ Scene::Scene()
 	m_skybox_box = new Shape();
 
 	m_light = new Light(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 1000.0f, m_light_shape);
-	m_dude = new Entity(m_shape);
 	m_light_ent = new Entity(m_light_shape);
+
+	m_dude = new Entity(m_shape);
+	m_dude->init(PhysicsState());
+	m_dude->setBoundingRadius(1.0);
 
 	m_ents.push_back(m_dude);
 	m_ents.push_back(m_light_ent);
@@ -256,14 +262,28 @@ void Scene::_DrawBouncingCubes(
 	m_building.draw(m_basic);*/
 }
 
+//TODO
 void Scene::DrawDude(
 	const glm::mat4& modelview,
 	const glm::mat4& projection,
 	glm::vec3 center) const
 {
-		Camera camera(modelview, projection, center);
+	std::shared_ptr<OctTree> oct = std::shared_ptr<OctTree>(new OctTree(
+		utility::BoundingBox(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1)), 1));
 
-		m_deferred->draw(&camera, m_ents, m_lights);
+	for (int i = 0; i < m_ents.size(); i++)
+	{
+		oct->insert(m_ents[i]);
+	}
+
+	utility::ViewFrustum frustum(projection * modelview);
+	ViewFrustumCuller vfc(oct.get());
+	std::vector<Entity *> inView = vfc.getVisibleObjects(frustum);
+
+	Camera camera(modelview, projection, center);
+
+	std::cout << "In view: " << inView.size() << std::endl;
+	m_deferred->draw(&camera, inView, m_lights);
 }
 
 

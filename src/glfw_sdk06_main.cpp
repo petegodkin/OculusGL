@@ -683,7 +683,7 @@ int main(int argc, char** argv)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, useOpenGLCoreContext ? GLFW_OPENGL_CORE_PROFILE : GLFW_OPENGL_COMPAT_PROFILE);
-    //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); //This was commented
 #ifdef _DEBUG
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 #endif
@@ -783,7 +783,7 @@ int main(int argc, char** argv)
     LOG_INFO("Calling initGL...");
     g_app.initGL();
     LOG_INFO("Calling initVR...");
-    //g_app.initVR(swapBackBufferDims);
+    g_app.initVR(swapBackBufferDims);
     LOG_INFO("initVR(%d) complete.", swapBackBufferDims);
 
     SetVsync(0); // SDK 0.6 requires vsync OFF

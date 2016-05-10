@@ -149,6 +149,11 @@ float Entity::getBoundingRadius() {
     return body.boundingSphereRadius;
 }
 
+void Entity::setBoundingRadius(float rad)
+{
+	body.setBoundingSphereRadius(rad);
+}
+
 void Entity::updateOrientation() {
     body.orientTowardsDirection();
 }
@@ -199,46 +204,6 @@ void Entity::lookAt(glm::vec3 pos, glm::vec3 up) {
     body.setDirectionToOrientation();
     updateOrientation();
 }
-
-
-
-/*std::vector<glm::mat4> Entity::getLerpPose(std::vector<glm::mat4> start, std::vector<glm::mat4> end, nsgl::Float u){
-	std::vector<glm::mat4> lerpPose;
-	int which = -1;
-
-
-	while (++which < start.size()) {
-		glm::mat4 m1, m2, m3;
-		glm::quat r1, r2, r3;
-		nsgl::Vec3f t1, t2, t3;
-
-
-		m1 = start[which];
-		m2 = end[which];
-		m3 = glm::mat4();
-
-
-		r1 = nsgl::AngleAxisf(m1.block<3, 3>(0, 0));
-		r2 = nsgl::AngleAxisf(m2.block<3, 3>(0, 0));
-		r3 = r1.slerp(u, r2);
-
-
-		t1 = m1.block<3, 1>(0, 3);
-		t2 = m2.block<3, 1>(0, 3);
-		t3 = (1.0 - u) * t1 + (u)* t2;
-
-
-		m3.block<3, 1>(0, 3) = t3;
-		m3.block<3, 3>(0, 0) = r3.matrix();
-
-
-		lerpPose.push_back(m3);
-	}
-
-
-	return lerpPose;
-}*/
-
 
 Entity::Entity() {
 

@@ -16,6 +16,8 @@
 #include "ShaderWithVariables.h"
 #include "Shape.h"
 #include "DeferredShader.h"
+#include "..\Util\Collision\OctTree.h"
+#include "..\Util\Collision\ViewFrustumCuller.h"
 
 ///@brief The Scene class renders everything in the VR world that will be the same
 /// in the Oculus and Control windows. The RenderForOneEye function is the display entry point.

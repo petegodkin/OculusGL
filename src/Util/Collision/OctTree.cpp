@@ -209,7 +209,7 @@ OctTree * OctTree::getTreeRoot() {
 }
 
 std::vector<int> OctTree::getExpectedObjAddress(OctTree::ObjType * obj) {
-    std::vector<int> address;
+    std::vector<int> addresses;
     OctTree * root = getTreeRoot(), * node, * oldNode = NULL ;
     int whichChild;
     
@@ -217,7 +217,7 @@ std::vector<int> OctTree::getExpectedObjAddress(OctTree::ObjType * obj) {
     while (node->boundingBox.numCornersContained(obj) == kNumNodes
      && node != oldNode) {
         if (node != root)
-            address.push_back(node->address);
+            addresses.push_back(node->address);
         whichChild = -1;
         oldNode = node;
         while (++whichChild < kNumNodes && oldNode == node) {
@@ -228,7 +228,7 @@ std::vector<int> OctTree::getExpectedObjAddress(OctTree::ObjType * obj) {
         }
     }
     
-    return address;
+    return addresses;
 }
 
 void OctTree::checkAndUpdateObjectLocation(OctTree::ObjType * obj) {
@@ -250,19 +250,19 @@ void OctTree::checkAndUpdateObjectLocation(OctTree::ObjType * obj) {
             for (int i = 0; i < kNumNodes; i++) {
                 if (root->getChild(i) != NULL) {
                     //UTIL_LOG("Child [" + i + "]: " + *root->getChild(i));
-                    UTIL_LOG("Should have bounding box: "
-                     + root->boundingBoxForChild(i).description());
-                    UTIL_LOG(std::string("Expects parent bounding box: ")
-                     + root->getChild(i)->boundingBoxForParent(root->getChild(i)->getAddress()).description());
+                    //UTIL_LOG("Should have bounding box: "
+                    // + root->boundingBoxForChild(i).description());
+                    //UTIL_LOG(std::string("Expects parent bounding box: ")
+                    // + root->getChild(i)->boundingBoxForParent(root->getChild(i)->getAddress()).description());
                 }
-                else
-                    UTIL_LOG("Child [" + i + "]: NULL");
+                //else
+                    //UTIL_LOG("Child [" + i + "]: NULL");
             }
             
             
             
             std::vector<int> expAddress = root->getExpectedObjAddress(obj);
-            UTIL_LOG("Instead, expected address " + expAddress);
+            //UTIL_LOG("Instead, expected address " + expAddress);
             expNode = root->getChild(expAddress);
             if (expNode != NULL)
                 //UTIL_LOG("Node: " + *expNode);
@@ -473,8 +473,8 @@ OctTree * OctTree::createChild(int whichChild) {
 }
 
 std::string OctTree::description() {
-    return std::string("(OctTree)") + " { address: " + address + ", bound: "
+	return std::string("(OctTree)"); /*+" { address: " + address + ", bound: "
      + "\n[" + boundingBox.description() + "]\n" + ", numObjs: " + numDirectlyHeldObjects()
-     + ", activeChildren: " + activeChildren + " }";
+     + ", activeChildren: " + activeChildren + " }";*/
 }
 
