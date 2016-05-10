@@ -85,6 +85,9 @@ protected:
 
 	Entity skybox;
 
+	//Shape m_shape;
+	//Shape m_building;
+
 public:
     float m_amplitude;
 
