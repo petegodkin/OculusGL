@@ -397,7 +397,11 @@ void mouseMove(GLFWwindow* pWindow, double xd, double yd)
     else
     {
         // Passive motion, no mouse button pressed
-        g_app.OnMouseMove(x, y);
+		const float moveMagnitude = 0.5f;
+		//g_app.m_mouseMove.x += static_cast<float>(mmx) * moveMagnitude;
+		//g_app.m_mouseMove.y -= static_cast<float>(mmy) * moveMagnitude;
+        g_app.OnMouseMove(xd, yd);
+		LOG_INFO("Mouse movement: X: %f | Y: %f", xd, yd);
     }
 }
 
