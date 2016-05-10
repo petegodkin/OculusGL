@@ -9,15 +9,16 @@ DeferredShader::DeferredShader() {
 }
 
 DeferredShader::DeferredShader(std::string vertShader, std::string fragShader)
-	: Shader(vertShader, fragShader), gbuffer(), skyShader("simple.vert", "simple.frag"),
-	renderer("light.vert", "light.frag"), disp_mode(four_screen)
+	: Shader(vertShader, fragShader), skyShader("simple.vert", "simple.frag"),
+	renderer("light.vert", "light.frag"), disp_mode(deferred)
 {
 	if (DEBUG_MODE)
 		check_gl_error("Before all dem inits");
 
-	gbuffer.Init(SCREEN_WIDTH, SCREEN_HEIGHT);
+	gbuffer = new GBuffer();
+	gbuffer->Init(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-	renderer.setGBuffer(&gbuffer);
+	renderer.setGBuffer(gbuffer);
 	
 	glBindAttribLocation(prog(), 0, "aPosition");
 	glBindAttribLocation(prog(), 1, "aNormal");
@@ -41,17 +42,18 @@ void DeferredShader::setSkybox(Entity* skybox) {
 	_skybox = skybox;
 }
 
-void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents)
+void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents) const
 {
 	//std::cout << test << std::endl;
 
 	if (DEBUG_MODE)
 		check_gl_error("Before geom pass");
 
-	gbuffer.BindForGeomPass();
+	gbuffer->BindForGeomPass();
 
 	glDepthMask(GL_TRUE);
 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);//fixes warnings from next line
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_DEPTH_TEST);
@@ -64,7 +66,7 @@ void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents)
 	check_gl_error("dfgdhdfghdfgh12");
 
 	for (Entity* entity : ents) {
-		Shape* shape = entity->shape();
+		const Shape* shape = entity->shape();
 		shape->bindVAO();
 
 		if (entity->texture() != nullptr && shape->texBuf.size() > 0) {
@@ -93,7 +95,7 @@ void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents)
 
 
 		if (entity->texture() != nullptr && shape->texBuf.size() > 0) {
-			//glBindTexture(GL_TEXTURE_2D, 0);
+			glBindTexture(GL_TEXTURE_2D, 0);
 			entity->texture()->unbind(0);
 		}
 	}
@@ -104,27 +106,32 @@ void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void DeferredShader::draw(Camera* camera, std::vector<Entity*> ents, std::vector<Light*> lights)
+void DeferredShader::draw(Camera* camera, std::vector<Entity*> ents, std::vector<Light*> lights) const
 {
 	
-	gbuffer.StartFrame();
+	gbuffer->StartFrame();
 	glUseProgram(prog());
 	geomPass(camera, ents);
 	glUseProgram(0);
 
 	if (disp_mode == four_screen) {
-		glUseProgram(prog());
+		//glUseProgram(prog());
 		//startLightPasses();
 		lightPass();
-		glUseProgram(0);
+		//glUseProgram(0);
 	} else {
 		renderer.draw(camera, lights);
+
+		//glEnable(GL_DEPTH_TEST);
+		//glDisable(GL_CULL_FACE);
+
+		//glUseProgram(prog());
+		finalPass();
+		//glUseProgram(0);
 	}
 
 	//skyboxPass(camera);
-	glUseProgram(prog());
-	finalPass();
-	glUseProgram(0);
+	
 }
 
 void DeferredShader::skyboxPass(Camera* camera)
@@ -138,44 +145,45 @@ void DeferredShader::skyboxPass(Camera* camera)
 		skyShader.draw(camera, _skybox);
 }
 
-void DeferredShader::finalPass()
+void DeferredShader::finalPass() const
 {
 	//glUseProgram(prog());
-	gbuffer.BindForFinalPass();
+	gbuffer->BindForFinalPass();
 	glBlitFramebuffer(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
 		0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 }
 
-void DeferredShader::startLightPasses()
+void DeferredShader::startLightPasses() const
 {
 	glEnable(GL_BLEND);
 	glBlendEquation(GL_FUNC_ADD);
 	glBlendFunc(GL_ONE, GL_ONE);
 
-	gbuffer.BindAllForReading();
+	gbuffer->BindAllForReading();
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void DeferredShader::lightPass()
+void DeferredShader::lightPass() const
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);//fixes warnings from next line
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	gbuffer.BindForReading();
+	gbuffer->BindForReading();
 
 	GLsizei HalfWidth = (GLsizei)(SCREEN_WIDTH / 2.0f);
 	GLsizei HalfHeight = (GLsizei)(SCREEN_HEIGHT / 2.0f);
 
-	gbuffer.SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_POSITION);
+	gbuffer->SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_POSITION);
 	glBlitFramebuffer(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
 		0, 0, HalfWidth, HalfHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
-	gbuffer.SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_DIFFUSE);
+	gbuffer->SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_DIFFUSE);
 	glBlitFramebuffer(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
 		0, HalfHeight, HalfWidth, SCREEN_HEIGHT, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
-	gbuffer.SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_NORMAL);
+	gbuffer->SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_NORMAL);
 	glBlitFramebuffer(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
 		HalfWidth, HalfHeight, SCREEN_WIDTH, SCREEN_HEIGHT, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
@@ -185,4 +193,5 @@ void DeferredShader::lightPass()
 }
 
 DeferredShader::~DeferredShader() {
+	delete gbuffer;
 }

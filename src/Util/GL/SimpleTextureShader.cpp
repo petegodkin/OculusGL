@@ -16,7 +16,7 @@ SimpleTextureShader::SimpleTextureShader(std::string vertShader, std::string fra
 
 void SimpleTextureShader::draw(Camera* camera, Entity* entity)
 {
-	Shape* shape = entity->shape();
+	const Shape* shape = entity->shape();
 
 	glUseProgram(prog());
 	{

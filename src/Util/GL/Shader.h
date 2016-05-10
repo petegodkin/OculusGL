@@ -28,8 +28,8 @@ public:
 	GLint GetAttrLoc(std::string name);
 	GLint GetUniLoc(std::string name);
 	GLint getUniformBlockHandle(std::string name);
-	GLuint prog();
+	GLuint prog() const;
 
 
-	bool check_gl_error(std::string msg);
+	bool check_gl_error(std::string msg) const;
 };

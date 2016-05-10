@@ -50,7 +50,7 @@ protected:
 	void Scene::DrawDude(
 		const glm::mat4& modelview,
 		const glm::mat4& projection,
-		glm::vec3 center);
+		glm::vec3 center) const;
 
 protected:
     void _InitCubeAttributes();
@@ -67,13 +67,21 @@ protected:
     ShaderWithVariables m_basic;
     ShaderWithVariables m_plane;
 
-	DeferredShader m_deferred;
+	DeferredShader *m_deferred;
 
     float m_phaseVal;
 
-	Shape m_shape;
-	Shape m_light;
-	Shape m_skybox_box;
+	Shape *m_shape;
+	Shape *m_light_shape;
+	Shape *m_skybox_box;
+
+	Light *m_light;
+
+
+	std::vector<Entity*> m_ents;
+	std::vector<Light*> m_lights;
+	Entity *m_dude;
+	Entity *m_light_ent;
 
 	Entity skybox;
 

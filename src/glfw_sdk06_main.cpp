@@ -178,7 +178,7 @@ void keyboard(GLFWwindow* pWindow, int key, int codes, int action, int mods)
             if (g_app.m_tweakbarQuad.m_showQuadInWorld == false)
             {
 #ifdef USE_ANTTWEAKBAR
-                TwWindowSize(g_auxWindow_w, g_auxWindow_h);
+                //TwWindowSize(g_auxWindow_w, g_auxWindow_h);
 #endif
             }
             break;
@@ -427,9 +427,9 @@ void keyboard_Aux(GLFWwindow* pWindow, int key, int codes, int action, int mods)
     if (g_app.m_tweakbarQuad.m_showQuadInWorld == false)
     {
 #ifdef USE_ANTTWEAKBAR
-        int ant = TwEventKeyGLFW(key, action);
-        if (ant != 0)
-            return;
+        //int ant = TwEventKeyGLFW(key, action);
+        //if (ant != 0)
+        //    return;
 #endif
     }
 
@@ -450,9 +450,9 @@ void mouseDown_Aux(GLFWwindow* pWindow, int button, int action, int mods)
     }
 
 #ifdef USE_ANTTWEAKBAR
-    int ant = TwEventMouseButtonGLFW(button, action);
-    if (ant != 0)
-        return;
+    //int ant = TwEventMouseButtonGLFW(button, action);
+    //if (ant != 0)
+    //    return;
 #endif
 }
 
@@ -463,9 +463,9 @@ void mouseMove_Aux(GLFWwindow* pWindow, double xd, double yd)
     mouseMove(pWindow, xd, yd);
 
 #ifdef USE_ANTTWEAKBAR
-    int ant = TwEventMousePosGLFW(static_cast<int>(xd), static_cast<int>(yd));
-    if (ant != 0)
-        return;
+    //int ant = TwEventMousePosGLFW(static_cast<int>(xd), static_cast<int>(yd));
+    //if (ant != 0)
+    //    return;
 #endif
 }
 
@@ -479,11 +479,11 @@ void mouseWheel_Aux(GLFWwindow* pWindow, double x, double y)
         mouseWheel(pWindow, x, y);
     }
 #ifdef USE_ANTTWEAKBAR
-    static int scrollpos = 0;
-    scrollpos += static_cast<int>(y);
-    int ant = TwEventMouseWheelGLFW(scrollpos);
-    if (ant != 0)
-        return;
+    //static int scrollpos = 0;
+    //scrollpos += static_cast<int>(y);
+    //int ant = TwEventMouseWheelGLFW(scrollpos);
+    //if (ant != 0)
+    //    return;
 #endif
 }
 
@@ -496,7 +496,7 @@ void resize_Aux(GLFWwindow* pWindow, int w, int h)
     if (g_app.m_tweakbarQuad.m_showQuadInWorld == false)
     {
 #ifdef USE_ANTTWEAKBAR
-        TwWindowSize(w, h);
+        //TwWindowSize(w, h);
 #endif
     }
 
@@ -559,7 +559,7 @@ void displayToHMD()
         if (g_app.m_tweakbarQuad.m_showQuadInWorld == false)
         {
 #ifdef USE_ANTTWEAKBAR
-            TwDraw(); ///@todo Should this go first? Will it write to a depth buffer?
+            //TwDraw(); ///@todo Should this go first? Will it write to a depth buffer?
 #endif
         }
         glfwSwapBuffers(g_pMirrorWindow);
@@ -710,7 +710,7 @@ int main(int argc, char** argv)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glClearColor(1.f, 0.f, 0.f, 1.0f);
+	glClearColor(0.f, 1.f, 0.f, 1.0f);
 	////////////////////////////
 
     glfwMakeContextCurrent(l_Window);
@@ -770,9 +770,9 @@ int main(int argc, char** argv)
 #endif
 
 #ifdef USE_ANTTWEAKBAR
-    LOG_INFO("Using AntTweakbar.");
-    TwInit(useOpenGLCoreContext ? TW_OPENGL_CORE : TW_OPENGL, NULL);
-    InitializeBar();
+    //LOG_INFO("Using AntTweakbar.");
+    //TwInit(useOpenGLCoreContext ? TW_OPENGL_CORE : TW_OPENGL, NULL);
+    //InitializeBar();
 #endif
 
 	GLSL::printError("Before initGL");
@@ -798,7 +798,7 @@ int main(int argc, char** argv)
         }
 
 #ifdef USE_ANTTWEAKBAR
-        TwRefreshBar(g_pTweakbar);
+        //TwRefreshBar(g_pTweakbar);
 #endif
 
         displayToHMD();

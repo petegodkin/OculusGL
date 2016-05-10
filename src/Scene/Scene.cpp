@@ -36,7 +36,7 @@
 bool check_gl_error(std::string msg) {
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR) {
-		std::cerr << msg << ": OpenGL Error: " << error << " English: " << gluErrorString(error) << std::endl;
+		std::cerr << msg << ": OpenGL Error: " << error << " English: " << gluErrorString(error) << " yeah..." << std::endl;
 		return true;
 	}
 
@@ -49,12 +49,32 @@ Scene::Scene()
 , m_phaseVal(0.0f)
 , m_amplitude(0.01f)
 , m_deferred()
-, m_shape()
 {
+	m_shape = new Shape();
+	m_light_shape = new Shape();
+	m_skybox_box = new Shape();
+
+	m_light = new Light(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 1000.0f, m_light_shape);
+	m_dude = new Entity(m_shape);
+	m_light_ent = new Entity(m_light_shape);
+
+	m_ents.push_back(m_dude);
+	m_ents.push_back(m_light_ent);
+
+	m_lights.push_back(m_light);
 }
 
 Scene::~Scene()
 {
+	delete m_shape;
+	delete m_light_shape;
+	delete m_skybox_box;
+
+	delete m_light;
+	delete m_dude;
+	delete m_light_ent;
+
+	delete m_deferred;
 }
 
 void Scene::initGL()
@@ -70,10 +90,10 @@ void Scene::initGL()
     _InitPlaneAttributes();
     glBindVertexArray(0);*/
 	GLSL::printError("Boo0");
-	m_deferred = DeferredShader("deferred.vert", "deferred.frag");
+	m_deferred = new DeferredShader("deferred.vert", "deferred.frag");
 	_InitObjAttributes();
 	check_gl_error("Before deferred");
-	system("PAUSE");
+	//system("PAUSE");
 	//glBindVertexArray(0);
 }
 
@@ -130,17 +150,17 @@ void Scene::_InitCubeAttributes()
 
 void Scene::_InitObjAttributes()
 {
-	m_shape.loadMesh("C:\\Users\\Peter\\Documents\\GitHub\\RiftSkeleton\\resources\\PC31.obj");
-	m_shape.init(false);
+	m_shape->loadMesh("../resources/PC31.obj");
+	m_shape->init(false);
 
-	m_light.loadMesh("C:\\Users\\Peter\\Documents\\GitHub\\RiftSkeleton\\resources\\Sphere\\UnitSphere.obj");
-	m_light.init(false);
+	m_light_shape->loadMesh("../resources/Sphere/UnitSphere.obj");
+	m_light_shape->init(false);
 
-	m_skybox_box.loadMesh("../resources/Skybox/skybox.obj");
-	m_skybox_box.init(true);
-	skybox = Entity(&m_skybox_box, "../resources/Skybox/Night_01B_back.jpg");
-	skybox.setScale(750.f);
-	m_deferred.setSkybox(&skybox);
+	//m_skybox_box->loadMesh("../resources/Skybox/skybox.obj");
+	//m_skybox_box->init(true);
+	//skybox = Entity(&m_skybox_box, "../resources/Skybox/Night_01B_back.jpg");
+	//skybox.setScale(750.f);
+	//m_deferred.setSkybox(&skybox);
 }
 
 ///@brief While the basic VAO is bound, gen and bind all buffers and attribs.
@@ -232,15 +252,8 @@ void Scene::DrawDude(
 	glm::vec3 center) const
 {
 		Camera camera(modelview, projection, center);
-		Entity entity(&m_shape);
-		std::vector<Entity*> ents;
-		ents.push_back(&entity);
 
-		Light light(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 10.0f, &m_light);
-		std::vector<Light*> lights;
-		lights.push_back(&light);
-
-		m_deferred.draw(&camera, ents, lights);
+		m_deferred->draw(&camera, m_ents, m_lights);
 }
 
 
@@ -320,7 +333,7 @@ void Scene::RenderForOneEye(const float* pMview, const float* pPersp) const
     const glm::mat4 object = glm::mat4(1.0f);
 
     //DrawScene(modelview, projection, object);
-	const_cast<Scene*>(this)->DrawDude(modelview, projection, glm::vec3(0, 0, 0));
+	DrawDude(modelview, projection, glm::vec3(0, 0, 0));
 }
 
 void Scene::timestep(double /*absTime*/, double dt)

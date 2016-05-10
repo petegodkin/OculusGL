@@ -23,6 +23,7 @@ DeferredRenderer::DeferredRenderer(std::string vertShader, std::string fragShade
 	position_handle = GetAttrLoc("aPosition");
 	light_pos_handle = GetUniLoc("uLightPos");
 	light_color_handle = GetUniLoc("uLightColor");
+	toast = "not set";
 }
 
 DeferredRenderer::~DeferredRenderer()
@@ -32,11 +33,20 @@ DeferredRenderer::~DeferredRenderer()
 
 void DeferredRenderer::setGBuffer(GBuffer* gbuffer) {
 	this->gbuffer = gbuffer;
+	toast = "SOOO set";
 }
 
-void DeferredRenderer::pointLightPass(Camera* camera, Light* light)
+void DeferredRenderer::pointLightPass(Camera* camera, Light* light) const
 {
+
+	if (DEBUG_MODE)
+		check_gl_error("before light binding");
+
 	gbuffer->BindForLightPass();
+
+	if (DEBUG_MODE)
+		check_gl_error("after light bind");
+
 
 	glUseProgram(prog());
 
@@ -90,7 +100,7 @@ void DeferredRenderer::pointLightPass(Camera* camera, Light* light)
 }
 
 
-void DeferredRenderer::draw(Camera* camera, std::vector<Light*> lights)
+void DeferredRenderer::draw(Camera* camera, std::vector<Light*> lights) const
 {
 	glEnable(GL_STENCIL_TEST);
 	for (int i = 0; i < lights.size(); i++) {

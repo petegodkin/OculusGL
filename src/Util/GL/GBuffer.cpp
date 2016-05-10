@@ -1,8 +1,25 @@
 #include "GBuffer.h"
 
 
+#include <iostream>
+#include <string>
+
+
+bool check_gl_error_stupid(std::string msg) {
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		std::cerr << msg << ": OpenGL Error: " << error << " English: " << glewGetErrorString(error) << std::endl;
+		system("PAUSE");
+		return true;
+	}
+
+	return false;
+}
+
 bool GBuffer::Init(unsigned int WindowWidth, unsigned int WindowHeight)
+
 {
+	check_gl_error_stupid("Before GBuffer init");
 	// Create the FBO
 	glGenFramebuffers(1, &m_fbo);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);
@@ -46,17 +63,19 @@ bool GBuffer::Init(unsigned int WindowWidth, unsigned int WindowHeight)
 	// restore default FBO
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
+	check_gl_error_stupid("After GBuffer init");
+
 	return true;
 }
 
-void GBuffer::StartFrame()
+void GBuffer::StartFrame() const
 {
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);
 	glDrawBuffer(GL_COLOR_ATTACHMENT4);
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void GBuffer::BindForGeomPass()
+void GBuffer::BindForGeomPass() const
 {
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);
 
@@ -69,7 +88,7 @@ void GBuffer::BindForGeomPass()
 }
 
 //probably incorrect name here
-void GBuffer::BindAllForReading()
+void GBuffer::BindAllForReading() const
 {
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
@@ -80,7 +99,7 @@ void GBuffer::BindAllForReading()
 
 }
 
-void GBuffer::BindForReading()
+void GBuffer::BindForReading() const
 {
 
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo);
@@ -88,18 +107,18 @@ void GBuffer::BindForReading()
 }
 
 
-void GBuffer::SetReadBuffer(GBUFFER_TEXTURE_TYPE TextureType)
+void GBuffer::SetReadBuffer(GBUFFER_TEXTURE_TYPE TextureType) const
 {
 	glReadBuffer(GL_COLOR_ATTACHMENT0 + TextureType);
 }
 
-void GBuffer::BindForStencilPass()
+void GBuffer::BindForStencilPass() const
 {
 	// must disable the draw buffers 
 	glDrawBuffer(GL_NONE);
 }
 
-void GBuffer::BindForLightPass()
+void GBuffer::BindForLightPass() const
 {
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);
 	glDrawBuffer(GL_COLOR_ATTACHMENT4);
@@ -110,7 +129,7 @@ void GBuffer::BindForLightPass()
 	}
 }
 
-void GBuffer::BindForFinalPass()
+void GBuffer::BindForFinalPass() const
 {
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo);

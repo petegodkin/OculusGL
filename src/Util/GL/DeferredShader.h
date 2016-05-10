@@ -24,15 +24,15 @@ public:
 	DeferredShader();
 	DeferredShader(std::string vertShader, std::string fragShader);
 	~DeferredShader();
-	virtual void draw(Camera* camera, std::vector<Entity*> ents, std::vector<Light*> lights);
+	virtual void draw(Camera* camera, std::vector<Entity*> ents, std::vector<Light*> lights) const;
 	void setSkybox(Entity* skybox);
 
 private:
-	void geomPass(Camera* camera, std::vector<Entity*> ents);
-	void lightPass();
-	GBuffer gbuffer;
-	void startLightPasses();
-	void finalPass();
+	void geomPass(Camera* camera, std::vector<Entity*> ents) const;
+	void lightPass() const;
+	GBuffer *gbuffer;
+	void startLightPasses() const;
+	void finalPass() const;
 	void skyboxPass(Camera* camera);
 	SimpleTextureShader skyShader;
 

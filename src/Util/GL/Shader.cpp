@@ -158,16 +158,19 @@ GLint Shader::getUniformBlockHandle(string name)
 	return handle;
 }
 
-GLuint Shader::prog()
+GLuint Shader::prog() const
 {
 	return program;
 }
 
 
-bool Shader::check_gl_error(std::string msg) {
+bool Shader::check_gl_error(std::string msg) const {
 	GLenum error = glGetError();
 	if (error != GL_NO_ERROR) {
-		std::cerr << msg << ": OpenGL Error: " << error << " English: " << glewGetErrorString(error) << std::endl;
+		std::cerr << msg << ": OpenGL Error: " << error << " English: " << glewGetErrorString(error)
+			<< " Or: " << gluErrorString(error) << std::endl;
+
+		system("PAUSE");
 		return true;
 	}
 

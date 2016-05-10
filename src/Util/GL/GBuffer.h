@@ -20,15 +20,15 @@ public:
 
 	bool Init(unsigned int WindowWidth, unsigned int WindowHeight);
 
-	void BindForReading();
-	void BindAllForReading();
-	void SetReadBuffer(GBUFFER_TEXTURE_TYPE TextureType);
+	void BindForReading() const;
+	void BindAllForReading() const;
+	void SetReadBuffer(GBUFFER_TEXTURE_TYPE TextureType) const;
 
-	void StartFrame();
-	void BindForGeomPass();
-	void BindForStencilPass();
-	void BindForLightPass();
-	void BindForFinalPass();
+	void StartFrame() const;
+	void BindForGeomPass() const;
+	void BindForStencilPass() const;
+	void BindForLightPass() const;
+	void BindForFinalPass() const;
 
 private:
 

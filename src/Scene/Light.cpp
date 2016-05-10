@@ -11,7 +11,7 @@ Light::Light(glm::vec3 pos) : pos(pos) {
 
 }
 
-Light::Light(glm::vec3 pos, glm::vec3 color, float intensity, Shape* shape) : pos(pos), color(color), intensity(intensity),
+Light::Light(glm::vec3 pos, glm::vec3 color, float intensity, const Shape* shape) : pos(pos), color(color), intensity(intensity),
 shape(shape) {
 	_transform = glm::translate(glm::mat4(1.0f), pos) * calc_scale_mat();
 }

@@ -14,13 +14,13 @@ public:
 
 	void setGBuffer(GBuffer* gbuffer);
 
-	virtual void draw(Camera* camera, std::vector<Light*> lights);
+	virtual void draw(Camera* camera, std::vector<Light*> lights) const;
 private:
-	void pointLightPass(Camera* camera, Light* light);
+	void pointLightPass(Camera* camera, Light* light) const;
 
 	glm::vec3 lightDir;
 
-	GBuffer* gbuffer;
+	const GBuffer* gbuffer;
 
 	StencilShader stencilShader;
 
@@ -39,4 +39,6 @@ private:
 	GLuint light_color_handle;
 
 	GLuint shiny_handle;
+
+	std::string toast;
 };

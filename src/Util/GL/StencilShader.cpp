@@ -15,7 +15,7 @@ StencilShader::StencilShader(std::string vertShader, std::string fragShader)
 	proj_handle = GetUniLoc("uProjMatrix");
 }
 
-void StencilShader::stencilPass(Camera* camera, GBuffer* gbuffer, Light* light)
+void StencilShader::stencilPass(Camera* camera, const GBuffer* gbuffer, Light* light) const
 {
 	glUseProgram(prog());
 

@@ -102,8 +102,8 @@ void AppSkeleton::initGL()
         }
     }
 
-    //m_presentFbo.initProgram("presentfbo");
-    //_initPresentFbo(m_presentFbo);
+    m_presentFbo.initProgram("presentfbo");
+    _initPresentFbo(m_presentFbo);
     //m_presentDistMeshL.initProgram("presentmesh");
     //m_presentDistMeshR.initProgram("presentmesh");
     // Init the present mesh VAO *after* initVR, which creates the mesh
@@ -239,8 +239,8 @@ void AppSkeleton::_checkSceneIntersections(glm::vec3 origin, glm::vec3 dir)
 void AppSkeleton::_drawSceneMono() const
 {
     _resetGLState();
-    glClearColor(1.0f, 0.0f, 1.0f, 0.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glClearColor(1.0f, 0.0f, 1.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // This line make no noticeable difference
 
     const glm::mat4 mvLocal = glm::mat4(1.f);
     const glm::mat4 mvWorld = mvLocal *
@@ -266,10 +266,10 @@ void AppSkeleton::display_raw() const
 
 void AppSkeleton::display_buffered(bool setViewport) const
 {
-    bindFBO(m_renderBuffer, m_fboScale);
+    //bindFBO(m_renderBuffer, m_fboScale);
 	//std::cout << "BUFFERED" << std::endl;
     _drawSceneMono();
-    unbindFBO();
+    //unbindFBO();
 
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_CULL_FACE);
@@ -282,7 +282,7 @@ void AppSkeleton::display_buffered(bool setViewport) const
 
     // Present FBO to screen
     const GLuint prog = m_presentFbo.prog();
-    glUseProgram(prog);
+    /*glUseProgram(prog);
     m_presentFbo.bindVAO();
     {
         glActiveTexture(GL_TEXTURE0);
@@ -295,7 +295,7 @@ void AppSkeleton::display_buffered(bool setViewport) const
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     }
     glBindVertexArray(0);
-    glUseProgram(0);
+    glUseProgram(0);*/
 }
 
 void AppSkeleton::timestep(double absTime, double dt)
