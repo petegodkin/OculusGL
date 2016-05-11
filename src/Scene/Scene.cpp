@@ -58,11 +58,11 @@ Scene::Scene()
 	m_skybox_box = new Shape();
 
 	m_light = new Light(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 1000.0f, m_light_shape);
-	m_light_ent = new Entity(m_light_shape);
+	m_light_ent = new Entity(m_light_shape, glm::vec3(0, 0, 0));
 
-	m_dude = new Entity(m_shape);
-	m_dude->init(PhysicsState());
-	m_dude->setBoundingRadius(1.0);
+	m_dude = new Entity(m_shape, glm::vec3(0, 0, 1));
+	//m_dude->init(PhysicsState());
+	//m_dude->setBoundingRadius(1.0);
 
 	m_ents.push_back(m_dude);
 	m_ents.push_back(m_light_ent);

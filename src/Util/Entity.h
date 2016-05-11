@@ -130,7 +130,7 @@ public:
 
 // From the other entity
 	Entity();
-	Entity(const Shape* shape);
+	Entity(const Shape* shape, glm::vec3 pos);
 	Entity(const Shape* shape, std::string filename);
 	virtual ~Entity();
 	const Shape* shape();
