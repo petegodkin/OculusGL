@@ -12,11 +12,15 @@ class MorphableEntity : public Entity
 public:
 	MorphableEntity();
 	MorphableEntity(const MorphableEntity &o);
-	MorphableEntity(const Shape &start);
-	MorphableEntity(const std::vector<Shape> &morphs);
+	MorphableEntity(const Shape* shape, glm::vec3 pos);
+	MorphableEntity(const Shape* shape, glm::vec3 pos, glm::vec3 orient);
+	MorphableEntity(std::vector<const Shape *> morphs);
 
-	void setStartMorph(const Shape &start);
-	void addMorph(const Shape &toAdd);
+	void setStartMorph(const Shape *start);
+	void addMorph(const Shape *toAdd);
+
+	bool getWasSeen();
+	void setWasSeen(bool change);
 
 	bool getIsMorphable();
 	void setIsMorphable(bool change);
@@ -30,12 +34,18 @@ public:
 	//std::string toString();
 
 private:
-	Shape m_shapeStart;
-	std::vector<Shape> m_vecMorphs;
+	void init();
+
+	bool morph();
+
+	const Shape *m_curShape;
+	std::vector<const Shape *> m_vecMorphs;
 
 	int m_nBaseDelay;
 	int m_nCurDelay;
-	bool m_bIsMorphable = true;
+	int m_nCurMorph;
+	bool m_bWasSeen = false;
+	bool m_bIsMorphable;
 
 };
 

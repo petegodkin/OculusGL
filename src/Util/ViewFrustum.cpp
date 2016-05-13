@@ -69,6 +69,19 @@ void ViewFrustum::extractPlanes(bool normalize) {
 	row = getRow(3, PV) - getRow(2, PV);
     planes[PLANE_FAR] = Plane(row.x, row.y, row.z, row.w);
     
+	std::vector<std::string> labels = {"Left: ", "Right: ", "Bott: ", "Top: ", "Near: ", "Far: "};
+
+	std::cout << "Current Planes:" << std::endl;
+	for (int i = 0; i < kNumPlanes; i++)
+	{
+		Plane pl = planes[i];
+		std::cout << "\t" << labels[i] << "\t(" <<  
+							 pl.a() << ", " << 
+							 pl.b() << ", " <<
+						   	 pl.c() << ", " <<
+							 pl.d() << ")" << std::endl;
+	}
+
     if (normalize) {
         for (int i = 0; i < kNumPlanes; i++)
             planes[i].normalize();

@@ -82,7 +82,7 @@ protected:
 
 	std::vector<Entity*> m_ents;
 	std::vector<Light*> m_lights;
-	Entity *m_dude;
+	MorphableEntity *m_dude;
 	Entity *m_light_ent;
 
 	Entity skybox;

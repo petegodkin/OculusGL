@@ -222,7 +222,7 @@ Entity::Entity(const Shape* shape, glm::vec3 pos) {
 	_modelMat = glm::mat4();
 	_scale = glm::vec3(1, 1, 1);
 
-	body = PhysicsState(pos, glm::vec3(0, 0, -1), 0.0); //glm::vec3 pos, glm::vec3 dir, float vel
+	body = PhysicsState(pos, glm::vec3(1, 0, 0), 0.0);
 	updateOrientation();
 
 	allowDrawing = true;

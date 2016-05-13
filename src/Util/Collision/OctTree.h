@@ -9,6 +9,7 @@
 #define ____OctTree__
 
 #include "Entity.h"
+#include "MorphableEntity.h"
 
 class OctTree {
 public:
