@@ -72,8 +72,7 @@ void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents) const
 		if (entity->texture() != nullptr && shape->texBuf.size() > 0) {
 			entity->texture()->bind(UtexHandle, 0);
 			glUniform1i(UflagHandle, 1);
-		}
-		else {
+		} else {
 			glUniform1i(UflagHandle, 0);
 		}
 
@@ -95,7 +94,7 @@ void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents) const
 
 
 		if (entity->texture() != nullptr && shape->texBuf.size() > 0) {
-			glBindTexture(GL_TEXTURE_2D, 0);
+			//glBindTexture(GL_TEXTURE_2D, 0);
 			entity->texture()->unbind(0);
 		}
 	}
@@ -187,9 +186,9 @@ void DeferredShader::lightPass() const
 	glBlitFramebuffer(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
 		HalfWidth, HalfHeight, SCREEN_WIDTH, SCREEN_HEIGHT, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
-	/*gbuffer.SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_TEXCOORD);
+	gbuffer->SetReadBuffer(GBuffer::GBUFFER_TEXTURE_TYPE_TEXCOORD);
 	glBlitFramebuffer(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
-	HalfWidth, 0, SCREEN_WIDTH, HalfHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);*/
+		HalfWidth, 0, SCREEN_WIDTH, HalfHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 }
 
 DeferredShader::~DeferredShader() {

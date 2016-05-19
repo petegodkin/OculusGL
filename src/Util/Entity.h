@@ -130,21 +130,21 @@ public:
 
 // From the other entity
 	Entity();
-	Entity(const Shape* shape, glm::vec3 pos);
-	Entity(const Shape* shape, std::string filename);
+	Entity::Entity(const Shape* shape, glm::vec3 pos);
+	//Entity(const Shape* shape);
+	//Entity(const Shape* shape, std::string filename);
 	virtual ~Entity();
 	const Shape* shape();
 	glm::mat4 modelMat();
 	void setScale(float entScale);
-	std::shared_ptr<Texture> texture();
-
-
+	void setTexture(Texture* texture);
+	Texture* texture();
 
 private:
 	const Shape* _shape;
 	glm::mat4 _modelMat;
 	glm::vec3 _scale;
-	std::shared_ptr<Texture> _texture = nullptr;
+	Texture* _texture = nullptr;
 };
 
 

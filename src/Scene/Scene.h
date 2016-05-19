@@ -79,6 +79,8 @@ protected:
 
 	Light *m_light;
 
+	Texture *m_dude_tex;
+
 
 	std::vector<Entity*> m_ents;
 	std::vector<Light*> m_lights;

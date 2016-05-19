@@ -57,8 +57,8 @@ Scene::Scene()
 	m_light_shape = new Shape();
 	m_skybox_box = new Shape();
 
-	m_light = new Light(glm::vec3(0, 0, 0), glm::vec3(1, 1, 1), 1000.0f, m_light_shape);
-	m_light_ent = new Entity(m_light_shape, glm::vec3(0, 0, 0));
+	m_light = new Light(glm::vec3(0, 0, 3), glm::vec3(1, 1, 1), 1000.0f, m_light_shape);
+	m_light_ent = new Entity(m_light_shape, glm::vec3(0, 0, 3));
 
 	// m_dude = new Entity(m_shape, glm::vec3(0, 0, 1));
 	m_dude = new MorphableEntity(m_shape, glm::vec3(0, 0, 1));
@@ -66,10 +66,36 @@ Scene::Scene()
 	//m_dude->init(PhysicsState());
 	//m_dude->setBoundingRadius(1.0);
 
+	m_dude_tex = new Texture();
+	m_dude_tex->setFilename("../resources/PC31_Text_2.jpg");
+	//m_dude_tex->setFilename("../resources/robbierabbit/robbierabbit_bloody_d.jpg");
+	m_dude->setTexture(m_dude_tex);
+	m_dude->setScale(0.25f);
+
+	m_shape->loadMesh("../resources/PC31.obj");
+
+	//m_shape->loadMesh("../resources/robbierabbit/robbierabbit01.obj");
+
 	m_ents.push_back(m_dude);
 	m_ents.push_back(m_light_ent);
 
 	m_lights.push_back(m_light);
+}
+
+void Scene::_InitObjAttributes()
+{
+	m_dude_tex->init();
+
+	m_shape->init(true); //was true
+
+	m_light_shape->loadMesh("../resources/Sphere/UnitSphere.obj");
+	m_light_shape->init(false);
+
+	//m_skybox_box->loadMesh("../resources/Skybox/skybox.obj");
+	//m_skybox_box->init(true);
+	//skybox = Entity(&m_skybox_box, "../resources/Skybox/Night_01B_back.jpg");
+	//skybox.setScale(750.f);
+	//m_deferred.setSkybox(&skybox);
 }
 
 Scene::~Scene()
@@ -80,6 +106,7 @@ Scene::~Scene()
 
 	delete m_light;
 	delete m_dude;
+	//delete m_dude_tex;
 	delete m_light_ent;
 
 	delete m_deferred;
@@ -151,24 +178,6 @@ void Scene::_InitCubeAttributes()
     m_basic.AddVbo("elements", quadVbo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, quadVbo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, 12*3*sizeof(GLuint), quads, GL_STATIC_DRAW);
-}
-
-
-
-
-void Scene::_InitObjAttributes()
-{
-	m_shape->loadMesh("../resources/PC31.obj");
-	m_shape->init(false);
-
-	m_light_shape->loadMesh("../resources/Sphere/UnitSphere.obj");
-	m_light_shape->init(false);
-
-	//m_skybox_box->loadMesh("../resources/Skybox/skybox.obj");
-	//m_skybox_box->init(true);
-	//skybox = Entity(&m_skybox_box, "../resources/Skybox/Night_01B_back.jpg");
-	//skybox.setScale(750.f);
-	//m_deferred.setSkybox(&skybox);
 }
 
 ///@brief While the basic VAO is bound, gen and bind all buffers and attribs.

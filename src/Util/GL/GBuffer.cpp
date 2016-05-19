@@ -81,7 +81,8 @@ void GBuffer::BindForGeomPass() const
 
 	GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0,
 		GL_COLOR_ATTACHMENT1,
-		GL_COLOR_ATTACHMENT2 };
+		GL_COLOR_ATTACHMENT2,
+		GL_COLOR_ATTACHMENT3 };
 
 	glDrawBuffers(ARRAY_SIZE_IN_ELEMENTS(DrawBuffers), DrawBuffers);
 

@@ -18,7 +18,7 @@ void main()
 {
 	WorldPosOut = vWorldPos;
 	if(Uflag == 1) {
-		DiffuseOut = texture(Utex, vTextCoord).xyz;
+		DiffuseOut = texture(Utex, vec2(vTextCoord.x, vTextCoord.y)).xyz;
 	} else {
 		DiffuseOut = UdColor;
 	}

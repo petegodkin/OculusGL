@@ -209,12 +209,11 @@ Entity::Entity() {
 
 }
 
-
-Entity::Entity(const Shape* shape, std::string filename) : Entity(shape, glm::vec3()) {
+/*Entity::Entity(const Shape* shape, std::string filename) : Entity(shape) {
 	_texture = std::make_shared<Texture>();
 	_texture->setFilename(filename);
 	_texture->init();
-}
+}*/
 
 
 Entity::Entity(const Shape* shape, glm::vec3 pos) {
@@ -239,12 +238,16 @@ const Shape* Entity::shape() {
 	return _shape;
 }
 
-std::shared_ptr<Texture> Entity::texture() {
+Texture* Entity::texture() {
 	return _texture;
 }
 
+void Entity::setTexture(Texture* texture) {
+	_texture = texture;
+}
+
 glm::mat4 Entity::modelMat() {
-	return glm::scale(_modelMat, _scale);
+	return glm::translate(glm::scale(_modelMat, _scale), body.getPosition());
 }
 
 void Entity::setScale(float entScale)
