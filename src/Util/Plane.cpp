@@ -35,7 +35,10 @@ glm::vec3 Plane::abc() { return glm::vec3(coefficients); }
 
 void Plane::normalize() {
     glm::vec3 nor = glm::vec3(coefficients);
+	//std::cout << "Non normalized: " << GUtils::vecToString(nor) << std::endl;
 	nor = glm::normalize(nor);
+
+	//std::cout << "NORMALIZED: " << GUtils::vecToString(nor) << std::endl;
 
 	coefficients = glm::vec4(nor, coefficients.w);
 
@@ -54,8 +57,14 @@ float Plane::distanceTo(glm::vec3 point) {
     return point.x * a() + point.y * b() + point.z * c() + d();
 }
 
-//std::string Plane::description() {
-//    return std::string("(Plane) {eq: (") + a() + ")x + (" + b() + ")y + ("
-//     + c() + ")z + (" + d() + ") = 0}";
-//}
+std::string Plane::description(std::string label) {
+	std::stringstream str;
+	str << label << "\t(" <<
+		a() << ", " <<
+		b() << ", " <<
+		c() << ", " <<
+		d() << ")" << std::endl;
+
+	return str.str();
+}
 

@@ -9,6 +9,7 @@
 #include <glm/glm.hpp>
 #include <cstring>
 #include <string>
+#include <sstream>
 #include <vector>
 #include <map>
 
@@ -30,14 +31,30 @@ namespace GUtils {
 
 	static std::string vecToString(glm::vec3 v)
 	{
-		//TODO, watch for issues here
-		char* to = (char *)malloc(9);
-		std::sprintf(to, "(%f, %f, %f)", v.x, v.y, v.z);
+		std::stringstream stream = std::stringstream();
+		stream << "(" << v.x << ", " << v.y << ", " << v.z << ")";
 
-		std::string res = std::string(to);
-		free(to);
+		return stream.str();
+	}
 
-		return res;
+	static std::string vecToString(glm::vec4 v)
+	{
+		std::stringstream stream = std::stringstream();
+		stream << "(" << v.x << ", " << v.y << ", " << v.z << ", " << v.w << ")";
+
+		return stream.str();
+	}
+
+	static std::string matToString(glm::mat4 m)
+	{
+		std::stringstream stream;
+
+		for (int i = 0; i < 4; i++)
+		{
+			stream << "|" << vecToString(m[i]) << "|" << std::endl;
+		}
+
+		return stream.str();
 	}
 
 	static float norm(glm::vec3 v)

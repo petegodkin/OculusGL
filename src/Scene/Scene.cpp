@@ -62,7 +62,7 @@ Scene::Scene()
 
 	// m_dude = new Entity(m_shape, glm::vec3(0, 0, 1));
 	m_dude = new MorphableEntity(m_shape, glm::vec3(0, 0, 1));
-	// m_dude->addMorph()
+	m_dude->addMorph(m_light_shape);
 	//m_dude->init(PhysicsState());
 	//m_dude->setBoundingRadius(1.0);
 
@@ -253,7 +253,7 @@ void Scene::_DrawBouncingCubes(
 		//DrawObj();
     }
 
-	//draw building (temporary bullshit) TODO
+	//draw building (temporary bull) TODO
 	/*glm::mat4 buildingMtx;
 	buildingMtx = glm::translate(
 		ringCenter,
@@ -279,6 +279,7 @@ void Scene::DrawDude(
 	}
 
 	utility::ViewFrustum frustum(projection * modelview);
+	//utility::ViewFrustum frustum(modelview * projection);
 	ViewFrustumCuller vfc(oct.get());
 	std::vector<Entity *> inView = vfc.getVisibleObjects(frustum);
 

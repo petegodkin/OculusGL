@@ -33,7 +33,7 @@ namespace utility {
         Plane normalized();
         
         float distanceTo(glm::vec3 point);
-		// description();
+		std::string description(std::string label);
     };
 }
 
