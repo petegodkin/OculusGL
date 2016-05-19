@@ -55,13 +55,13 @@ AppSkeleton::AppSkeleton()
     // provided they all do forward rendering. Per-scene deferred render passes will
     // take a little bit more work.
     m_scenes.push_back(&m_scene);
-    m_scenes.push_back(&m_hydraScene);
+    //m_scenes.push_back(&m_hydraScene);
 #ifdef USE_OCULUSSDK
     //m_scenes.push_back(&m_ovrScene);
 #endif
 
     // Give this scene a pointer to get live Hydra data for display
-    m_hydraScene.SetFlyingMousePointer(&m_fm);
+    //m_hydraScene.SetFlyingMousePointer(&m_fm);
 
     ResetChassisTransformations();
 }

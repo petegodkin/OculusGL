@@ -63,11 +63,13 @@ Scene::Scene()
 
 	m_shape->loadMesh("../resources/PC31.obj");
 	shape_rabbit->loadMesh("../resources/robbierabbit/robbierabbit01.obj");
+	m_light_ent->setBoundingRadius(1.0f);
 
 	// m_dude = new Entity(m_shape, glm::vec3(0, 0, 1));
 	m_dude = new MorphableEntity(m_shape, glm::vec3(0, 0, 1));
 	m_dude->addMorph(shape_rabbit);
 	//m_dude->init(PhysicsState());
+
 	m_dude->setBoundingRadius(1.0);
 
 	m_dude_tex = new Texture();
@@ -75,6 +77,8 @@ Scene::Scene()
 	//m_dude_tex->setFilename("../resources/robbierabbit/robbierabbit_bloody_d.jpg");
 	m_dude->setTexture(m_dude_tex);
 	m_dude->setScale(0.25f);
+
+	m_dude->setBoundingRadius(1.0f);
 
 	m_ents.push_back(m_dude);
 	m_ents.push_back(m_light_ent);

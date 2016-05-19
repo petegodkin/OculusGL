@@ -47,7 +47,7 @@ glm::vec3 ViewFrustum::getRow(int ndx, glm::mat3 mat)
 }
 
 void ViewFrustum::extractPlanes(bool normalize) {
-	std::cout << "The ViewMatrix:\n" << GUtils::matToString(PV);
+	//std::cout << "The ViewMatrix:\n" << GUtils::matToString(PV);
 
     glm::vec4 row;
     
@@ -99,11 +99,11 @@ void ViewFrustum::extractPlanes(bool normalize) {
             planes[i].normalize();
     }
 
-	std::cout << "Current Normalized Planes:" << std::endl;
+	/*std::cout << "Current Normalized Planes:" << std::endl;
 	for (int i = 0; i < kNumPlanes; i++)
 	{
 		std::cout << "\t" << planes[i].description(labels[i]);
-	}
+	}*/
     
     for (int i = 0; i < kNumCorners; i++)
         corners[i] = calculateCorner(i);
