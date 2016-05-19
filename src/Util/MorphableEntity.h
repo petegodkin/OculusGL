@@ -31,12 +31,12 @@ public:
 	int getCurDelay();
 	void setCurDelay(int delay);
 
+	bool morph();
+
 	//std::string toString();
 
 private:
 	void init();
-
-	bool morph();
 
 	const Shape *m_curShape;
 	std::vector<const Shape *> m_vecMorphs;

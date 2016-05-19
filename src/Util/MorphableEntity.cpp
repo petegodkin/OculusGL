@@ -15,6 +15,7 @@ MorphableEntity::MorphableEntity() : Entity()
 	m_nCurDelay = 0;
 
 	m_curShape = new Shape();
+	m_vecMorphs.push_back(m_curShape);
 }
 
 MorphableEntity::MorphableEntity(const Shape* start, glm::vec3 pos) : Entity(start, pos)
@@ -25,6 +26,7 @@ MorphableEntity::MorphableEntity(const Shape* start, glm::vec3 pos) : Entity(sta
 	m_nCurDelay = N_DEFAULT_DELAY;
 
 	m_curShape = start;
+	m_vecMorphs.push_back(m_curShape);
 }
 
 MorphableEntity::MorphableEntity(const Shape* start, glm::vec3 pos, glm::vec3 orient) : Entity(start, pos)
@@ -35,10 +37,13 @@ MorphableEntity::MorphableEntity(const Shape* start, glm::vec3 pos, glm::vec3 or
 	m_nCurDelay = N_DEFAULT_DELAY;
 
 	m_curShape = start;
+	m_vecMorphs.push_back(m_curShape);
 }
 
 MorphableEntity::MorphableEntity(std::vector<const Shape *> morphs)
 {
+	assert(morphs.size() > 0);
+
 	init();
 	m_vecMorphs = morphs;
 
@@ -70,6 +75,7 @@ bool MorphableEntity::morph()
 	}
 
 	m_curShape = m_vecMorphs[m_nCurMorph];
+	m_bIsMorphable = false;
 
 	return bSuccess;
 }

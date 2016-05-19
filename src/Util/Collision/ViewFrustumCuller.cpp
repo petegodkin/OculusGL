@@ -29,9 +29,23 @@ std::vector<Entity *> ViewFrustumCuller::getVisibleObjects(
         enclosedObjects = node->getEnclosedObjects();
         
         for (int i = 0; i < (int) enclosedObjects.size(); i++) {
-            if (frustum.enclosesSphere(enclosedObjects[i]->getPosition(), 
+			if (frustum.enclosesSphere(enclosedObjects[i]->getPosition(),
 				enclosedObjects[i]->getBoundingSphereRadius()))
-                intersections.push_back(enclosedObjects[i]);
+			{
+				if (MorphableEntity *morpher = dynamic_cast<MorphableEntity *>(enclosedObjects[i]))
+				{
+					if (morpher->getIsMorphable())
+					{
+						morpher->morph();
+					}
+					else
+					{
+						morpher->setIsMorphable(true);
+					}
+				}
+
+				intersections.push_back(enclosedObjects[i]);
+			}
         }
         
         for (int i = 0; i < OctTree::kNumNodes; i++) {

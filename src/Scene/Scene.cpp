@@ -56,25 +56,25 @@ Scene::Scene()
 	m_shape = new Shape();
 	m_light_shape = new Shape();
 	m_skybox_box = new Shape();
+	Shape *shape_rabbit = new Shape();
 
 	m_light = new Light(glm::vec3(0, 0, 3), glm::vec3(1, 1, 1), 1000.0f, m_light_shape);
 	m_light_ent = new Entity(m_light_shape, glm::vec3(0, 0, 3));
 
+	m_shape->loadMesh("../resources/PC31.obj");
+	shape_rabbit->loadMesh("../resources/robbierabbit/robbierabbit01.obj");
+
 	// m_dude = new Entity(m_shape, glm::vec3(0, 0, 1));
 	m_dude = new MorphableEntity(m_shape, glm::vec3(0, 0, 1));
-	// m_dude->addMorph()
+	m_dude->addMorph(shape_rabbit);
 	//m_dude->init(PhysicsState());
-	//m_dude->setBoundingRadius(1.0);
+	m_dude->setBoundingRadius(1.0);
 
 	m_dude_tex = new Texture();
 	m_dude_tex->setFilename("../resources/PC31_Text_2.jpg");
 	//m_dude_tex->setFilename("../resources/robbierabbit/robbierabbit_bloody_d.jpg");
 	m_dude->setTexture(m_dude_tex);
 	m_dude->setScale(0.25f);
-
-	m_shape->loadMesh("../resources/PC31.obj");
-
-	//m_shape->loadMesh("../resources/robbierabbit/robbierabbit01.obj");
 
 	m_ents.push_back(m_dude);
 	m_ents.push_back(m_light_ent);
