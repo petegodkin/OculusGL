@@ -25,11 +25,17 @@ ViewFrustum::ViewFrustum(glm::mat4 ProjView) {
 
 glm::vec4 ViewFrustum::getRow(int ndx, glm::mat4 mat)
 {
-	return glm::vec4(
+	/*return glm::vec4(
 		mat[ndx][0],
 		mat[ndx][1],
 		mat[ndx][2],
-		mat[ndx][3]);
+		mat[ndx][3]);*/
+
+	return glm::vec4(
+		mat[0][ndx],
+		mat[1][ndx],
+		mat[2][ndx],
+		mat[3][ndx]);
 }
 
 glm::vec3 ViewFrustum::getRow(int ndx, glm::mat3 mat)
@@ -41,12 +47,14 @@ glm::vec3 ViewFrustum::getRow(int ndx, glm::mat3 mat)
 }
 
 void ViewFrustum::extractPlanes(bool normalize) {
+	std::cout << "The ViewMatrix:\n" << GUtils::matToString(PV);
 
     glm::vec4 row;
     
     //Left plane
     //row = (PV.block<1, 4>(3, 0) + PV.block<1, 4>(0, 0)).transpose();
-	row = getRow(0, PV) + getRow(3, PV);
+	
+	row = getRow(3, PV) + getRow(0, PV);
     planes[PLANE_LEFT] = Plane(row.x, row.y, row.z, row.w);
 
     //Right plane
@@ -54,7 +62,7 @@ void ViewFrustum::extractPlanes(bool normalize) {
     planes[PLANE_RIGHT] = Plane(row.x, row.y, row.z, row.w);
 
     //Bottom plane
-	row = getRow(1, PV) + getRow(3, PV);
+	row = getRow(3, PV) + getRow(1, PV);
     planes[PLANE_BOTTOM] = Plane(row.x, row.y, row.z, row.w);
 
     //Top plane
@@ -62,7 +70,7 @@ void ViewFrustum::extractPlanes(bool normalize) {
     planes[PLANE_TOP] = Plane(row.x, row.y, row.z, row.w);
 
     //Near plane
-	row = getRow(2, PV) + getRow(3, PV);
+	row = getRow(3, PV) + getRow(2, PV);
     planes[PLANE_NEAR] = Plane(row.x, row.y, row.z, row.w);
 
     //Far plane
@@ -74,18 +82,28 @@ void ViewFrustum::extractPlanes(bool normalize) {
 	/*std::cout << "Current Planes:" << std::endl;
 	for (int i = 0; i < kNumPlanes; i++)
 	{
+<<<<<<< HEAD
 		Plane pl = planes[i];
 		std::cout << "\t" << labels[i] << "\t(" <<  
 							 pl.a() << ", " << 
 							 pl.b() << ", " <<
 						   	 pl.c() << ", " <<
 							 pl.d() << ")" << std::endl;
+=======
+		std::cout << "\t" << planes[i].description(labels[i]);
+>>>>>>> 8879dc75c56498bec3c7e238831dcb9fbb39c58a
 	}*/
 
     if (normalize) {
         for (int i = 0; i < kNumPlanes; i++)
             planes[i].normalize();
     }
+
+	std::cout << "Current Normalized Planes:" << std::endl;
+	for (int i = 0; i < kNumPlanes; i++)
+	{
+		std::cout << "\t" << planes[i].description(labels[i]);
+	}
     
     for (int i = 0; i < kNumCorners; i++)
         corners[i] = calculateCorner(i);

@@ -64,6 +64,11 @@ bool MorphableEntity::morph()
 {
 	bool bSuccess = true;
 
+	if (!m_bIsMorphable)
+	{
+		return false;
+	}
+
 	if (m_nCurMorph + 1 < m_vecMorphs.size())
 	{
 		m_nCurMorph++;
@@ -80,7 +85,14 @@ bool MorphableEntity::morph()
 	return bSuccess;
 }
 
-void MorphableEntity::setStartMorph(const Shape *start) { m_curShape = start; }
+void MorphableEntity::setStartMorph(const Shape *start)
+{ 
+	m_vecMorphs.push_back(start);
+	m_nCurMorph = m_vecMorphs.size() - 1;
+
+	m_curShape = m_vecMorphs[m_nCurMorph];
+}
+
 void MorphableEntity::addMorph(const Shape *toAdd) { m_vecMorphs.push_back(toAdd); }
 
 bool MorphableEntity::getWasSeen() { return m_bWasSeen; }
