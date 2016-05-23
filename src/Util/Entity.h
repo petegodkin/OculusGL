@@ -135,6 +135,7 @@ public:
 	//Entity(const Shape* shape, std::string filename);
 	virtual ~Entity();
 	const Shape* shape();
+	void setShape(const Shape *shape);
 	glm::mat4 modelMat();
 	void setScale(float entScale);
 	void setTexture(Texture* texture);

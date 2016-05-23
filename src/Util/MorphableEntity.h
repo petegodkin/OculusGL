@@ -19,8 +19,8 @@ public:
 	void setStartMorph(const Shape *start);
 	void addMorph(const Shape *toAdd);
 
-	bool getWasSeen();
-	void setWasSeen(bool change);
+	bool getIsVisible();
+	void setIsVisible(bool change);
 
 	bool getIsMorphable();
 	void setIsMorphable(bool change);
@@ -44,7 +44,7 @@ private:
 	int m_nBaseDelay;
 	int m_nCurDelay;
 	int m_nCurMorph;
-	bool m_bWasSeen = false;
+	bool m_bIsVisible = false;
 	bool m_bIsMorphable;
 
 };

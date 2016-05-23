@@ -4,6 +4,7 @@
 ///
 
 #include "MorphableEntity.h"
+#include <iostream>
 
 #define N_DEFAULT_DELAY 15
 
@@ -56,12 +57,16 @@ MorphableEntity::MorphableEntity(std::vector<const Shape *> morphs)
 void MorphableEntity::init()
 {
 	m_bIsMorphable = false;
-	m_bWasSeen = false;
+	m_bIsVisible = false;
 	m_nCurMorph = 0;
+
+	//Entity::setShape(m_curShape);
 }
 
 bool MorphableEntity::morph()
 {
+	std::cout << "Morphing from original index " << m_nCurMorph << "!" << std::endl;
+
 	bool bSuccess = true;
 
 	if (!m_bIsMorphable)
@@ -75,12 +80,15 @@ bool MorphableEntity::morph()
 	}
 	else
 	{
-		assert(m_vecMorphs.size() > 1);
+		assert(m_vecMorphs.size() > 0);
 		m_nCurMorph = 0;
 	}
 
 	m_curShape = m_vecMorphs[m_nCurMorph];
+	setShape(m_curShape);
 	m_bIsMorphable = false;
+
+	std::cout << "Morphed to  " << m_nCurMorph << "!" << std::endl;
 
 	return bSuccess;
 }
@@ -95,8 +103,8 @@ void MorphableEntity::setStartMorph(const Shape *start)
 
 void MorphableEntity::addMorph(const Shape *toAdd) { m_vecMorphs.push_back(toAdd); }
 
-bool MorphableEntity::getWasSeen() { return m_bWasSeen; }
-void MorphableEntity::setWasSeen(bool change) { m_bWasSeen = change; }
+bool MorphableEntity::getIsVisible() { return m_bIsVisible; }
+void MorphableEntity::setIsVisible(bool change) { m_bIsVisible = change; }
 
 bool MorphableEntity::getIsMorphable() {return m_bIsMorphable; }
 void MorphableEntity::setIsMorphable(bool change) {m_bIsMorphable = change; }

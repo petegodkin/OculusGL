@@ -177,6 +177,8 @@ bool ViewFrustum::enclosesBox(BoundingBox box) {
 bool ViewFrustum::enclosesSphere(glm::vec3 center, float rad) {
 	float dist;
 
+	std::cout << "Center: " << GUtils::vecToString(center) << ", Radius: " << rad << std::endl;
+
 	for(int i=0; i < kNumPlanes; i++) {
 		dist = planes[i].distanceTo(center);
 		if (dist < -rad)

@@ -152,6 +152,7 @@ float Entity::getBoundingRadius() {
 void Entity::setBoundingRadius(float rad)
 {
 	body.setBoundingSphereRadius(rad);
+	std::cout << "Entity::SetBoundingRadius: Param: " << rad << ", Body's: " << body.getBoundingSphereRadius() << std::endl;
 }
 
 void Entity::updateOrientation() {
@@ -236,6 +237,11 @@ Entity::Entity(const Shape* shape, glm::vec3 pos) {
 
 const Shape* Entity::shape() {
 	return _shape;
+}
+
+void Entity::setShape(const Shape *shape)
+{
+	_shape = shape;
 }
 
 Texture* Entity::texture() {

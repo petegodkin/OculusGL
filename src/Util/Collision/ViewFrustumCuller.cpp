@@ -34,17 +34,29 @@ std::vector<Entity *> ViewFrustumCuller::getVisibleObjects(
 			{
 				if (MorphableEntity *morpher = dynamic_cast<MorphableEntity *>(enclosedObjects[i]))
 				{
+					morpher->setIsVisible(true);
+
 					if (morpher->getIsMorphable())
 					{
+						//std::cout << "Morphing!" << std::endl;
 						morpher->morph();
-					}
-					else
-					{
-						morpher->setIsMorphable(true);
 					}
 				}
 
 				intersections.push_back(enclosedObjects[i]);
+			}
+			else
+			{
+				if (MorphableEntity *morpher = dynamic_cast<MorphableEntity *>(enclosedObjects[i]))
+				{
+					if (!morpher->getIsMorphable())
+					{
+						morpher->setIsVisible(false);
+						morpher->setIsMorphable(true);
+
+						std::cout << "No longer visible, morphable is true!" << std::endl;
+					}
+				}
 			}
         }
         

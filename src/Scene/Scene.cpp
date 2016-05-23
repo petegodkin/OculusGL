@@ -56,21 +56,21 @@ Scene::Scene()
 	m_shape = new Shape();
 	m_light_shape = new Shape();
 	m_skybox_box = new Shape();
-	Shape *shape_rabbit = new Shape();
+	m_shape_rabbit = new Shape();
 
 	m_light = new Light(glm::vec3(0, 0, 3), glm::vec3(1, 1, 1), 1000.0f, m_light_shape);
 	m_light_ent = new Entity(m_light_shape, glm::vec3(0, 0, 3));
 
 	m_shape->loadMesh("../resources/PC31.obj");
-	shape_rabbit->loadMesh("../resources/robbierabbit/robbierabbit01.obj");
-	m_light_ent->setBoundingRadius(1.0f);
+	m_shape_rabbit->loadMesh("../resources/robbierabbit/robbierabbit01.obj");
+	m_light_ent->setBoundingRadius(1.5f);
 
 	// m_dude = new Entity(m_shape, glm::vec3(0, 0, 1));
 	m_dude = new MorphableEntity(m_shape, glm::vec3(0, 0, 1));
-	m_dude->addMorph(shape_rabbit);
+	m_dude->addMorph(m_light_shape);
 	//m_dude->init(PhysicsState());
 
-	m_dude->setBoundingRadius(1.0);
+	m_dude->setBoundingRadius(10.0f);
 
 	m_dude_tex = new Texture();
 	m_dude_tex->setFilename("../resources/PC31_Text_2.jpg");
@@ -94,6 +94,9 @@ void Scene::_InitObjAttributes()
 
 	m_light_shape->loadMesh("../resources/Sphere/UnitSphere.obj");
 	m_light_shape->init(false);
+
+	//m_shape_rabbit->init(false);
+
 
 	//m_skybox_box->loadMesh("../resources/Skybox/skybox.obj");
 	//m_skybox_box->init(true);
@@ -294,6 +297,8 @@ void Scene::DrawDude(
 	utility::ViewFrustum frustum(projection * modelview);
 	ViewFrustumCuller vfc(oct.get());
 	std::vector<Entity *> inView = vfc.getVisibleObjects(frustum);
+
+	
 
 	Camera camera(modelview, projection, center);
 

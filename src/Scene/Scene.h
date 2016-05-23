@@ -74,6 +74,7 @@ protected:
     float m_phaseVal;
 
 	Shape *m_shape;
+	Shape *m_shape_rabbit;
 	Shape *m_light_shape;
 	Shape *m_skybox_box;
 
