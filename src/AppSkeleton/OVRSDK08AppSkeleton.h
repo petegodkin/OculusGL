@@ -104,4 +104,9 @@ public:
 private: // Disallow copy ctor and assignment operator
     OVRSDK08AppSkeleton(const OVRSDK08AppSkeleton&);
     OVRSDK08AppSkeleton& operator=(const OVRSDK08AppSkeleton&);
+
+	void _setupEyes();
+	void _createTextAndFBOs(ovrLayerEyeFov& layer); // , const ovrSizei size);
+	void _createMirrorFBO(const ovrSizei size);
+	void _createUndistortedFBO(const ovrSizei size);
 };

@@ -22,10 +22,15 @@ class DeferredShader : public Shader
 public:
 
 	DeferredShader();
-	DeferredShader(std::string vertShader, std::string fragShader);
+	DeferredShader(std::string vertShader, std::string fragShader, int width, int height);
 	~DeferredShader();
 	virtual void draw(Camera* camera, std::vector<Entity*> ents, std::vector<Light*> lights) const;
 	void setSkybox(Entity* skybox);
+
+	GLuint fboID();
+	GLuint finalTexture();
+	int width();
+	int height();
 
 private:
 	void geomPass(Camera* camera, std::vector<Entity*> ents) const;

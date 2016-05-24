@@ -100,6 +100,22 @@ Scene::Scene()
 	m_lights.push_back(m_light);
 }
 
+int Scene::width() const {
+	return m_deferred->width();
+}
+
+int Scene::height() const {
+	return m_deferred->height();
+}
+
+int Scene::fboID() const {
+	return m_deferred->fboID();
+}
+
+int Scene::finalTexture() const {
+	return m_deferred->finalTexture();
+}
+
 void Scene::_InitObjAttributes()
 {
 	m_dude_tex->init();
@@ -148,7 +164,7 @@ void Scene::initGL()
     _InitPlaneAttributes();
     glBindVertexArray(0);*/
 	GLSL::printError("Boo0");
-	m_deferred = new DeferredShader("deferred.vert", "deferred.frag");
+	m_deferred = new DeferredShader("deferred.vert", "deferred.frag", 1814, 2052);//SCREEN_WIDTH, SCREEN_HEIGHT);
 	_InitObjAttributes();
 	check_gl_error("Before deferred");
 	//system("PAUSE");

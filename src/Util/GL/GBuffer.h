@@ -30,8 +30,16 @@ public:
 	void BindForLightPass() const;
 	void BindForFinalPass() const;
 
+	int width();
+	int height();
+
+	GLuint fboID();
+	GLuint finalTexture();
+
 private:
 
+	int _width;
+	int _height;
 	GLuint m_fbo;
 	GLuint m_textures[GBUFFER_NUM_TEXTURES];
 	GLuint m_depthTexture;

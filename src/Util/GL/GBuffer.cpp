@@ -16,9 +16,29 @@ bool check_gl_error_stupid(std::string msg) {
 	return false;
 }
 
+int GBuffer::width() {
+	return _width;
+}
+
+int GBuffer::height() {
+	return _height;
+}
+
+GLuint GBuffer::fboID() {
+	return m_fbo;
+}
+
+GLuint GBuffer::finalTexture() {
+	return m_finalTexture;
+}
+
 bool GBuffer::Init(unsigned int WindowWidth, unsigned int WindowHeight)
 
 {
+	_width = WindowWidth;
+	_height = WindowHeight;
+
+
 	check_gl_error_stupid("Before GBuffer init");
 	// Create the FBO
 	glGenFramebuffers(1, &m_fbo);

@@ -14,8 +14,8 @@
 #include <map>
 #include <string>
 
-#define SCREEN_WIDTH 1000//1920
-#define SCREEN_HEIGHT 800//1080
+#define SCREEN_WIDTH 1814//1000//1920
+#define SCREEN_HEIGHT 2052//800//1080
 
 ///@brief 
 class ShaderWithVariables

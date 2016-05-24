@@ -101,6 +101,11 @@ protected:
 public:
     float m_amplitude;
 
+	int width() const;
+	int height() const;
+	int fboID() const;
+	int finalTexture() const;
+
 private: // Disallow copy ctor and assignment operator
     Scene(const Scene&);
     Scene& operator=(const Scene&);

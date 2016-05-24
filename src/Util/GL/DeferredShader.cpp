@@ -8,7 +8,7 @@ DeferredShader::DeferredShader() {
 
 }
 
-DeferredShader::DeferredShader(std::string vertShader, std::string fragShader)
+DeferredShader::DeferredShader(std::string vertShader, std::string fragShader, int width, int height)
 	: Shader(vertShader, fragShader), skyShader("simple.vert", "simple.frag"),
 	renderer("light.vert", "light.frag"), disp_mode(deferred)
 {
@@ -16,7 +16,7 @@ DeferredShader::DeferredShader(std::string vertShader, std::string fragShader)
 		check_gl_error("Before all dem inits");
 
 	gbuffer = new GBuffer();
-	gbuffer->Init(SCREEN_WIDTH, SCREEN_HEIGHT);
+	gbuffer->Init(width, height);
 
 	renderer.setGBuffer(gbuffer);
 	
@@ -104,6 +104,22 @@ void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents) const
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
+
+GLuint DeferredShader::fboID() {
+	return gbuffer->fboID();
+}
+
+GLuint DeferredShader::finalTexture() {
+	return gbuffer->finalTexture();
+}
+
+int DeferredShader::width() {
+	return gbuffer->width();
+}
+int DeferredShader::height() {
+	return gbuffer->height();
+}
+
 
 void DeferredShader::draw(Camera* camera, std::vector<Entity*> ents, std::vector<Light*> lights) const
 {
