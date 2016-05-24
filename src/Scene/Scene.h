@@ -74,7 +74,8 @@ protected:
     float m_phaseVal;
 
 	Shape *m_shape;
-	Shape *m_shape_rabbit;
+	Shape *m_shape_grass;
+	Shape *m_shape_grassFlowers;
 	Shape *m_light_shape;
 	Shape *m_skybox_box;
 
@@ -85,8 +86,12 @@ protected:
 
 	std::vector<Entity*> m_ents;
 	std::vector<Light*> m_lights;
-	MorphableEntity *m_dude;
+	
 	Entity *m_light_ent;
+
+	MorphableEntity *m_dude;
+	MorphableEntity *m_grass_ent;
+	MorphableEntity *m_grassFlowers_ent;
 
 	Entity skybox;
 

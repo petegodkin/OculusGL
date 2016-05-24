@@ -14,8 +14,19 @@ Shape::Shape() :
 	posBufID(0),
 	norBufID(0),
 	texBufID(0),
+	VAO(0),
+	m_nDefaultScale(1.0f)
+{
+}
+
+Shape::Shape(float scale) :
+	eleBufID(0),
+	posBufID(0),
+	norBufID(0),
+	texBufID(0),
 	VAO(0)
 {
+	m_nDefaultScale = scale;
 }
 
 Shape::~Shape()
@@ -85,4 +96,9 @@ void Shape::draw() const
 		eleBuf.size(),
 		GL_UNSIGNED_INT,
 		0);
+}
+
+float Shape::getScale() const
+{
+	return m_nDefaultScale;
 }

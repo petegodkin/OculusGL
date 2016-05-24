@@ -220,7 +220,9 @@ Entity::Entity() {
 Entity::Entity(const Shape* shape, glm::vec3 pos) {
 	_shape = shape;
 	_modelMat = glm::mat4();
-	_scale = glm::vec3(1, 1, 1);
+	_scale = glm::vec3(shape->getScale());
+
+	std::cout << "Scale in Entity ctor: " << GUtils::vecToString(_scale) << std::endl;
 
 	body = PhysicsState(pos, glm::vec3(1, 0, 0), 0.0);
 	updateOrientation();
@@ -242,6 +244,7 @@ const Shape* Entity::shape() {
 void Entity::setShape(const Shape *shape)
 {
 	_shape = shape;
+	_scale = glm::vec3(shape->getScale());
 }
 
 Texture* Entity::texture() {
@@ -258,5 +261,5 @@ glm::mat4 Entity::modelMat() {
 
 void Entity::setScale(float entScale)
 {
-	_scale = glm::vec3(entScale, entScale, entScale);
+	_scale = glm::vec3(entScale);
 }

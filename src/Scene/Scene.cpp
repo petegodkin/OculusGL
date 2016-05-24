@@ -53,17 +53,28 @@ Scene::Scene()
 , m_amplitude(0.01f)
 , m_deferred()
 {
-	m_shape = new Shape();
+	m_shape = new Shape(0.25f);
 	m_light_shape = new Shape();
 	m_skybox_box = new Shape();
-	m_shape_rabbit = new Shape();
+	m_shape_grass = new Shape(0.25f);
+	m_shape_grassFlowers = new Shape(0.0025f);
 
 	m_light = new Light(glm::vec3(0, 0, 3), glm::vec3(1, 1, 1), 1000.0f, m_light_shape);
 	m_light_ent = new Entity(m_light_shape, glm::vec3(0, 0, 3));
 
 	m_shape->loadMesh("../resources/PC31.obj");
-	m_shape_rabbit->loadMesh("../resources/robbierabbit/robbierabbit01.obj");
 	m_light_ent->setBoundingRadius(1.5f);
+
+	m_shape_grassFlowers->loadMesh("../resources/plants1.obj");
+	//m_grassFlowers_ent = new MorphableEntity(m_shape_grassFlowers, glm::vec3(-10.0f, 0, 0));
+	//m_grassFlowers_ent->setBoundingRadius(1.0f);
+	//m_grassFlowers_ent->addMorph(m_shape_grass);
+
+
+	m_shape_grass->loadMesh("../resources/Grass/MediumPolyGrass.obj");
+	m_grass_ent = new MorphableEntity(m_shape_grass, glm::vec3(10.0f, 0, 0));
+	m_grass_ent->setBoundingRadius(1.0f);
+	m_grass_ent->addMorph(m_shape_grassFlowers);
 
 	// m_dude = new Entity(m_shape, glm::vec3(0, 0, 1));
 	m_dude = new MorphableEntity(m_shape, glm::vec3(0, 0, 1));
@@ -72,16 +83,19 @@ Scene::Scene()
 
 	m_dude->setBoundingRadius(10.0f);
 
+	
+
 	m_dude_tex = new Texture();
 	m_dude_tex->setFilename("../resources/PC31_Text_2.jpg");
 	//m_dude_tex->setFilename("../resources/robbierabbit/robbierabbit_bloody_d.jpg");
 	m_dude->setTexture(m_dude_tex);
-	m_dude->setScale(0.25f);
 
 	m_dude->setBoundingRadius(1.0f);
 
 	m_ents.push_back(m_dude);
 	m_ents.push_back(m_light_ent);
+	m_ents.push_back(m_grass_ent);
+	//m_ents.push_back(m_grassFlowers_ent);
 
 	m_lights.push_back(m_light);
 }
@@ -91,11 +105,13 @@ void Scene::_InitObjAttributes()
 	m_dude_tex->init();
 
 	m_shape->init(true); //was true
+	m_shape_grass->init(false);
+	m_shape_grassFlowers->init(false);
 
 	m_light_shape->loadMesh("../resources/Sphere/UnitSphere.obj");
 	m_light_shape->init(false);
 
-	//m_shape_rabbit->init(false);
+	//m_shape_grass->init(false);
 
 
 	//m_skybox_box->loadMesh("../resources/Skybox/skybox.obj");
@@ -382,7 +398,7 @@ void Scene::RenderForOneEye(const float* pMview, const float* pPersp) const
     const glm::mat4 projection = glm::make_mat4(pPersp);
     const glm::mat4 object = glm::mat4(1.0f);
 
-    //DrawScene(modelview, projection, object);
+    DrawScene(modelview, projection, object);
 	DrawDude(modelview, projection, glm::vec3(0, 0, 0));
 }
 
