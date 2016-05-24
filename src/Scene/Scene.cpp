@@ -62,7 +62,7 @@ Scene::Scene()
 	m_light_ent = new Entity(m_light_shape, glm::vec3(0, 0, 3));
 
 	m_shape->loadMesh("../resources/PC31.obj");
-	shape_rabbit->loadMesh("../resources/robbierabbit/robbierabbit01.obj");
+	//shape_rabbit->loadMesh("../resources/robbierabbit/robbierabbit01.obj");
 
 	// m_dude = new Entity(m_shape, glm::vec3(0, 0, 1));
 	m_dude = new MorphableEntity(m_shape, glm::vec3(0, 0, 1));

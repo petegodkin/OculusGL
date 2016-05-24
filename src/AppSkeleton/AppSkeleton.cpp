@@ -55,7 +55,7 @@ AppSkeleton::AppSkeleton()
     // provided they all do forward rendering. Per-scene deferred render passes will
     // take a little bit more work.
     m_scenes.push_back(&m_scene);
-    m_scenes.push_back(&m_hydraScene);
+    //m_scenes.push_back(&m_hydraScene);
 #ifdef USE_OCULUSSDK
     //m_scenes.push_back(&m_ovrScene);
 #endif
@@ -252,7 +252,7 @@ void AppSkeleton::_drawSceneMono() const
         90.0f,
         static_cast<float>(vp.x)/static_cast<float>(vp.y),
         0.004f,
-        100.0f); //Joel changed this because far plane
+        500.0f);
 
     _DrawScenes(glm::value_ptr(mvWorld), glm::value_ptr(persp), glm::value_ptr(mvLocal));
 }

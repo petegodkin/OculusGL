@@ -157,100 +157,151 @@ void OVRSDK08AppSkeleton::initHMD()
     }
 }
 
+void OVRSDK08AppSkeleton::_setupEyes() {
+	// Set up eye view parameters
+	for (ovrEyeType eye = ovrEyeType::ovrEye_Left;
+	eye < ovrEyeType::ovrEye_Count;
+		eye = static_cast<ovrEyeType>(eye + 1))
+	{
+		ovrEyeRenderDesc& erd = m_eyeRenderDescs[eye];
+		const ovrHmdDesc& hmd = ovr_GetHmdDesc(m_Hmd);
+		erd = ovr_GetRenderDesc(m_Hmd, eye, hmd.MaxEyeFov[eye]);
+
+		m_eyeOffsets[eye] = erd.HmdToEyeViewOffset;
+		const ovrMatrix4f ovrPerspectiveProjection = ovrMatrix4f_Projection(
+			erd.Fov, .1f, 10000.f, ovrProjection_RightHanded);
+		m_eyeProjections[eye] = glm::transpose(glm::make_mat4(&ovrPerspectiveProjection.M[0][0]));
+	}
+}
+
+void OVRSDK08AppSkeleton::_createTextAndFBOs(ovrLayerEyeFov& layer, const ovrSizei sizeUnused) {
+	// Create eye render target textures and FBOs
+	layer.Header.Type = ovrLayerType_EyeFov;
+	layer.Header.Flags = ovrLayerFlag_TextureOriginAtBottomLeft;
+
+	for (ovrEyeType eye = ovrEyeType::ovrEye_Left;
+	eye < ovrEyeType::ovrEye_Count;
+		eye = static_cast<ovrEyeType>(eye + 1))
+	{
+		const ovrHmdDesc& hmd = ovr_GetHmdDesc(m_Hmd);
+		const ovrFovPort& fov = layer.Fov[eye] = hmd.MaxEyeFov[eye];
+		const ovrSizei& size = layer.Viewport[eye].Size = ovr_GetFovTextureSize(m_Hmd, eye, fov, 1.f);
+		layer.Viewport[eye].Pos = { 0, 0 };
+		LOG_INFO("Eye %d tex : %dx%d @ (%d,%d)", eye, size.w, size.h,
+			layer.Viewport[eye].Pos.x, layer.Viewport[eye].Pos.y);
+
+		// Allocate the frameBuffer that will hold the scene, and then be
+		// re-rendered to the screen with distortion
+		/*if (!OVR_SUCCESS(ovr_CreateSwapTextureSetGL(m_Hmd, GL_RGBA, size.w, size.h, &m_pTexSet[eye])))
+		{
+			LOG_ERROR("Unable to create swap textures");
+			return;
+		}*/
+		const ovrSwapTextureSet& swapSet = *m_pTexSet[eye];
+		for (int i = 0; i < swapSet.TextureCount; ++i)
+		{
+			const ovrGLTexture& ovrTex = (ovrGLTexture&)swapSet.Textures[i];
+			glBindTexture(GL_TEXTURE_2D, ovrTex.OGL.TexId);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		}
+
+		// Manually assemble swap FBO
+		m_swapFBO.w = size.w;
+		m_swapFBO.h = size.h;
+		glGenFramebuffers(1, &m_swapFBO.id);
+		glBindFramebuffer(GL_FRAMEBUFFER, m_swapFBO.id);
+		const int idx = 0;
+		const ovrGLTextureData* pGLData = reinterpret_cast<ovrGLTextureData*>(&swapSet.Textures[idx]);
+		m_swapFBO.tex = pGLData->TexId;
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_swapFBO.tex, 0);
+
+		m_swapFBO.depth = 0;
+		glGenRenderbuffers(1, &m_swapFBO.depth);
+		glBindRenderbuffer(GL_RENDERBUFFER, m_swapFBO.depth);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, size.w, size.h);
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_swapFBO.depth);
+
+		// Check status
+		const GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+		if (status != GL_FRAMEBUFFER_COMPLETE)
+		{
+			LOG_ERROR("Framebuffer status incomplete: %d %x", status, status);
+		}
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		layer.ColorTexture[eye] = m_pTexSet[eye];
+	}
+}
+
+void OVRSDK08AppSkeleton::_createMirrorFBO(const ovrSizei size) {
+	// Manually assemble mirror FBO
+	m_mirrorFBO.w = size.w;
+	m_mirrorFBO.h = size.h;
+	glGenFramebuffers(1, &m_mirrorFBO.id);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_mirrorFBO.id);
+	const ovrGLTextureData* pMirrorGLData = reinterpret_cast<ovrGLTextureData*>(m_pMirrorTex);
+	m_mirrorFBO.tex = pMirrorGLData->TexId;
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_mirrorFBO.tex, 0);
+
+	// Check status
+	{
+		const GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+		if (status != GL_FRAMEBUFFER_COMPLETE)
+		{
+			LOG_ERROR("Framebuffer status incomplete: %d %x", status, status);
+		}
+	}
+
+}
+
+
+void OVRSDK08AppSkeleton::_createUndistortedFBO(const ovrSizei size) {
+	m_undistortedFBO.w = size.w;
+	m_undistortedFBO.h = size.h;
+	glGenFramebuffers(1, &m_undistortedFBO.id);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_undistortedFBO.id);
+	glGenTextures(1, &m_undistortedFBO.tex);
+	glBindTexture(GL_TEXTURE_2D, m_undistortedFBO.tex);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,
+		m_undistortedFBO.w, m_undistortedFBO.h, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_undistortedFBO.tex, 0);
+}
+
 ///@brief Called once a GL context has been set up.
 void OVRSDK08AppSkeleton::initVR(bool swapBackBufferDims)
 {
-    if (m_Hmd == NULL)
+    if (false)//m_Hmd == NULL)
         return;
 
-    // Set up eye view parameters
-    for (ovrEyeType eye = ovrEyeType::ovrEye_Left;
-        eye < ovrEyeType::ovrEye_Count;
-        eye = static_cast<ovrEyeType>(eye + 1))
-    {
-        ovrEyeRenderDesc& erd = m_eyeRenderDescs[eye];
-        const ovrHmdDesc& hmd = ovr_GetHmdDesc(m_Hmd);
-        erd = ovr_GetRenderDesc(m_Hmd, eye, hmd.MaxEyeFov[eye]);
-
-        m_eyeOffsets[eye] = erd.HmdToEyeViewOffset;
-        const ovrMatrix4f ovrPerspectiveProjection = ovrMatrix4f_Projection(
-            erd.Fov, .1f, 10000.f, ovrProjection_RightHanded);
-        m_eyeProjections[eye] = glm::transpose(glm::make_mat4(&ovrPerspectiveProjection.M[0][0]));
-    }
+	_setupEyes();
 
     _DestroySwapTextures();
 
-    // Create eye render target textures and FBOs
-    ovrLayerEyeFov& layer = m_layerEyeFov;
-    layer.Header.Type = ovrLayerType_EyeFov;
-    layer.Header.Flags = ovrLayerFlag_TextureOriginAtBottomLeft;
 
-    for (ovrEyeType eye = ovrEyeType::ovrEye_Left;
-        eye < ovrEyeType::ovrEye_Count;
-        eye = static_cast<ovrEyeType>(eye + 1))
-    {
-        const ovrHmdDesc& hmd = ovr_GetHmdDesc(m_Hmd);
-        const ovrFovPort& fov = layer.Fov[eye] = hmd.MaxEyeFov[eye];
-        const ovrSizei& size = layer.Viewport[eye].Size = ovr_GetFovTextureSize(m_Hmd, eye, fov, 1.f);
-        layer.Viewport[eye].Pos = { 0, 0 };
-        LOG_INFO("Eye %d tex : %dx%d @ (%d,%d)", eye, size.w, size.h,
-            layer.Viewport[eye].Pos.x, layer.Viewport[eye].Pos.y);
+	const ovrSizei size = { 400, 600 };
 
-        // Allocate the frameBuffer that will hold the scene, and then be
-        // re-rendered to the screen with distortion
-        if (!OVR_SUCCESS(ovr_CreateSwapTextureSetGL(m_Hmd, GL_RGBA, size.w, size.h, &m_pTexSet[eye])))
-        {
-            LOG_ERROR("Unable to create swap textures");
-            return;
-        }
-        const ovrSwapTextureSet& swapSet = *m_pTexSet[eye];
-        for (int i = 0; i < swapSet.TextureCount; ++i)
-        {
-            const ovrGLTexture& ovrTex = (ovrGLTexture&)swapSet.Textures[i];
-            glBindTexture(GL_TEXTURE_2D, ovrTex.OGL.TexId);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        }
+	ovrLayerEyeFov& layer = m_layerEyeFov;
 
-        // Manually assemble swap FBO
-        m_swapFBO.w = size.w;
-        m_swapFBO.h = size.h;
-        glGenFramebuffers(1, &m_swapFBO.id);
-        glBindFramebuffer(GL_FRAMEBUFFER, m_swapFBO.id);
-        const int idx = 0;
-        const ovrGLTextureData* pGLData = reinterpret_cast<ovrGLTextureData*>(&swapSet.Textures[idx]);
-        m_swapFBO.tex = pGLData->TexId;
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_swapFBO.tex, 0);
-
-        m_swapFBO.depth = 0;
-        glGenRenderbuffers(1, &m_swapFBO.depth);
-        glBindRenderbuffer(GL_RENDERBUFFER, m_swapFBO.depth);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, size.w, size.h);
-        glBindRenderbuffer(GL_RENDERBUFFER, 0);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_swapFBO.depth);
-
-        // Check status
-        const GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-        if (status != GL_FRAMEBUFFER_COMPLETE)
-        {
-            LOG_ERROR("Framebuffer status incomplete: %d %x", status, status);
-        }
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-        layer.ColorTexture[eye] = m_pTexSet[eye];
-    }
+	_createTextAndFBOs(layer, size);
 
     // In-world quads
-    const ovrSizei qsz = { 600, 600 };
+    /*const ovrSizei qsz = { 600, 600 };
     _InitQuadLayer(m_tweakbarQuad, qsz);
-    _InitQuadLayer(m_secondQuad, qsz);
+    _InitQuadLayer(m_secondQuad, qsz);*/
 
-    m_cursorShader.initProgram("basic");
+    /*m_cursorShader.initProgram("basic");
     m_cursorShader.bindVAO();
     _InitPointerAttributes();
-    glBindVertexArray(0);
+    glBindVertexArray(0);*/
 
     // Mirror texture for displaying to desktop window
     if (m_pMirrorTex)
@@ -261,7 +312,7 @@ void OVRSDK08AppSkeleton::initVR(bool swapBackBufferDims)
     const ovrEyeType eye = ovrEyeType::ovrEye_Left;
     const ovrHmdDesc& hmd = ovr_GetHmdDesc(m_Hmd);
     const ovrFovPort& fov = layer.Fov[eye] = hmd.MaxEyeFov[eye];
-    const ovrSizei& size = layer.Viewport[eye].Size = ovr_GetFovTextureSize(m_Hmd, eye, fov, 1.f);
+    //const ovrSizei& size = layer.Viewport[eye].Size = ovr_GetFovTextureSize(m_Hmd, eye, fov, 1.f);
     const ovrResult result = ovr_CreateMirrorTextureGL(m_Hmd, GL_RGBA, size.w, size.h, &m_pMirrorTex);
     if (!OVR_SUCCESS(result))
     {
@@ -269,39 +320,10 @@ void OVRSDK08AppSkeleton::initVR(bool swapBackBufferDims)
         return;
     }
 
-    // Manually assemble mirror FBO
-    m_mirrorFBO.w = size.w;
-    m_mirrorFBO.h = size.h;
-    glGenFramebuffers(1, &m_mirrorFBO.id);
-    glBindFramebuffer(GL_FRAMEBUFFER, m_mirrorFBO.id);
-    const ovrGLTextureData* pMirrorGLData = reinterpret_cast<ovrGLTextureData*>(m_pMirrorTex);
-    m_mirrorFBO.tex = pMirrorGLData->TexId;
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_mirrorFBO.tex, 0);
-
-    // Check status
-    {
-        const GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-        if (status != GL_FRAMEBUFFER_COMPLETE)
-        {
-            LOG_ERROR("Framebuffer status incomplete: %d %x", status, status);
-        }
-    }
-
+	_createMirrorFBO(size);
+   
     // Create another FBO for blitting the undistorted scene to for desktop window display.
-    m_undistortedFBO.w = size.w;
-    m_undistortedFBO.h = size.h;
-    glGenFramebuffers(1, &m_undistortedFBO.id);
-    glBindFramebuffer(GL_FRAMEBUFFER, m_undistortedFBO.id);
-    glGenTextures(1, &m_undistortedFBO.tex);
-    glBindTexture(GL_TEXTURE_2D, m_undistortedFBO.tex);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8,
-        m_undistortedFBO.w, m_undistortedFBO.h, 0,
-        GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_undistortedFBO.tex, 0);
+	_createUndistortedFBO(size);
 
     // Check status
     {
@@ -495,7 +517,7 @@ void OVRSDK08AppSkeleton::_DrawToSecondQuad() const
 void OVRSDK08AppSkeleton::display_sdk() const
 {
     const ovrHmd hmd = m_Hmd;
-    if (hmd == NULL)
+    if (false)//hmd == NULL)
     {
         display_buffered();
         return;
