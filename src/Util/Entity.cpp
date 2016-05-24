@@ -247,13 +247,13 @@ void Entity::setShape(const Shape *shape)
 	_scale = glm::vec3(shape->getScale());
 }
 
-Texture* Entity::texture() {
-	return _texture;
-}
-
-void Entity::setTexture(Texture* texture) {
-	_texture = texture;
-}
+//Texture* Entity::texture() {
+//	return _texture;
+//}
+//
+//void Entity::setTexture(Texture* texture) {
+//	_texture = texture;
+//}
 
 glm::mat4 Entity::modelMat() {
 	return glm::translate(glm::scale(_modelMat, _scale), body.getPosition());

@@ -118,8 +118,8 @@ public:
     
     virtual std::string description();
     
-      virtual glm::vec3 getPosition();
-      virtual void setPosition(glm::vec3 pos);
+    virtual glm::vec3 getPosition();
+    virtual void setPosition(glm::vec3 pos);
     virtual bool positionChanged();
     virtual void setPositionChanged(bool changed);
 	virtual void setBoundingRadius(float rad);
@@ -138,14 +138,14 @@ public:
 	void setShape(const Shape *shape);
 	glm::mat4 modelMat();
 	void setScale(float entScale);
-	void setTexture(Texture* texture);
-	Texture* texture();
+	//void setTexture(Texture* texture);
+	//Texture* texture();
 
 private:
 	const Shape* _shape;
 	glm::mat4 _modelMat;
 	glm::vec3 _scale;
-	Texture* _texture = nullptr;
+	//Texture* _texture = nullptr;
 };
 
 

@@ -11,6 +11,7 @@
 #include <glm/glm.hpp>
 #include "Camera.h"
 #include "Light.h"
+#include "ShaderWithVariables.h"
 
 class Shader
 {

@@ -69,15 +69,15 @@ void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents) const
 		const Shape* shape = entity->shape();
 		shape->bindVAO();
 
-		if (entity->texture() != nullptr && shape->texBuf.size() > 0) {
-			entity->texture()->bind(UtexHandle, 0);
+		if (shape->texture() != nullptr && shape->texBuf.size() > 0) {
+			shape->texture()->bind(UtexHandle, 0);
 			glUniform1i(UflagHandle, 1);
 		} else {
 			glUniform1i(UflagHandle, 0);
 		}
 
 		//TODO: fix hardcoded diffuse color
-		glUniform3fv(UdColorHandle, 1, value_ptr(glm::vec3(1.0f, 0.0f, 0.0f)));
+		glUniform3fv(UdColorHandle, 1, value_ptr(shape->getDiffuse()));
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, shape->eleBufID);
 		check_gl_error("Here1111111111112");
@@ -93,9 +93,9 @@ void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents) const
 			check_gl_error("Def shader after draw");
 
 
-		if (entity->texture() != nullptr && shape->texBuf.size() > 0) {
+		if (shape->texture() != nullptr && shape->texBuf.size() > 0) {
 			//glBindTexture(GL_TEXTURE_2D, 0);
-			entity->texture()->unbind(0);
+			shape->texture()->unbind(0);
 		}
 	}
 	glDepthMask(GL_FALSE);

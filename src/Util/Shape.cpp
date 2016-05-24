@@ -15,7 +15,8 @@ Shape::Shape() :
 	norBufID(0),
 	texBufID(0),
 	VAO(0),
-	m_nDefaultScale(1.0f)
+	m_nDefaultScale(1.0f),
+	m_diffuse(1.0f, 0.0f, 0.0f)
 {
 }
 
@@ -24,7 +25,8 @@ Shape::Shape(float scale) :
 	posBufID(0),
 	norBufID(0),
 	texBufID(0),
-	VAO(0)
+	VAO(0),
+	m_diffuse(1.0f, 0.0f, 0.0f)
 {
 	m_nDefaultScale = scale;
 }
@@ -101,4 +103,22 @@ void Shape::draw() const
 float Shape::getScale() const
 {
 	return m_nDefaultScale;
+}
+
+Texture* Shape::texture() const{
+	return _texture;
+}
+
+void Shape::setTexture(Texture* texture) {
+	_texture = texture;
+}
+
+void Shape::setDiffuse(glm::vec3 diffuse)
+{
+	m_diffuse = diffuse;
+}
+
+glm::vec3 Shape::getDiffuse() const
+{
+	return m_diffuse;
 }

@@ -75,6 +75,7 @@ protected:
 
 	Shape *m_shape;
 	Shape *m_shape_grass;
+	Shape *m_shape_grassBig;
 	Shape *m_shape_grassFlowers;
 	Shape *m_light_shape;
 	Shape *m_skybox_box;
@@ -82,6 +83,7 @@ protected:
 	Light *m_light;
 
 	Texture *m_dude_tex;
+	Texture *m_grass_tex;
 
 
 	std::vector<Entity*> m_ents;
@@ -100,6 +102,7 @@ protected:
 
 public:
     float m_amplitude;
+	void drawGrass(float width, float length);
 
 	int width() const;
 	int height() const;

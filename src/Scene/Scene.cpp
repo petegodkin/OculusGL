@@ -57,6 +57,7 @@ Scene::Scene()
 	m_light_shape = new Shape();
 	m_skybox_box = new Shape();
 	m_shape_grass = new Shape(0.25f);
+	m_shape_grassBig = new Shape(0.60f);
 	m_shape_grassFlowers = new Shape(0.0025f);
 
 	m_light = new Light(glm::vec3(0, 0, 3), glm::vec3(1, 1, 1), 1000.0f, m_light_shape);
@@ -69,35 +70,36 @@ Scene::Scene()
 	//m_grassFlowers_ent = new MorphableEntity(m_shape_grassFlowers, glm::vec3(-10.0f, 0, 0));
 	//m_grassFlowers_ent->setBoundingRadius(1.0f);
 	//m_grassFlowers_ent->addMorph(m_shape_grass);
+	
+	m_shape_grassBig->loadMesh("../resources/Grass/HighPolyGrass.obj");
+	m_grass_tex = new Texture();
+	m_grass_tex->setFilename("../resources/Grass/GreenPow.png");
+	m_shape_grassBig->setTexture(m_grass_tex);
 
-
-	m_shape_grass->loadMesh("../resources/Grass/MediumPolyGrass.obj");
+	m_shape_grass->loadMesh("../resources/Grass2/Grass_02.obj");
+	m_shape_grass->setDiffuse(glm::vec3(0.0f, 0.9f, 0.1f));
 	m_grass_ent = new MorphableEntity(m_shape_grass, glm::vec3(10.0f, 0, 0));
 	m_grass_ent->setBoundingRadius(1.0f);
-	m_grass_ent->addMorph(m_shape_grassFlowers);
+	m_grass_ent->addMorph(m_shape_grassBig);
 
 	// m_dude = new Entity(m_shape, glm::vec3(0, 0, 1));
+	m_dude_tex = new Texture();
+	m_dude_tex->setFilename("../resources/PC31_Text_2.jpg");
+	m_shape->setTexture(m_dude_tex);
+
 	m_dude = new MorphableEntity(m_shape, glm::vec3(0, 0, 1));
 	m_dude->addMorph(m_light_shape);
 	//m_dude->init(PhysicsState());
-
-	m_dude->setBoundingRadius(10.0f);
-
-	
-
-	m_dude_tex = new Texture();
-	m_dude_tex->setFilename("../resources/PC31_Text_2.jpg");
-	//m_dude_tex->setFilename("../resources/robbierabbit/robbierabbit_bloody_d.jpg");
-	m_dude->setTexture(m_dude_tex);
 
 	m_dude->setBoundingRadius(1.0f);
 
 	m_ents.push_back(m_dude);
 	m_ents.push_back(m_light_ent);
-	m_ents.push_back(m_grass_ent);
+	//m_ents.push_back(m_grass_ent);
 	//m_ents.push_back(m_grassFlowers_ent);
 
 	m_lights.push_back(m_light);
+	drawGrass(40.0f, 30.0f);
 }
 
 int Scene::width() const {
@@ -119,9 +121,11 @@ int Scene::finalTexture() const {
 void Scene::_InitObjAttributes()
 {
 	m_dude_tex->init();
+	m_grass_tex->init();
 
 	m_shape->init(true); //was true
 	m_shape_grass->init(false);
+	m_shape_grassBig->init(true);
 	m_shape_grassFlowers->init(false);
 
 	m_light_shape->loadMesh("../resources/Sphere/UnitSphere.obj");
@@ -136,6 +140,8 @@ void Scene::_InitObjAttributes()
 	//skybox.setScale(750.f);
 	//m_deferred.setSkybox(&skybox);
 }
+
+
 
 Scene::~Scene()
 {
@@ -169,6 +175,20 @@ void Scene::initGL()
 	check_gl_error("Before deferred");
 	//system("PAUSE");
 	//glBindVertexArray(0);
+}
+
+void Scene::drawGrass(float width, float length)
+{
+	for (float w = -width / 2.0f; w < width / 2.0f; w += 0.5f)
+	{
+		for (float l = -length / 2.0f; l < length / 2.0f; l += 0.5f)
+		{
+			MorphableEntity *grass = new MorphableEntity(m_shape_grass, glm::vec3(w, 0.0f, l));
+			grass->setBoundingRadius(1.0f);
+
+			m_ents.push_back(grass);
+		}
+	}
 }
 
 ///@brief While the basic VAO is bound, gen and bind all buffers and attribs.

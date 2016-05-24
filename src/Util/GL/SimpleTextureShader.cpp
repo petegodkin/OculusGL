@@ -25,12 +25,12 @@ void SimpleTextureShader::draw(Camera* camera, Entity* entity)
 		glUniformMatrix4fv(GetUniLoc("uProjMatrix"), 1, GL_FALSE, value_ptr(camera->proj()));
 
 		shape->bindVAO();
-		entity->texture()->bind(GetUniLoc("Utex"), 0);
+		shape->texture()->bind(GetUniLoc("Utex"), 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, shape->eleBufID);
 
 		shape->draw();
 		//glBindTexture(GL_TEXTURE_2D, 0);
-		entity->texture()->unbind(0);
+		shape->texture()->unbind(0);
 	}
 
 	glUseProgram(0);
