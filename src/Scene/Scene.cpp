@@ -53,53 +53,6 @@ Scene::Scene()
 , m_amplitude(0.01f)
 , m_deferred()
 {
-	m_shape = new Shape(0.25f);
-	m_light_shape = new Shape();
-	m_skybox_box = new Shape();
-	m_shape_grass = new Shape(0.25f);
-	m_shape_grassBig = new Shape(0.60f);
-	m_shape_grassFlowers = new Shape(0.0025f);
-
-	m_light = new Light(glm::vec3(0, 0, 3), glm::vec3(1, 1, 1), 1000.0f, m_light_shape);
-	m_light_ent = new Entity(m_light_shape, glm::vec3(0, 0, 3));
-
-	m_shape->loadMesh("../resources/PC31.obj");
-	m_light_ent->setBoundingRadius(1.5f);
-
-	m_shape_grassFlowers->loadMesh("../resources/plants1.obj");
-	//m_grassFlowers_ent = new MorphableEntity(m_shape_grassFlowers, glm::vec3(-10.0f, 0, 0));
-	//m_grassFlowers_ent->setBoundingRadius(1.0f);
-	//m_grassFlowers_ent->addMorph(m_shape_grass);
-	
-	m_shape_grassBig->loadMesh("../resources/Grass/HighPolyGrass.obj");
-	m_grass_tex = new Texture();
-	m_grass_tex->setFilename("../resources/Grass/GreenPow.png");
-	m_shape_grassBig->setTexture(m_grass_tex);
-
-	m_shape_grass->loadMesh("../resources/Grass2/Grass_02.obj");
-	m_shape_grass->setDiffuse(glm::vec3(0.0f, 0.9f, 0.1f));
-	m_grass_ent = new MorphableEntity(m_shape_grass, glm::vec3(10.0f, 0, 0));
-	m_grass_ent->setBoundingRadius(1.0f);
-	m_grass_ent->addMorph(m_shape_grassBig);
-
-	// m_dude = new Entity(m_shape, glm::vec3(0, 0, 1));
-	m_dude_tex = new Texture();
-	m_dude_tex->setFilename("../resources/PC31_Text_2.jpg");
-	m_shape->setTexture(m_dude_tex);
-
-	m_dude = new MorphableEntity(m_shape, glm::vec3(0, 0, 1));
-	m_dude->addMorph(m_light_shape);
-	//m_dude->init(PhysicsState());
-
-	m_dude->setBoundingRadius(1.0f);
-
-	m_ents.push_back(m_dude);
-	m_ents.push_back(m_light_ent);
-	//m_ents.push_back(m_grass_ent);
-	//m_ents.push_back(m_grassFlowers_ent);
-
-	m_lights.push_back(m_light);
-	drawGrass(40.0f, 30.0f);
 }
 
 int Scene::width() const {
@@ -120,16 +73,48 @@ int Scene::finalTexture() const {
 
 void Scene::_InitObjAttributes()
 {
-	m_dude_tex->init();
-	m_grass_tex->init();
+	m_shape = new MeshSet("../resources/PC31.obj", 0.25f);
+	m_light_shape = new MeshSet("../resources/Sphere/UnitSphere.obj");
+	//m_skybox_box = new Shape();
+	m_shape_grass = new MeshSet("../resources/Grass2/Grass_02.obj", 0.25f);
+	m_shape_grassBig = new MeshSet("../resources/Grass/HighPolyGrass.obj", 0.60f);
+	m_shape_grassFlowers = new MeshSet("../resources/plants1.obj", 0.0025f);
 
-	m_shape->init(true); //was true
-	m_shape_grass->init(false);
-	m_shape_grassBig->init(true);
-	m_shape_grassFlowers->init(false);
+	m_light = new Light(glm::vec3(0, 0, 3), glm::vec3(1, 1, 1), 1000.0f, m_light_shape);
+	m_light_ent = new Entity(m_light_shape, glm::vec3(0, 0, 3));
 
-	m_light_shape->loadMesh("../resources/Sphere/UnitSphere.obj");
-	m_light_shape->init(false);
+	m_light_ent->setBoundingRadius(1.5f);
+
+	//m_grassFlowers_ent = new MorphableEntity(m_shape_grassFlowers, glm::vec3(-10.0f, 0, 0));
+	//m_grassFlowers_ent->setBoundingRadius(1.0f);
+	//m_grassFlowers_ent->addMorph(m_shape_grass);
+
+	//m_grass_tex = new Texture();
+	//m_grass_tex->setFilename("../resources/Grass/GreenPow.png");
+	//m_shape_grassBig->setTexture(m_grass_tex);
+
+	m_shape_grass->setDiffuse(glm::vec3(0.0f, 0.9f, 0.1f));
+	m_grass_ent = new MorphableEntity(m_shape_grass, glm::vec3(10.0f, 0, 0));
+	m_grass_ent->setBoundingRadius(1.0f);
+	m_grass_ent->addMorph(m_shape_grassBig);
+
+	// m_dude = new Entity(m_shape, glm::vec3(0, 0, 1));
+	//m_dude_tex = new Texture();
+	//m_dude_tex->setFilename("../resources/PC31_Text_2.jpg");
+	//m_shape->setTexture(m_dude_tex);
+
+	m_dude = new MorphableEntity(m_shape, glm::vec3(0, 0, 1));
+	m_dude->addMorph(m_light_shape);
+	//m_dude->init(PhysicsState());
+
+	m_dude->setBoundingRadius(1.0f);
+
+	m_ents.push_back(m_dude);
+	m_ents.push_back(m_light_ent);
+	//m_ents.push_back(m_grass_ent);
+	//m_ents.push_back(m_grassFlowers_ent);
+
+	m_lights.push_back(m_light);
 
 	//m_shape_grass->init(false);
 

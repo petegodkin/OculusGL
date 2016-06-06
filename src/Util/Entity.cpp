@@ -217,7 +217,7 @@ Entity::Entity() {
 }*/
 
 
-Entity::Entity(const Shape* shape, glm::vec3 pos) {
+Entity::Entity(const MeshSet* shape, glm::vec3 pos) {
 	_shape = shape;
 	_modelMat = glm::mat4();
 	_scale = glm::vec3(shape->getScale());
@@ -237,11 +237,11 @@ Entity::Entity(const Shape* shape, glm::vec3 pos) {
 //
 //}
 
-const Shape* Entity::shape() {
+const MeshSet* Entity::shape() {
 	return _shape;
 }
 
-void Entity::setShape(const Shape *shape)
+void Entity::setShape(const MeshSet *shape)
 {
 	_shape = shape;
 	_scale = glm::vec3(shape->getScale());

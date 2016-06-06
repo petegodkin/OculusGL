@@ -73,17 +73,17 @@ protected:
 
     float m_phaseVal;
 
-	Shape *m_shape;
-	Shape *m_shape_grass;
-	Shape *m_shape_grassBig;
-	Shape *m_shape_grassFlowers;
-	Shape *m_light_shape;
-	Shape *m_skybox_box;
+	MeshSet *m_shape;
+	MeshSet *m_shape_grass;
+	MeshSet *m_shape_grassBig;
+	MeshSet *m_shape_grassFlowers;
+	MeshSet *m_light_shape;
+	MeshSet *m_skybox_box;
 
 	Light *m_light;
 
-	Texture *m_dude_tex;
-	Texture *m_grass_tex;
+	//Texture *m_dude_tex;
+	//Texture *m_grass_tex;
 
 
 	std::vector<Entity*> m_ents;

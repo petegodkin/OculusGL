@@ -6,7 +6,6 @@
 #include <vector>
 #include <memory>
 
-#include "Texture.h"
 #include "GraphicsUtil.h"
 
 class Shape
@@ -34,15 +33,15 @@ public:
 
 	unsigned VAO;
 
-	void setTexture(Texture* texture);
-	Texture* texture() const;
+	//void setTexture(Texture* texture);
+	//Texture* texture() const;
 
 	void setDiffuse(glm::vec3 diffuse);
 	glm::vec3 getDiffuse() const;
 
 private:
 	float m_nDefaultScale;
-	Texture* _texture = nullptr;
+	//Texture* _texture = nullptr;
 	glm::vec3 m_diffuse;
 };
 

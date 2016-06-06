@@ -66,36 +66,41 @@ void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents) const
 	check_gl_error("dfgdhdfghdfgh12");
 
 	for (Entity* entity : ents) {
-		const Shape* shape = entity->shape();
-		shape->bindVAO();
+		const MeshSet* meshset = entity->shape();
+		for (Mesh* mesh : meshset->getMeshes()) {
+			mesh->bindVAO();
 
-		if (shape->texture() != nullptr && shape->texBuf.size() > 0) {
-			shape->texture()->bind(UtexHandle, 0);
-			glUniform1i(UflagHandle, 1);
-		} else {
-			glUniform1i(UflagHandle, 0);
-		}
+			if (mesh->textures.size() > 0) {
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, mesh->textures.at(0).id);
+				glUniform1i(UtexHandle, 0);
+				glUniform1i(UflagHandle, 1);
+			}
+			else {
+				glUniform1i(UflagHandle, 0);
+			}
 
-		//TODO: fix hardcoded diffuse color
-		glUniform3fv(UdColorHandle, 1, value_ptr(shape->getDiffuse()));
+			//TODO: fix hardcoded diffuse color
+			glUniform3fv(UdColorHandle, 1, value_ptr(meshset->getDiffuse()));
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, shape->eleBufID);
-		check_gl_error("Here1111111111112");
-		
-		glUniformMatrix4fv(uModelMatrixHandle, 1, GL_FALSE, value_ptr(entity->modelMat()));
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->IND);
+			check_gl_error("Here1111111111112");
 
-		if (DEBUG_MODE)
-			check_gl_error("Def shader before draw");
+			glUniformMatrix4fv(uModelMatrixHandle, 1, GL_FALSE, value_ptr(entity->modelMat()));
 
-		shape->draw();
+			if (DEBUG_MODE)
+				check_gl_error("Def shader before draw");
 
-		if (DEBUG_MODE)
-			check_gl_error("Def shader after draw");
+			mesh->draw();
+
+			if (DEBUG_MODE)
+				check_gl_error("Def shader after draw");
 
 
-		if (shape->texture() != nullptr && shape->texBuf.size() > 0) {
-			//glBindTexture(GL_TEXTURE_2D, 0);
-			shape->texture()->unbind(0);
+			if (mesh->textures.size() > 0) {
+				glBindTexture(GL_TEXTURE_2D, 0);
+				//mesh->texture()->unbind(0);
+			}
 		}
 	}
 	glDepthMask(GL_FALSE);

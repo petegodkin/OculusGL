@@ -105,13 +105,13 @@ float Shape::getScale() const
 	return m_nDefaultScale;
 }
 
-Texture* Shape::texture() const{
-	return _texture;
-}
+//Texture* Shape::texture() const{
+//	return _texture;
+//}
 
-void Shape::setTexture(Texture* texture) {
-	_texture = texture;
-}
+//void Shape::setTexture(Texture* texture) {
+//	_texture = texture;
+//}
 
 void Shape::setDiffuse(glm::vec3 diffuse)
 {

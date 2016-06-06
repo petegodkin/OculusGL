@@ -60,7 +60,9 @@ void DeferredRenderer::pointLightPass(Camera* camera, Light* light) const
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
 
-	light->shape->bindVAO();
+	assert(light->shape->getMeshes().size() == 1);
+	Mesh* mesh = light->shape->getMeshes()[0];
+	mesh->bindVAO();
 
 	glUniform1i(pos_map_handle, GBuffer::GBUFFER_TEXTURE_TYPE_POSITION);
 	glUniform1i(color_map_handle, GBuffer::GBUFFER_TEXTURE_TYPE_DIFFUSE);
@@ -79,12 +81,12 @@ void DeferredRenderer::pointLightPass(Camera* camera, Light* light) const
 	glUniformMatrix4fv(proj_handle, 1, GL_FALSE, glm::value_ptr(camera->proj()));
 
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, light->shape->eleBufID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->IND);
 
 	if (DEBUG_MODE)
 		check_gl_error("rend before");
 
-	light->shape->draw();
+	mesh->draw();
 
 	if (DEBUG_MODE)
 		check_gl_error("rend after");

@@ -13,8 +13,7 @@
 #include <complex>
 #include <functional>
 
-#include "Texture.h"
-#include "Shape.h"
+#include "MeshSet.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/quaternion.hpp>
@@ -130,19 +129,19 @@ public:
 
 // From the other entity
 	Entity();
-	Entity::Entity(const Shape* shape, glm::vec3 pos);
+	Entity::Entity(const MeshSet* shape, glm::vec3 pos);
 	//Entity(const Shape* shape);
 	//Entity(const Shape* shape, std::string filename);
 	virtual ~Entity();
-	const Shape* shape();
-	void setShape(const Shape *shape);
+	const MeshSet* shape();
+	void setShape(const MeshSet *shape);
 	glm::mat4 modelMat();
 	void setScale(float entScale);
 	//void setTexture(Texture* texture);
 	//Texture* texture();
 
 private:
-	const Shape* _shape;
+	const MeshSet* _shape;
 	glm::mat4 _modelMat;
 	glm::vec3 _scale;
 	//Texture* _texture = nullptr;
