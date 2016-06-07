@@ -13,6 +13,7 @@
 #include <complex>
 #include <functional>
 
+#include "BoundingBox.h"
 #include "Texture.h"
 #include "Shape.h"
 #include <glm/glm.hpp>
@@ -124,6 +125,9 @@ public:
     virtual void setPositionChanged(bool changed);
 	virtual void setBoundingRadius(float rad);
     virtual float getBoundingSphereRadius();
+
+	virtual void setBoundingBox(glm::vec3 start, glm::vec3 end);
+	virtual utility::BoundingBox getBoundingBox();
 //    
 //    /// Causes the body to orient towards `pos`.
     void lookAt(glm::vec3 pos, glm::vec3 up);

@@ -155,6 +155,16 @@ void Entity::setBoundingRadius(float rad)
 	std::cout << "Entity::SetBoundingRadius: Param: " << rad << ", Body's: " << body.getBoundingSphereRadius() << std::endl;
 }
 
+void Entity::setBoundingBox(glm::vec3 start, glm::vec3 end)
+{
+
+}
+
+utility::BoundingBox Entity::getBoundingBox()
+{
+	return utility::BoundingBox(glm::vec3(0.0), glm::vec3(0.0));
+}
+
 void Entity::updateOrientation() {
     body.orientTowardsDirection();
 }

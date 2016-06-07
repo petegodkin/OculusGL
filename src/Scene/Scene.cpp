@@ -99,7 +99,7 @@ Scene::Scene()
 	//m_ents.push_back(m_grassFlowers_ent);
 
 	m_lights.push_back(m_light);
-	drawGrass(40.0f, 30.0f);
+	//drawGrass(40.0f, 30.0f);
 }
 
 int Scene::width() const {
