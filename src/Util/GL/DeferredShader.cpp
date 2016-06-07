@@ -46,6 +46,15 @@ void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents) const
 {
 	//std::cout << test << std::endl;
 
+	std::map<const MeshSet*, std::vector<Entity*>> mapMesh;
+
+	for (int i = 0; i < ents.size(); i++)
+	{
+		//auto meshItr = mapMesh.find(ents[i]->shape());
+		//Do we have to initialize the vector first?
+		mapMesh[ents[i]->shape()].push_back(ents[i]);
+	}
+
 	if (DEBUG_MODE)
 		check_gl_error("Before geom pass");
 
@@ -65,9 +74,10 @@ void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents) const
 
 	check_gl_error("dfgdhdfghdfgh12");
 
-	for (Entity* entity : ents) {
-		const MeshSet* meshset = entity->shape();
-		for (Mesh* mesh : meshset->getMeshes()) {
+	for (auto meshset : mapMesh) 
+	{
+		for (Mesh* mesh : meshset.first->getMeshes())
+		{
 			mesh->bindVAO();
 
 			if (mesh->textures.size() > 0) {
@@ -81,21 +91,16 @@ void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents) const
 			}
 
 			//TODO: fix hardcoded diffuse color
-			glUniform3fv(UdColorHandle, 1, value_ptr(meshset->getDiffuse()));
+			glUniform3fv(UdColorHandle, 1, value_ptr(meshset.first->getDiffuse()));
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->IND);
 			check_gl_error("Here1111111111112");
 
-			glUniformMatrix4fv(uModelMatrixHandle, 1, GL_FALSE, value_ptr(entity->modelMat()));
-
-			if (DEBUG_MODE)
-				check_gl_error("Def shader before draw");
-
-			mesh->draw();
-
-			if (DEBUG_MODE)
-				check_gl_error("Def shader after draw");
-
+			for (auto entity : meshset.second)
+			{
+				glUniformMatrix4fv(uModelMatrixHandle, 1, GL_FALSE, value_ptr(entity->modelMat()));
+				mesh->draw();
+			}
 
 			if (mesh->textures.size() > 0) {
 				glBindTexture(GL_TEXTURE_2D, 0);

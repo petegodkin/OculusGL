@@ -124,6 +124,8 @@ void Scene::_InitObjAttributes()
 	//skybox = Entity(&m_skybox_box, "../resources/Skybox/Night_01B_back.jpg");
 	//skybox.setScale(750.f);
 	//m_deferred.setSkybox(&skybox);
+
+	drawGrass(100.0, 100.0, 5.0);
 }
 
 
@@ -162,11 +164,11 @@ void Scene::initGL()
 	//glBindVertexArray(0);
 }
 
-void Scene::drawGrass(float width, float length)
+void Scene::drawGrass(float width, float length, float thickness)
 {
-	for (float w = -width / 2.0f; w < width / 2.0f; w += 0.5f)
+	for (float w = -width / 2.0f; w < width / 2.0f; w += thickness)
 	{
-		for (float l = -length / 2.0f; l < length / 2.0f; l += 0.5f)
+		for (float l = -length / 2.0f; l < length / 2.0f; l += thickness)
 		{
 			MorphableEntity *grass = new MorphableEntity(m_shape_grass, glm::vec3(w, 0.0f, l));
 			grass->setBoundingRadius(1.0f);

@@ -102,7 +102,7 @@ protected:
 
 public:
     float m_amplitude;
-	void drawGrass(float width, float length);
+	void drawGrass(float width, float length, float thickness);
 
 	int width() const;
 	int height() const;

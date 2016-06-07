@@ -152,7 +152,7 @@ float Entity::getBoundingRadius() {
 void Entity::setBoundingRadius(float rad)
 {
 	body.setBoundingSphereRadius(rad);
-	std::cout << "Entity::SetBoundingRadius: Param: " << rad << ", Body's: " << body.getBoundingSphereRadius() << std::endl;
+	//std::cout << "Entity::SetBoundingRadius: Param: " << rad << ", Body's: " << body.getBoundingSphereRadius() << std::endl;
 }
 
 void Entity::updateOrientation() {
