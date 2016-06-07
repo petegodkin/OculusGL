@@ -36,6 +36,7 @@ commonDllList = [
 	['OSVR_ROOT', ['bin'], 'osvrUtil.dll' ],
 	['SDL2_ROOT', ['lib','x86'], 'SDL2.dll' ],
 	['SIXENSE_ROOT', ['samples','win32','sixense_simple3d'], 'DeviceDLL.dll' ],
+	['ASSIMP_ROOT', ['bin', 'assimp_release-dll_win32'], 'Assimp32.dll' ],
 ]
 
 debugDllList = [
@@ -43,13 +44,13 @@ debugDllList = [
 	['SIXENSE_ROOT', ['bin','win32','debug_dll'], 'sixense_utilsd.dll' ],
 	['SFML_ROOT', ['bin'], 'sfml-system-2.dll' ],
 	['SFML_ROOT', ['bin'], 'sfml-window-2.dll' ],
-	['ASSIMP_ROOT', ['bin', 'assimp_debug-dll_win32'], 'Assimp32d.dll' ],
+	#['ASSIMP_ROOT', ['bin', 'assimp_debug-dll_win32'], 'Assimp32d.dll' ],
 ]
 
 releaseDllList = [
 	['SIXENSE_ROOT', ['bin','win32','release_dll'], 'sixense.dll' ],
 	['SIXENSE_ROOT', ['bin','win32','release_dll'], 'sixense_utils.dll' ],
-	['ASSIMP_ROOT', ['bin', 'assimp_release-dll_win32'], 'Assimp32.dll' ],
+	#['ASSIMP_ROOT', ['bin', 'assimp_release-dll_win32'], 'Assimp32.dll' ],
 ]
 
 def assembleBuild(buildHome, buildname, dllList):

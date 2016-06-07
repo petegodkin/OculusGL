@@ -86,11 +86,11 @@ IF( WIN32 )
 	
 	SET( ASSIMP_ROOT "${LIBS_HOME}/assimp-3.0"  CACHE STRING "assimp root")
 	INCLUDE_DIRECTORIES( "${ASSIMP_ROOT}/include" )
-	IF( DEBUG )
-        LINK_DIRECTORIES ( "${ASSIMP_ROOT}/lib/assimp_debug-dll_win32" )
-    ELSE()
+	#IF( DEBUG )
+    #    LINK_DIRECTORIES ( "${ASSIMP_ROOT}/lib/assimp_debug-dll_win32" )
+    #ELSE()
         LINK_DIRECTORIES( "${ASSIMP_ROOT}/lib/assimp_release-dll_win32" )
-    ENDIF()
+    #ENDIF()
 
     IF( USE_OCULUSSDK )
         # TODO: the logic here needs work, OVR SDK dir is kept in cache until manually changed

@@ -76,9 +76,9 @@ void Scene::_InitObjAttributes()
 	m_shape = new MeshSet("../resources/PC31.obj", 0.25f);
 	m_light_shape = new MeshSet("../resources/Sphere/UnitSphere.obj");
 	//m_skybox_box = new Shape();
-	m_shape_grass = new MeshSet("../resources/Grass2/Grass_02.obj", 0.25f);
-	m_shape_grassBig = new MeshSet("../resources/Grass/HighPolyGrass.obj", 0.60f);
-	m_shape_grassFlowers = new MeshSet("../resources/plants1.obj", 0.0025f);
+	m_shape_grass = new MeshSet("../resources/Grass_02.obj", 0.25f);
+//	m_shape_grassBig = new MeshSet("../resources/Grass/HighPolyGrass.obj", 0.60f);
+//	m_shape_grassFlowers = new MeshSet("../resources/plants1.obj", 0.0025f);
 
 	m_light = new Light(glm::vec3(0, 0, 3), glm::vec3(1, 1, 1), 1000.0f, m_light_shape);
 	m_light_ent = new Entity(m_light_shape, glm::vec3(0, 0, 3));
@@ -96,7 +96,7 @@ void Scene::_InitObjAttributes()
 	m_shape_grass->setDiffuse(glm::vec3(0.0f, 0.9f, 0.1f));
 	m_grass_ent = new MorphableEntity(m_shape_grass, glm::vec3(10.0f, 0, 0));
 	m_grass_ent->setBoundingRadius(1.0f);
-	m_grass_ent->addMorph(m_shape_grassBig);
+	//m_grass_ent->addMorph(m_shape_grassBig);
 
 	// m_dude = new Entity(m_shape, glm::vec3(0, 0, 1));
 	//m_dude_tex = new Texture();
@@ -104,7 +104,7 @@ void Scene::_InitObjAttributes()
 	//m_shape->setTexture(m_dude_tex);
 
 	m_dude = new MorphableEntity(m_shape, glm::vec3(0, 0, 1));
-	m_dude->addMorph(m_light_shape);
+	m_dude->addMorph(m_shape_grass);
 	//m_dude->init(PhysicsState());
 
 	m_dude->setBoundingRadius(1.0f);
