@@ -124,7 +124,7 @@ void Scene::_InitObjAttributes()
 	//m_skybox_box->loadMesh("../resources/Skybox/skybox.obj");
 	//m_skybox_box->init(true);
 	skybox = new Entity(m_skybox_box, glm::vec3(0));
-	skybox->setRotations(glm::vec3(-90.0f, 0.0f, 0.0f));
+	skybox->setRotations(glm::vec3(-1.570796, 0.0f, 0.0f));
 	skybox->setScale(80.f);
 	m_deferred->setSkybox(skybox);
 
