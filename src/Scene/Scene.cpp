@@ -73,10 +73,12 @@ int Scene::finalTexture() const {
 
 void Scene::_InitObjAttributes()
 {
-	m_shape = new MeshSet("../resources/PC31.obj", 0.25f);
-	m_light_shape = new MeshSet("../resources/Sphere/UnitSphere.obj");
-	//m_skybox_box = new Shape();
-	m_shape_grass = new MeshSet("../resources/Grass_02.obj", 0.25f);
+	std::string resourcePath = "../resources/";
+
+	m_shape = new MeshSet(resourcePath + "PC31.obj", 0.25f);
+	m_light_shape = new MeshSet(resourcePath + "Sphere/UnitSphere.obj");
+	m_skybox_box = new MeshSet(resourcePath + "skybox.dae", GL_LINEAR, GL_CLAMP_TO_EDGE);
+	m_shape_grass = new MeshSet(resourcePath + "Grass_02.obj", 0.25f);
 //	m_shape_grassBig = new MeshSet("../resources/Grass/HighPolyGrass.obj", 0.60f);
 //	m_shape_grassFlowers = new MeshSet("../resources/plants1.obj", 0.0025f);
 
@@ -118,13 +120,15 @@ void Scene::_InitObjAttributes()
 	//m_shape_grass->init(false);
 
 
+
 	//m_skybox_box->loadMesh("../resources/Skybox/skybox.obj");
 	//m_skybox_box->init(true);
-	//skybox = Entity(&m_skybox_box, "../resources/Skybox/Night_01B_back.jpg");
-	//skybox.setScale(750.f);
-	//m_deferred.setSkybox(&skybox);
+	skybox = new Entity(m_skybox_box, glm::vec3(0));
+	skybox->setRotations(glm::vec3(-90.0f, 0.0f, 0.0f));
+	skybox->setScale(80.f);
+	m_deferred->setSkybox(skybox);
 
-	drawGrass(100.0, 100.0, 5.0);
+	//drawGrass(100.0, 100.0, 5.0);
 }
 
 
@@ -141,6 +145,7 @@ Scene::~Scene()
 	delete m_light_ent;
 
 	delete m_deferred;
+	delete skybox;
 }
 
 void Scene::initGL()

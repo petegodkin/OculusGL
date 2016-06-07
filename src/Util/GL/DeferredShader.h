@@ -38,7 +38,7 @@ private:
 	GBuffer *gbuffer;
 	void startLightPasses() const;
 	void finalPass() const;
-	void skyboxPass(Camera* camera);
+	void skyboxPass(Camera* camera) const;
 	SimpleTextureShader skyShader;
 
 	Entity* _skybox;

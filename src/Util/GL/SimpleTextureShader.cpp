@@ -12,17 +12,21 @@ SimpleTextureShader::SimpleTextureShader() {
 
 SimpleTextureShader::SimpleTextureShader(std::string vertShader, std::string fragShader) : Shader(vertShader, fragShader)
 {
+	uViewMatrixHandle = GetUniLoc("uViewMatrix");
+	uModelMatrixHandle = GetUniLoc("uModelMatrix");
+	uProjMatrixHandle = GetUniLoc("uProjMatrix");
+	UtexHandle = GetUniLoc("Utex");
 }
 
-void SimpleTextureShader::draw(Camera* camera, Entity* entity)
+void SimpleTextureShader::draw(Camera* camera, Entity* entity) const
 {
 	//int texture = getAttributeHandle("aTextCoord");
 
 	std::vector<Mesh *> meshes = entity->shape()->getMeshes();
 
-	glUniformMatrix4fv(GetUniLoc("uViewMatrix"), 1, GL_FALSE, value_ptr(camera->view()));
-	glUniformMatrix4fv(GetUniLoc("uModelMatrix"), 1, GL_FALSE, value_ptr(entity->modelMat()));
-	glUniformMatrix4fv(GetUniLoc("uProjMatrix"), 1, GL_FALSE, value_ptr(camera->proj()));
+	glUniformMatrix4fv(uViewMatrixHandle, 1, GL_FALSE, value_ptr(camera->view()));
+	glUniformMatrix4fv(uModelMatrixHandle, 1, GL_FALSE, value_ptr(entity->modelMat()));
+	glUniformMatrix4fv(uProjMatrixHandle, 1, GL_FALSE, value_ptr(camera->proj()));
 
 	for (int i = 0; i < meshes.size(); i++)
 	{
@@ -31,7 +35,7 @@ void SimpleTextureShader::draw(Camera* camera, Entity* entity)
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, mesh->textures.at(0).id);
-		glUniform1i(GetUniLoc("Utex"), 0);
+		glUniform1i(UtexHandle, 0);
 		//glBindBuffer(GL_ARRAY_BUFFER, mesh->VBO3);
 		//glEnableVertexAttribArray(texture);//
 		//glVertexAttribPointer(texture, 2, GL_FLOAT, GL_FALSE,//

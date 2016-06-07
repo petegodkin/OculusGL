@@ -144,10 +144,14 @@ public:
 	//void setTexture(Texture* texture);
 	//Texture* texture();
 
+	glm::mat4 Entity::getRotMat();
+	void Entity::setRotations(glm::vec3 rots);
+
 private:
 	const MeshSet* _shape;
 	glm::mat4 _modelMat;
 	glm::vec3 _scale;
+	glm::vec3 rotations;
 	//Texture* _texture = nullptr;
 };
 

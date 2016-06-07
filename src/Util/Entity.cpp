@@ -12,6 +12,8 @@
 
 #include "GraphicsUtil.h"
 
+using namespace glm;
+
 DialogContainer::DialogContainer() {
     curMessage = 0;
 }
@@ -266,10 +268,24 @@ void Entity::setShape(const MeshSet *shape)
 //}
 
 glm::mat4 Entity::modelMat() {
-	return glm::translate(glm::scale(_modelMat, _scale), body.getPosition());
+	return glm::translate(glm::scale(_modelMat, _scale), body.getPosition()) * getRotMat();
 }
 
 void Entity::setScale(float entScale)
 {
 	_scale = glm::vec3(entScale);
+}
+
+glm::mat4 Entity::getRotMat()
+{
+	mat4 model_rot_x = rotate(mat4(1.0f), rotations.x, vec3(1.f, 0.f, 0.f));
+	mat4 model_rot_y = rotate(mat4(1.0f), rotations.y, vec3(0.f, 1.f, 0.f));
+	mat4 model_rot_z = rotate(mat4(1.0f), rotations.z, vec3(0.f, 0.f, 1.f));
+
+	return model_rot_y * model_rot_z * model_rot_x;
+}
+
+void Entity::setRotations(glm::vec3 rots)
+{
+	rotations = rots;
 }

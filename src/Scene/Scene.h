@@ -95,7 +95,7 @@ protected:
 	MorphableEntity *m_grass_ent;
 	MorphableEntity *m_grassFlowers_ent;
 
-	Entity skybox;
+	Entity *skybox;
 
 	//Shape m_shape;
 	//Shape m_building;

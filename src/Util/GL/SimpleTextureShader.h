@@ -11,5 +11,11 @@ class SimpleTextureShader : public Shader
 public:
 	SimpleTextureShader();
 	SimpleTextureShader(std::string vertShader, std::string fragShader);
-	void draw(Camera* camera, Entity* entity);
+	void draw(Camera* camera, Entity* entity) const;
+
+private:
+	GLint uViewMatrixHandle;
+	GLint uModelMatrixHandle;
+	GLint uProjMatrixHandle;
+	GLint UtexHandle;
 };

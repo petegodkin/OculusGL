@@ -149,6 +149,7 @@ void DeferredShader::draw(Camera* camera, std::vector<Entity*> ents, std::vector
 
 		//glEnable(GL_DEPTH_TEST);
 		//glDisable(GL_CULL_FACE);
+		skyboxPass(camera);
 
 		//glUseProgram(prog());
 		finalPass();
@@ -159,7 +160,7 @@ void DeferredShader::draw(Camera* camera, std::vector<Entity*> ents, std::vector
 	
 }
 
-void DeferredShader::skyboxPass(Camera* camera)
+void DeferredShader::skyboxPass(Camera* camera) const
 {
 	glUseProgram(skyShader.prog());
 
