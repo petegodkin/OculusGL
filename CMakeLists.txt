@@ -83,6 +83,14 @@ IF( WIN32 )
     INCLUDE_DIRECTORIES( "${GLEW_ROOT}/include" )
     LINK_DIRECTORIES   ( "${GLEW_ROOT}/lib/Release/Win32" )
     ADD_DEFINITIONS( -DGLEW_STATIC )
+	
+	SET( ASSIMP_ROOT "${LIBS_HOME}/assimp-3.0"  CACHE STRING "assimp root")
+	INCLUDE_DIRECTORIES( "${ASSIMP_ROOT}/include" )
+	#IF( DEBUG )
+    #    LINK_DIRECTORIES ( "${ASSIMP_ROOT}/lib/assimp_debug-dll_win32" )
+    #ELSE()
+        LINK_DIRECTORIES( "${ASSIMP_ROOT}/lib/assimp_release-dll_win32" )
+    #ENDIF()
 
     IF( USE_OCULUSSDK )
         # TODO: the logic here needs work, OVR SDK dir is kept in cache until manually changed
@@ -170,6 +178,7 @@ IF( WIN32 )
     SET( PLATFORM_LIBS
         ${FRAMEWORK_LIBS}
         opengl32.lib glu32.lib glew32s.lib
+		assimp.lib
         ${OVR_LIBS}
         ${OSVR_LIBS}
         Winmm.lib
@@ -195,6 +204,7 @@ IF( WIN32 )
         "GLEW_ROOT=${GLEW_ROOT}"
         "SDL2_ROOT=${SDL2_ROOT}"
         "SFML_ROOT=${SFML_ROOT}"
+        "ASSIMP_ROOT=${ASSIMP_ROOT}"
         )
 ELSEIF( APPLE )
     ADD_DEFINITIONS( -D_MACOS )

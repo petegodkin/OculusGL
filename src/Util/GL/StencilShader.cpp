@@ -22,7 +22,9 @@ void StencilShader::stencilPass(Camera* camera, const GBuffer* gbuffer, Light* l
 	// Disable color/depth write and enable stencil
 	gbuffer->BindForStencilPass();
 
-	light->shape->bindVAO();
+	assert(light->shape->getMeshes().size() == 1);
+	Mesh* mesh = light->shape->getMeshes()[0];
+	mesh->bindVAO();
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -41,12 +43,12 @@ void StencilShader::stencilPass(Camera* camera, const GBuffer* gbuffer, Light* l
 	glUniformMatrix4fv(view_handle, 1, GL_FALSE, glm::value_ptr(camera->view()));
 	glUniformMatrix4fv(proj_handle, 1, GL_FALSE, glm::value_ptr(camera->proj()));
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, light->shape->eleBufID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->IND);
 
 	if (DEBUG_MODE)
 		check_gl_error("stencil before");
 
-	light->shape->draw();
+	mesh->draw();
 
 	if (DEBUG_MODE)
 		check_gl_error("stencil after");

@@ -18,6 +18,7 @@ libraryRootDirs = {
 	'ANTTWEAKBAR_ROOT': os.path.join(libsHome, 'AntTweakBar_116', 'AntTweakBar'),
 	'SIXENSE_ROOT': os.path.join(libsHome, 'SixenseSDK'),
 	'GLEW_ROOT': os.path.join(libsHome, 'glew-1.12.0'),
+	'ASSIMP_ROOT': os.path.join(libsHome, 'assimp-3.0'),
 	'OSVR_ROOT': os.path.join(libsHome, 'OSVR-Core-Snapshot-v0.2-338-ga848a4c-build122-vs12-32bit'),
 	'SDL2_ROOT': os.path.join(libsHome, 'SDL2-2.0.3'),
 	'SFML_ROOT': os.path.join(libsHome, 'SFML-2.2'),
@@ -35,6 +36,7 @@ commonDllList = [
 	['OSVR_ROOT', ['bin'], 'osvrUtil.dll' ],
 	['SDL2_ROOT', ['lib','x86'], 'SDL2.dll' ],
 	['SIXENSE_ROOT', ['samples','win32','sixense_simple3d'], 'DeviceDLL.dll' ],
+	['ASSIMP_ROOT', ['bin', 'assimp_release-dll_win32'], 'Assimp32.dll' ],
 ]
 
 debugDllList = [
@@ -42,11 +44,13 @@ debugDllList = [
 	['SIXENSE_ROOT', ['bin','win32','debug_dll'], 'sixense_utilsd.dll' ],
 	['SFML_ROOT', ['bin'], 'sfml-system-2.dll' ],
 	['SFML_ROOT', ['bin'], 'sfml-window-2.dll' ],
+	#['ASSIMP_ROOT', ['bin', 'assimp_debug-dll_win32'], 'Assimp32d.dll' ],
 ]
 
 releaseDllList = [
 	['SIXENSE_ROOT', ['bin','win32','release_dll'], 'sixense.dll' ],
 	['SIXENSE_ROOT', ['bin','win32','release_dll'], 'sixense_utils.dll' ],
+	#['ASSIMP_ROOT', ['bin', 'assimp_release-dll_win32'], 'Assimp32.dll' ],
 ]
 
 def assembleBuild(buildHome, buildname, dllList):

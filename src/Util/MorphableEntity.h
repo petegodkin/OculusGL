@@ -12,12 +12,12 @@ class MorphableEntity : public Entity
 public:
 	MorphableEntity();
 	MorphableEntity(const MorphableEntity &o);
-	MorphableEntity(const Shape* shape, glm::vec3 pos);
-	MorphableEntity(const Shape* shape, glm::vec3 pos, glm::vec3 orient);
-	MorphableEntity(std::vector<const Shape *> morphs);
+	MorphableEntity(const MeshSet* shape, glm::vec3 pos);
+	MorphableEntity(const MeshSet* shape, glm::vec3 pos, glm::vec3 orient);
+	MorphableEntity(std::vector<const MeshSet *> morphs);
 
-	void setStartMorph(const Shape *start);
-	void addMorph(const Shape *toAdd);
+	void setStartMorph(const MeshSet *start);
+	void addMorph(const MeshSet *toAdd);
 
 	bool getIsVisible();
 	void setIsVisible(bool change);
@@ -38,8 +38,8 @@ public:
 private:
 	void init();
 
-	const Shape *m_curShape;
-	std::vector<const Shape *> m_vecMorphs;
+	const MeshSet *m_curShape;
+	std::vector<const MeshSet *> m_vecMorphs;
 
 	int m_nBaseDelay;
 	int m_nCurDelay;

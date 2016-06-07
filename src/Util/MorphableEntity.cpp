@@ -15,11 +15,11 @@ MorphableEntity::MorphableEntity() : Entity()
 	m_nBaseDelay = 0;
 	m_nCurDelay = 0;
 
-	m_curShape = new Shape();
+	m_curShape = nullptr;//new MeshSet();
 	m_vecMorphs.push_back(m_curShape);
 }
 
-MorphableEntity::MorphableEntity(const Shape* start, glm::vec3 pos) : Entity(start, pos)
+MorphableEntity::MorphableEntity(const MeshSet* start, glm::vec3 pos) : Entity(start, pos)
 {
 	init();
 	m_bIsMorphable = false;
@@ -30,7 +30,7 @@ MorphableEntity::MorphableEntity(const Shape* start, glm::vec3 pos) : Entity(sta
 	m_vecMorphs.push_back(m_curShape);
 }
 
-MorphableEntity::MorphableEntity(const Shape* start, glm::vec3 pos, glm::vec3 orient) : Entity(start, pos)
+MorphableEntity::MorphableEntity(const MeshSet* start, glm::vec3 pos, glm::vec3 orient) : Entity(start, pos)
 {
 	init();
 	m_bIsMorphable = false;
@@ -41,7 +41,7 @@ MorphableEntity::MorphableEntity(const Shape* start, glm::vec3 pos, glm::vec3 or
 	m_vecMorphs.push_back(m_curShape);
 }
 
-MorphableEntity::MorphableEntity(std::vector<const Shape *> morphs)
+MorphableEntity::MorphableEntity(std::vector<const MeshSet *> morphs)
 {
 	assert(morphs.size() > 0);
 
@@ -93,7 +93,7 @@ bool MorphableEntity::morph()
 	return bSuccess;
 }
 
-void MorphableEntity::setStartMorph(const Shape *start)
+void MorphableEntity::setStartMorph(const MeshSet *start)
 { 
 	m_vecMorphs.push_back(start);
 	m_nCurMorph = m_vecMorphs.size() - 1;
@@ -101,7 +101,7 @@ void MorphableEntity::setStartMorph(const Shape *start)
 	m_curShape = m_vecMorphs[m_nCurMorph];
 }
 
-void MorphableEntity::addMorph(const Shape *toAdd) { m_vecMorphs.push_back(toAdd); }
+void MorphableEntity::addMorph(const MeshSet *toAdd) { m_vecMorphs.push_back(toAdd); }
 
 bool MorphableEntity::getIsVisible() { return m_bIsVisible; }
 void MorphableEntity::setIsVisible(bool change) { m_bIsVisible = change; }
