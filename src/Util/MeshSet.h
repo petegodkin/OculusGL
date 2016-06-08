@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include "tdogl/Texture.h"
 #include "tdogl/Bitmap.h"
+#include "BoundingBox.h"
 
 struct BoneInfo
 {
@@ -35,6 +36,8 @@ public:
 	float getScale() const;
 	void setDiffuse(glm::vec3 diffuse);
 	glm::vec3 getDiffuse() const;
+	void calcBoundingBox();
+	utility::BoundingBox getBoundingBox();
 private:
 	void recursiveProcess(aiNode* node, const aiScene* scene, GLuint texInterpolation, GLuint texWrap);
 	void processMesh(aiMesh* mesh, const aiScene* scene, GLuint texInterpolation, GLuint texWrap);
@@ -44,6 +47,8 @@ private:
 	//to avoid a memory leak 
 	std::vector<tdogl::Texture*> texturesToDel;
 	static std::map<std::string, GLuint> savedTextures;
+	
+	utility::BoundingBox m_boundingBox;
 
 	float m_nDefaultScale;
 	glm::vec3 m_diffuse;

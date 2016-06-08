@@ -6,18 +6,28 @@
 
 using namespace utility;
 
-BoundingBox::BoundingBox(glm::vec3 s, glm::vec3 e) {
-    start = end = glm::vec3(0.0);
-    for (int i = 0; i < kNumComps; i++) {
-        start[i] = std::fmin(s[i], e[i]);
-        end[i] = std::fmax(s[i], e[i]);
-    }
+BoundingBox::BoundingBox(glm::vec3 s, glm::vec3 e, boolean bMinMax) {
+	//If not already separated by mins and maxs
+	if (!bMinMax)
+	{
+		start = end = glm::vec3(0.0);
+		for (int i = 0; i < kNumComps; i++) {
+			start[i] = std::fmin(s[i], e[i]);
+			end[i] = std::fmax(s[i], e[i]);
+		}
+	}
+	else
+	{
+		start = s;
+		end = e;
+	}
 }
 
 glm::vec3 BoundingBox::getStart() {return start;}
 glm::vec3 BoundingBox::getEnd() {return end;}
 glm::vec3 BoundingBox::getDimensions() {return end - start;}
 glm::vec3 BoundingBox::getCenter() {return (start + end) / float(2.0);}
+float BoundingBox::getRadius() { return glm::distance(getCenter(), getEnd()); }
 
 BoundingBox BoundingBox::withOffset(glm::vec3 offset) {
     return BoundingBox(start + offset, end + offset);

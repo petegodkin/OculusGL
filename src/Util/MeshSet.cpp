@@ -145,6 +145,8 @@ MeshSet::MeshSet(std::string filename, float scale, GLuint texInterpolation, GLu
 	processAnimations();
 	recursiveProcess(scene->mRootNode, scene, texInterpolation, texWrap);
 	m_nDefaultScale = scale;
+
+	calcBoundingBox();
 }
 
 void MeshSet::processBones(aiNode* node)
@@ -182,6 +184,45 @@ std::vector<Mesh*> MeshSet::getMeshes() const{
 std::vector<aiAnimation*>& MeshSet::getAnimations()
 {
 	return animations;
+}
+
+/* Determine the overarching boundingBox for all meshes in the mesh set*/
+void MeshSet::calcBoundingBox()
+{
+	if (meshes.size() > 1)
+	{
+		glm::vec3 mins = meshes[0]->getBoundingBox().getStart();
+		glm::vec3 maxs = meshes[0]->getBoundingBox().getEnd();
+
+		for (int i = 1; i < 0; i++)
+		{
+			utility::BoundingBox box = meshes[i]->getBoundingBox();
+			glm::vec3 boxMin = box.getStart();
+			glm::vec3 boxMax = box.getEnd();
+
+			for (int v = 0; v < 3; v++)
+			{
+				mins[v] = std::fmin(boxMin[v], mins[v]);
+				maxs[v] = std::fmax(boxMax[v], maxs[v]);
+			}
+		}
+
+		m_boundingBox = utility::BoundingBox(mins, maxs, true);
+	}
+	else if (meshes.size() == 1)
+	{
+		m_boundingBox = meshes[0]->getBoundingBox();
+	}
+	else
+	{
+		std::cout << "Error: no mesh in meshset!" << std::endl;
+		m_boundingBox = utility::BoundingBox();
+	}
+}
+
+utility::BoundingBox MeshSet::getBoundingBox()
+{
+	return m_boundingBox;
 }
 
 float MeshSet::getScale() const

@@ -125,7 +125,7 @@ Mesh::~Mesh()
 	glDeleteBuffers(1, &IND);
 }
 
-pair<vec3, vec3> Mesh::get_lower_and_upper_bounds()
+void Mesh::calcBoundingBox()
 {
 	float min_x, max_x,
 		min_y, max_y,
@@ -142,8 +142,15 @@ pair<vec3, vec3> Mesh::get_lower_and_upper_bounds()
 		if (verts.at(i).z < min_z) min_z = verts.at(i).z;
 		if (verts.at(i).z > max_z) max_z = verts.at(i).z;
 	}
-	return pair<vec3, vec3>(glm::vec3(min_x, min_y, min_z), glm::vec3(max_x, max_y, max_z));
+
+	m_boundingBox = utility::BoundingBox(glm::vec3(min_x, min_y, min_z), glm::vec3(max_x, max_y, max_z));
 }
+
+utility::BoundingBox Mesh::getBoundingBox()
+{
+	return m_boundingBox;
+}
+
 
 std::vector<glm::mat4> Mesh::getBoneTransformations() {
 	return boneTransformations;
