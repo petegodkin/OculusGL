@@ -77,7 +77,7 @@ void Scene::_InitObjAttributes()
 
 	m_shape = new MeshSet(resourcePath + "PC31.obj", 0.25f);
 	m_light_shape = new MeshSet(resourcePath + "Sphere/UnitSphere.obj");
-	m_skybox_box = new MeshSet(resourcePath + "skybox.dae", GL_LINEAR, GL_CLAMP_TO_EDGE);
+	m_skybox_box = new MeshSet(resourcePath + "skybox.dae", 1.0f, GL_LINEAR, GL_CLAMP_TO_EDGE);
 	m_shape_grass = new MeshSet(resourcePath + "Grass_02.obj", 0.25f);
 //	m_shape_grassBig = new MeshSet("../resources/Grass/HighPolyGrass.obj", 0.60f);
 //	m_shape_grassFlowers = new MeshSet("../resources/plants1.obj", 0.0025f);
