@@ -26,13 +26,13 @@ namespace utility {
         /// will become the "least" point of the box (closest to -infinity on
         /// all axes) and `end` will become the "greatest" point of the box
         /// (closest to infinitiy on all axes).
-        BoundingBox(glm::vec3 s = glm::vec3(0.0), glm::vec3 e = glm::vec3(0.0), boolean bMinMax = false);
+        BoundingBox(glm::vec3 s = glm::vec3(0.0), glm::vec3 e = glm::vec3(0.0), bool bMinMax = false);
         
         glm::vec3 getStart();
-        glm::vec3 getEnd();
+        glm::vec3 getEnd() const;
         glm::vec3 getDimensions();
-        glm::vec3 getCenter();
-		float getRadius(); //this is based off the distance from the middle to the corner.
+        glm::vec3 getCenter() const;
+		float getRadius() const; //this is based off the distance from the middle to the corner.
         
         BoundingBox withOffset(glm::vec3 offset);
         

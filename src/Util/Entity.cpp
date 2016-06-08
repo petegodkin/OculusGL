@@ -148,7 +148,8 @@ void Entity::setDirection(glm::vec3 dir) {
 }
 
 float Entity::getBoundingRadius() {
-    return body.boundingSphereRadius;
+    //return body.boundingSphereRadius;
+	return _shape->getBoundingRadius();
 }
 
 void Entity::setBoundingRadius(float rad)

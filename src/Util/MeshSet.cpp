@@ -225,6 +225,11 @@ utility::BoundingBox MeshSet::getBoundingBox()
 	return m_boundingBox;
 }
 
+float MeshSet::getBoundingRadius() const
+{
+	return m_boundingBox.getRadius();
+}
+
 float MeshSet::getScale() const
 {
 	return m_nDefaultScale;

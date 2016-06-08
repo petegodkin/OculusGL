@@ -6,7 +6,7 @@
 
 using namespace utility;
 
-BoundingBox::BoundingBox(glm::vec3 s, glm::vec3 e, boolean bMinMax) {
+BoundingBox::BoundingBox(glm::vec3 s, glm::vec3 e, bool bMinMax) {
 	//If not already separated by mins and maxs
 	if (!bMinMax)
 	{
@@ -24,10 +24,10 @@ BoundingBox::BoundingBox(glm::vec3 s, glm::vec3 e, boolean bMinMax) {
 }
 
 glm::vec3 BoundingBox::getStart() {return start;}
-glm::vec3 BoundingBox::getEnd() {return end;}
+glm::vec3 BoundingBox::getEnd() const {return end;}
 glm::vec3 BoundingBox::getDimensions() {return end - start;}
-glm::vec3 BoundingBox::getCenter() {return (start + end) / float(2.0);}
-float BoundingBox::getRadius() { return glm::distance(getCenter(), getEnd()); }
+glm::vec3 BoundingBox::getCenter() const {return (start + end) / float(2.0);}
+float BoundingBox::getRadius() const { return glm::distance(getCenter(), getEnd()); }
 
 BoundingBox BoundingBox::withOffset(glm::vec3 offset) {
     return BoundingBox(start + offset, end + offset);

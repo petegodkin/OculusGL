@@ -28,9 +28,11 @@ public:
 	void processBones(aiNode* node);
 	void processAnimations();
 	~MeshSet();
+
 	std::vector<Mesh*> getMeshes() const;
 	std::vector<aiAnimation*>& getAnimations();
 	std::unordered_map<std::string, BoneInfo*> boneInfo;
+
 	aiNode *bone_tree;
 	aiMatrix4x4 inverseMat;
 	float getScale() const;
@@ -38,6 +40,7 @@ public:
 	glm::vec3 getDiffuse() const;
 	void calcBoundingBox();
 	utility::BoundingBox getBoundingBox();
+	float getBoundingRadius() const;
 private:
 	void recursiveProcess(aiNode* node, const aiScene* scene, GLuint texInterpolation, GLuint texWrap);
 	void processMesh(aiMesh* mesh, const aiScene* scene, GLuint texInterpolation, GLuint texWrap);
