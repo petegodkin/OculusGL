@@ -169,7 +169,7 @@ void OVRSDK08AppSkeleton::_setupEyes() {
 
 		m_eyeOffsets[eye] = erd.HmdToEyeViewOffset;
 		const ovrMatrix4f ovrPerspectiveProjection = ovrMatrix4f_Projection(
-			erd.Fov, .1f, 10000.f, ovrProjection_RightHanded);
+			erd.Fov, .1f, 1000000.f, ovrProjection_RightHanded);
 		m_eyeProjections[eye] = glm::transpose(glm::make_mat4(&ovrPerspectiveProjection.M[0][0]));
 	}
 }

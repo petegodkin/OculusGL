@@ -90,7 +90,6 @@ void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents) const
 				glUniform1i(UflagHandle, 0);
 			}
 
-			//TODO: fix hardcoded diffuse color
 			glUniform3fv(UdColorHandle, 1, value_ptr(meshset.first->getDiffuse()));
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->IND);
@@ -104,7 +103,6 @@ void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents) const
 
 			if (mesh->textures.size() > 0) {
 				glBindTexture(GL_TEXTURE_2D, 0);
-				//mesh->texture()->unbind(0);
 			}
 		}
 	}
@@ -140,23 +138,12 @@ void DeferredShader::draw(Camera* camera, std::vector<Entity*> ents, std::vector
 	glUseProgram(0);
 
 	if (disp_mode == four_screen) {
-		//glUseProgram(prog());
-		//startLightPasses();
 		lightPass();
-		//glUseProgram(0);
 	} else {
 		renderer.draw(camera, lights);
-
-		//glEnable(GL_DEPTH_TEST);
-		//glDisable(GL_CULL_FACE);
 		skyboxPass(camera);
-
-		//glUseProgram(prog());
 		finalPass();
-		//glUseProgram(0);
 	}
-
-	//skyboxPass(camera);
 	
 }
 
