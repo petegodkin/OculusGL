@@ -425,7 +425,7 @@ void Scene::RenderForOneEye(const float* pMview, const float* pPersp) const
     const glm::mat4 projection = glm::make_mat4(pPersp);
     const glm::mat4 object = glm::mat4(1.0f);
 
-    DrawScene(modelview, projection, object);
+    //DrawScene(modelview, projection, object);
 	DrawDude(modelview, projection, glm::vec3(0, 0, 0));
 }
 

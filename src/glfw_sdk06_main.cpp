@@ -587,7 +587,7 @@ void GLAPIENTRY myCallback(
     case GL_DEBUG_SEVERITY_HIGH:
     case GL_DEBUG_SEVERITY_MEDIUM:
     case GL_DEBUG_SEVERITY_LOW:
-        //LOG_INFO("[[GL Debug]] %x %x %x %x %s", source, type, id, severity, msg);
+        LOG_INFO("[[GL Debug]] %x %x %x %x %s", source, type, id, severity, msg);
         break;
     case GL_DEBUG_SEVERITY_NOTIFICATION:
         break;
