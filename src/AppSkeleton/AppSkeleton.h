@@ -102,6 +102,9 @@ protected:
     SpaceCursor m_spaceCursor;
     glm::vec3 m_spaceCursorPos;
 
+	float m_pitch = 0;
+	float m_yaw = 0;
+
 public:
     FlyingMouse m_fm;
     glm::vec3 m_keyboardMove;

@@ -237,6 +237,25 @@ void AppSkeleton::_checkSceneIntersections(glm::vec3 origin, glm::vec3 dir)
     }
 }
 
+glm::vec3 findLookAtPt(float pitch, float yaw)
+{
+	float x, y, z;
+	x = 1 * cos(pitch) * cos(yaw);
+	y = 1 * sin(pitch);
+	z = 1 * cos(pitch) * cos(3.14 / 2.0 - yaw);
+	return glm::vec3(x, y, z);
+}
+
+glm::mat4 getView(glm::vec3 position, float pitch, float yaw) {
+	if (pitch > 1.3)
+		pitch = 1.3;
+	else if (pitch < -1.3)
+		pitch = -1.3;
+
+	return glm::lookAt(position, position + findLookAtPt(pitch, yaw),
+		glm::vec3(0.0, 1.0, 0.0));
+}
+
 void AppSkeleton::_drawSceneMono() const
 {
     _resetGLState();
@@ -244,15 +263,15 @@ void AppSkeleton::_drawSceneMono() const
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // This line make no noticeable difference
 
     const glm::mat4 mvLocal = glm::mat4(1.f);
-    const glm::mat4 mvWorld = mvLocal *
-        glm::inverse(makeWorldToChassisMatrix());
+	const glm::mat4 mvWorld = mvLocal * getView(m_chassisPos, m_pitch, m_yaw);
+        //glm::inverse(makeWorldToChassisMatrix());
 
     const glm::ivec2 vp = getRTSize();
     const glm::mat4 persp = glm::perspective(
         90.0f,
         static_cast<float>(vp.x)/static_cast<float>(vp.y),
         0.004f,
-        500.0f);
+        1000.0f);
 
     _DrawScenes(glm::value_ptr(mvWorld), glm::value_ptr(persp), glm::value_ptr(mvLocal));
 }
@@ -413,6 +432,13 @@ void AppSkeleton::OnMouseMove(int x, int y)
     const glm::vec3 dir3 = glm::vec3(mv * glm::vec4(localRay,0.f));
 
     _checkSceneIntersections(origin3, dir3);
+
+	static glm::vec2 oldPos = glm::vec2(x, y);
+
+	m_pitch += (y - oldPos.y) * .005;
+	m_yaw -= (x - oldPos.x) * .005;
+	oldPos = glm::vec2(x, y);
+
 }
 
 void AppSkeleton::OnMouseWheel(double x, double /*y*/)

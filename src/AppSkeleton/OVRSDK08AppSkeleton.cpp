@@ -74,6 +74,7 @@ void OVRSDK08AppSkeleton::OnMouseButton(int button, int action)
 
 void OVRSDK08AppSkeleton::OnMouseMove(int x, int y)
 {
+	AppSkeleton::OnMouseMove(x, y);
     const FBO& f = m_tweakbarQuad.fbo;
     m_pointerCoords.x = static_cast<float>(x) / static_cast<float>(f.w);
     m_pointerCoords.y = static_cast<float>(y) / static_cast<float>(f.h);

@@ -708,6 +708,8 @@ int main(int argc, char** argv)
 
 
 	/////////////////////////////////////////
+	glfwSetInputMode(l_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
 	// OpenGL settings
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
