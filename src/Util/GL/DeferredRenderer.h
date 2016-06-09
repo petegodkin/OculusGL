@@ -40,5 +40,9 @@ private:
 
 	GLuint shiny_handle;
 
+	GLuint intensity_handle;
+	GLuint exp_handle;
+	GLuint linear_handle;
+
 	std::string toast;
 };

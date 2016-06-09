@@ -157,8 +157,9 @@ void Scene::addLights() {
 		x -= radius;
 		float z = fmod(rand(), radius * 2.0f);
 		z -= radius;
-		m_lights.push_back(new Light(glm::vec3(x, 1.0f, z), glm::vec3(1, 1, 1), 10000.0f, light_shape));
-		m_ents.push_back(new Entity(light_shape, glm::vec3(x, 1.0f, z)));
+		glm::vec3 pos(x, 1.0f, z);
+		m_lights.push_back(new Light(pos, glm::vec3(1, 1, 1), 1.0f, light_shape));
+		m_ents.push_back(new Entity(light_shape, pos));
 	}
 
 }
@@ -406,7 +407,7 @@ void Scene::DrawDude(
 	Camera camera(modelview, projection, center);
 
 	std::cout << "In view: " << inView.size() << std::endl;
-	m_deferred->draw(&camera, m_ents/*inView*/, m_lights);
+	m_deferred->draw(&camera, inView, m_lights);
 }
 
 

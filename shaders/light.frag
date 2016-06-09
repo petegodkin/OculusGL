@@ -9,12 +9,14 @@ uniform vec3 uEye;
 uniform vec3 uLightPos;
 uniform vec3 uLightColor;
 
+uniform float uIntensity;
+uniform float uLinear;
+uniform float uExponential;
+
 out vec4 FragColor;
 
 #define CONSTANT 0.0
-#define LINEAR 0.5
-#define EXPONENTIAL 0.3
-#define AMBIENT_INTENSITY 0.3
+#define AMBIENT_INTENSITY 0.2
 #define DIFFUSE_INTENSITY 1.0
 #define SPEC_INTENSITY 1.0
 #define SHINY 20
@@ -30,7 +32,7 @@ vec4 calcLightInternal(vec3 lightDir, vec3 worldPos, vec3 normal)
     vec4 specularColor = vec4(0, 0, 0, 0);
 
     if (diffuseFactor > 0.0) {
-        diffuseColor = vec4(color, 1.0) * DIFFUSE_INTENSITY * diffuseFactor;
+        diffuseColor = vec4(color, 1.0) * uIntensity * diffuseFactor;
 
         vec3 vertexToEye = normalize(uEye - worldPos);
         vec3 lightReflect = normalize(reflect(lightDir, normal));
@@ -52,7 +54,7 @@ vec4 calcPointLight(vec3 worldPos, vec3 normal)
 
     vec4 color = calcLightInternal(lightDir, worldPos, normal);
 
-    float attenuation =  CONSTANT + LINEAR * distance + EXPONENTIAL * distance * distance;
+    float attenuation =  CONSTANT + uLinear * distance + uExponential * distance * distance;
 
     attenuation = max(1.0, attenuation);
 

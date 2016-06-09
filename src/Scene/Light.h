@@ -5,6 +5,10 @@
 #include <memory>
 #include "MeshSet.h"
 
+#define CONSTANT_AT 0.0
+#define LINEAR_AT 0.7
+#define EXP_AT 0.5
+
 class Light {
 public:
 	Light(glm::vec3 pos);

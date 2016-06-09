@@ -23,6 +23,10 @@ DeferredRenderer::DeferredRenderer(std::string vertShader, std::string fragShade
 	position_handle = GetAttrLoc("aPosition");
 	light_pos_handle = GetUniLoc("uLightPos");
 	light_color_handle = GetUniLoc("uLightColor");
+
+	intensity_handle = GetUniLoc("uIntensity");
+	exp_handle = GetUniLoc("uExponential");
+	linear_handle = GetUniLoc("uLinear");
 	toast = "not set";
 }
 
@@ -75,6 +79,10 @@ void DeferredRenderer::pointLightPass(Camera* camera, Light* light) const
 	glUniform3f(light_pos_handle, light_pos.x, light_pos.y, light_pos.z);
 	glUniform3f(light_color_handle, light_color.x, light_color.y, light_color.z);
 	glUniform2f(size_handle, (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
+
+	glUniform1f(intensity_handle, light->intensity);
+	glUniform1f(exp_handle,(float)EXP_AT);
+	glUniform1f(linear_handle, (float)LINEAR_AT);
 
 	glUniformMatrix4fv(model_handle, 1, GL_FALSE, value_ptr(light->transform()));
 	glUniformMatrix4fv(view_handle, 1, GL_FALSE, glm::value_ptr(camera->view()));

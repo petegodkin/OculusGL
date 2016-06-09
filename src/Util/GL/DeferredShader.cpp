@@ -72,8 +72,6 @@ void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents) const
 	glUniformMatrix4fv(uViewMatrixHandle, 1, GL_FALSE, value_ptr(camera->view()));
 	glUniformMatrix4fv(uProjMatrixHandle, 1, GL_FALSE, value_ptr(camera->proj()));
 
-	check_gl_error("dfgdhdfghdfgh12");
-
 	for (auto meshset : mapMesh) 
 	{
 		for (Mesh* mesh : meshset.first->getMeshes())
@@ -93,7 +91,6 @@ void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents) const
 			glUniform3fv(UdColorHandle, 1, value_ptr(mesh->diffuse));
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->IND);
-			check_gl_error("Here1111111111112");
 
 			for (auto entity : meshset.second)
 			{

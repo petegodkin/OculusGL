@@ -1,9 +1,6 @@
 #include "Light.h"
 #include <glm/gtx/transform.hpp>
 
-#define CONSTANT_AT 0.0
-#define LINEAR_AT 0.5
-#define EXP_AT 0.3
 
 #include <glm/glm.hpp>
 
@@ -32,6 +29,6 @@ glm::mat4 Light::calc_scale_mat()
 
 	float r = (-linear + sqrtf(linear * linear -
 		4 * exp * (constant - 256 * MaxChannel * intensity)))
-		/ 2 * exp;
+		/ (2 * exp);
 	return glm::scale(glm::mat4(1.0f), glm::vec3(r, r, r));
 }

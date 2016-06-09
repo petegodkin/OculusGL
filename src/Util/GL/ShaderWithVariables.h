@@ -1,7 +1,7 @@
 // ShaderWithVariables.h
 
 #pragma once
-#define DEBUG_MODE true
+#define DEBUG_MODE false
 
 #ifdef _WIN32
 #  define WINDOWS_LEAN_AND_MEAN
