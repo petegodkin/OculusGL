@@ -103,6 +103,14 @@ void Scene::_InitObjAttributes()
 	grass_ent->setBoundingRadius(1.0f);
 	m_ents.push_back(grass_ent);
 
+	// ground
+	MeshSet *ground_shape = new MeshSet(resourcePath, "ground.dae", 100.0f);
+	m_meshes.push_back(ground_shape);
+
+	Entity *ground = new Entity(ground_shape, glm::vec3(0, 0, 0));
+	//ground->setBoundingRadius(1.0f);
+	m_ents.push_back(ground);
+
 	// pc-31
 	MeshSet *shape = new MeshSet(resourcePath, "PC31.obj", 0.25f);
 	m_meshes.push_back(shape);
