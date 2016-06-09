@@ -71,7 +71,7 @@ void MeshSet::processMesh(aiMesh *mesh, const aiScene *scene, GLuint texInterpol
 		if (mat->GetTexture(aiTextureType_DIFFUSE, i, &str) == AI_SUCCESS) {
 			TextureData tmp;
 			//---------------------------
-			std::string tempStr("../resources/");
+			std::string tempStr = m_path;
 			tempStr += str.C_Str();
 			if (savedTextures.find(tempStr) == savedTextures.end())
 			{
@@ -128,8 +128,13 @@ void MeshSet::processMesh(aiMesh *mesh, const aiScene *scene, GLuint texInterpol
 	meshes.push_back(new Mesh(&verts, &normals, &indices, mat, &textures, &texCoords, &bones, &boneIds, &boneWeights, &animations));
 }
 
-MeshSet::MeshSet(std::string filename, float scale, GLuint texInterpolation, GLuint texWrap) {
-	const aiScene* scene = aiImportFile(filename.c_str(), aiProcess_GenNormals | aiProcess_GenSmoothNormals | aiProcess_Triangulate | aiProcess_FlipUVs /*| aiProcess_LimitBoneWeights*/ | aiProcess_JoinIdenticalVertices | aiProcess_CalcTangentSpace);
+MeshSet::MeshSet(std::string path, std::string filename, float scale, GLuint texInterpolation, GLuint texWrap) {
+	
+	m_path = path;
+
+	std::string filepath = path + filename;
+
+	const aiScene* scene = aiImportFile(filepath.c_str(), aiProcess_GenNormals | aiProcess_GenSmoothNormals | aiProcess_Triangulate | aiProcess_FlipUVs /*| aiProcess_LimitBoneWeights*/ | aiProcess_JoinIdenticalVertices | aiProcess_CalcTangentSpace);
 	if (!scene) {
 		std::cout << aiGetErrorString();
 		return;

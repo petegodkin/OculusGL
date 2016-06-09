@@ -35,6 +35,14 @@
 //#include "..\Util\Collision\OctTree.h"
 //#include "..\Util\Collision\ViewFrustumCuller.h"
 
+struct CreateCommand {
+	CreateCommand() {
+
+	}
+	std::string path;
+	std::string filename;
+	glm::vec3 position;
+};
 
 bool check_gl_error(std::string msg) {
 	GLenum error = glGetError();
@@ -75,77 +83,65 @@ void Scene::_InitObjAttributes()
 {
 	std::string resourcePath = "../resources/";
 
-	m_shape = new MeshSet(resourcePath + "PC31.obj", 0.25f);
-	m_light_shape = new MeshSet(resourcePath + "Sphere/UnitSphere.obj");
-	m_skybox_box = new MeshSet(resourcePath + "skybox.dae", 1.0f, GL_LINEAR, GL_CLAMP_TO_EDGE);
-	m_shape_grass = new MeshSet(resourcePath + "Grass_02.obj", 0.25f);
-//	m_shape_grassBig = new MeshSet("../resources/Grass/HighPolyGrass.obj", 0.60f);
-//	m_shape_grassFlowers = new MeshSet("../resources/plants1.obj", 0.0025f);
+	// light
+	MeshSet *light_shape = new MeshSet(resourcePath, "Sphere/UnitSphere.obj");
+	light_shape->setDiffuse(glm::vec3(1));
+	m_meshes.push_back(light_shape);
 
-	m_light = new Light(glm::vec3(0, 0, 3), glm::vec3(1, 1, 1), 1000.0f, m_light_shape);
-	m_light_ent = new Entity(m_light_shape, glm::vec3(0, 0, 3));
+	Light *light = new Light(glm::vec3(0, 0, 3), glm::vec3(1, 1, 1), 1000.0f, light_shape);
+	m_lights.push_back(light);
 
-	m_light_ent->setBoundingRadius(1.5f);
+	Entity *light_ent = new Entity(light_shape, glm::vec3(0, 0, 3));
+	light_ent->setBoundingRadius(1.5f);
+	m_ents.push_back(light_ent);
 
-	//m_grassFlowers_ent = new MorphableEntity(m_shape_grassFlowers, glm::vec3(-10.0f, 0, 0));
-	//m_grassFlowers_ent->setBoundingRadius(1.0f);
-	//m_grassFlowers_ent->addMorph(m_shape_grass);
+	// grass
+	MeshSet *shape_grass = new MeshSet(resourcePath, "Grass_02.obj", 0.25f);
+	m_meshes.push_back(shape_grass);
 
-	//m_grass_tex = new Texture();
-	//m_grass_tex->setFilename("../resources/Grass/GreenPow.png");
-	//m_shape_grassBig->setTexture(m_grass_tex);
+	MorphableEntity *grass_ent = new MorphableEntity(shape_grass, glm::vec3(10.0f, 0, 0));
+	grass_ent->setBoundingRadius(1.0f);
+	m_ents.push_back(grass_ent);
 
-	m_shape_grass->setDiffuse(glm::vec3(0.0f, 0.9f, 0.1f));
-	m_grass_ent = new MorphableEntity(m_shape_grass, glm::vec3(10.0f, 0, 0));
-	m_grass_ent->setBoundingRadius(1.0f);
-	//m_grass_ent->addMorph(m_shape_grassBig);
+	// pc-31
+	MeshSet *shape = new MeshSet(resourcePath, "PC31.obj", 0.25f);
+	m_meshes.push_back(shape);
 
-	// m_dude = new Entity(m_shape, glm::vec3(0, 0, 1));
-	//m_dude_tex = new Texture();
-	//m_dude_tex->setFilename("../resources/PC31_Text_2.jpg");
-	//m_shape->setTexture(m_dude_tex);
+	MorphableEntity *dude = new MorphableEntity(shape, glm::vec3(0, 0, 1));
+	dude->addMorph(shape_grass);
+	dude->setBoundingRadius(1.0f);
+	m_ents.push_back(dude);
 
-	m_dude = new MorphableEntity(m_shape, glm::vec3(0, 0, 1));
-	m_dude->addMorph(m_shape_grass);
-	//m_dude->init(PhysicsState());
+	// skybox
+	MeshSet *skybox_box = new MeshSet(resourcePath, "skybox.dae", 1.0f, GL_LINEAR, GL_CLAMP_TO_EDGE);
+	m_meshes.push_back(skybox_box);
 
-	m_dude->setBoundingRadius(1.0f);
+	m_skybox = new Entity(skybox_box, glm::vec3(0));
+	m_skybox->setRotations(glm::vec3(-1.570796, 0.0f, 0.0f));
+	m_skybox->setScale(80.f);
 
-	m_ents.push_back(m_dude);
-	m_ents.push_back(m_light_ent);
-	//m_ents.push_back(m_grass_ent);
-	//m_ents.push_back(m_grassFlowers_ent);
+	m_deferred->setSkybox(m_skybox);
 
-	m_lights.push_back(m_light);
-	//m_shape_grass->init(false);
-
-
-
-	//m_skybox_box->loadMesh("../resources/Skybox/skybox.obj");
-	//m_skybox_box->init(true);
-	skybox = new Entity(m_skybox_box, glm::vec3(0));
-	skybox->setRotations(glm::vec3(-1.570796, 0.0f, 0.0f));
-	skybox->setScale(80.f);
-	m_deferred->setSkybox(skybox);
-
-	//drawGrass(100.0, 100.0, 5.0);
+	// more grass
+	drawStuff(shape_grass, 100.0, 100.0, 5.0);
 }
 
 
 
 Scene::~Scene()
 {
-	delete m_shape;
-	delete m_light_shape;
-	delete m_skybox_box;
-
-	delete m_light;
-	delete m_dude;
-	//delete m_dude_tex;
-	delete m_light_ent;
-
+	for (MeshSet* mesh : m_meshes) {
+		delete mesh;
+	}
+	for (Entity* ent : m_ents) {
+		delete ent;
+	}
+	for (Light* ent : m_lights) {
+		delete ent;
+	}
+	delete m_skybox;
 	delete m_deferred;
-	delete skybox;
+
 }
 
 void Scene::initGL()
@@ -168,13 +164,13 @@ void Scene::initGL()
 	//glBindVertexArray(0);
 }
 
-void Scene::drawGrass(float width, float length, float thickness)
+void Scene::drawStuff(MeshSet *mesh, float width, float length, float thickness)
 {
 	for (float w = -width / 2.0f; w < width / 2.0f; w += thickness)
 	{
 		for (float l = -length / 2.0f; l < length / 2.0f; l += thickness)
 		{
-			MorphableEntity *grass = new MorphableEntity(m_shape_grass, glm::vec3(w, 0.0f, l));
+			MorphableEntity *grass = new MorphableEntity(mesh, glm::vec3(w, 0.0f, l));
 			grass->setBoundingRadius(1.0f);
 
 			m_ents.push_back(grass);

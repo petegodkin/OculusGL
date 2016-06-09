@@ -73,36 +73,15 @@ protected:
 
     float m_phaseVal;
 
-	MeshSet *m_shape;
-	MeshSet *m_shape_grass;
-	MeshSet *m_shape_grassBig;
-	MeshSet *m_shape_grassFlowers;
-	MeshSet *m_light_shape;
-	MeshSet *m_skybox_box;
-
-	Light *m_light;
-
-	//Texture *m_dude_tex;
-	//Texture *m_grass_tex;
-
-
 	std::vector<Entity*> m_ents;
+	std::vector<MeshSet*> m_meshes;
 	std::vector<Light*> m_lights;
-	
-	Entity *m_light_ent;
 
-	MorphableEntity *m_dude;
-	MorphableEntity *m_grass_ent;
-	MorphableEntity *m_grassFlowers_ent;
-
-	Entity *skybox;
-
-	//Shape m_shape;
-	//Shape m_building;
+	Entity *m_skybox;
 
 public:
     float m_amplitude;
-	void drawGrass(float width, float length, float thickness);
+	void drawStuff(MeshSet *mesh, float width, float length, float thickness);
 
 	int width() const;
 	int height() const;

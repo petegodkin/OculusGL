@@ -24,7 +24,7 @@ struct BoneInfo
 class MeshSet
 {
 public:
-	MeshSet(std::string filename, float scale = 1.0, GLuint texInterpolation = GL_LINEAR, GLuint texWrap = GL_REPEAT);
+	MeshSet(std::string path, std::string filename, float scale = 1.0, GLuint texInterpolation = GL_LINEAR, GLuint texWrap = GL_REPEAT);
 	void processBones(aiNode* node);
 	void processAnimations();
 	~MeshSet();
@@ -55,4 +55,5 @@ private:
 
 	float m_nDefaultScale;
 	glm::vec3 m_diffuse;
+	std::string m_path;
 };
