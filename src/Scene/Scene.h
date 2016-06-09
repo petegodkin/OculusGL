@@ -79,6 +79,11 @@ protected:
 
 	Entity *m_skybox;
 
+	void addEntities(MeshSet *mesh, float radius, int amount);
+	void addMorphableEntities(std::vector<MeshSet*> meshes, float radius, int amount);
+	void addGround();
+	void addLights();
+
 public:
     float m_amplitude;
 	void drawStuff(MeshSet *mesh, float width, float length, float thickness);

@@ -12,22 +12,22 @@
   </asset>
   <library_images>
     <image id="Night_01B_down_png" name="Night_01B_down_png">
-      <init_from>Night_01B_down.png</init_from>
+      <init_from>totality_dn.png</init_from>
     </image>
     <image id="Night_01B_front_png" name="Night_01B_front_png">
-      <init_from>Night_01B_front.png</init_from>
+      <init_from>totality_ft.png</init_from>
     </image>
     <image id="Night_01B_right_png" name="Night_01B_right_png">
-      <init_from>Night_01B_right.png</init_from>
+      <init_from>totality_rt.png</init_from>
     </image>
     <image id="Night_01B_back_png" name="Night_01B_back_png">
-      <init_from>Night_01B_back.png</init_from>
+      <init_from>totality_bk.png</init_from>
     </image>
     <image id="Night_01B_left_png" name="Night_01B_left_png">
-      <init_from>Night_01B_left.png</init_from>
+      <init_from>totality_lf.png</init_from>
     </image>
     <image id="Night_01B_up_png" name="Night_01B_up_png">
-      <init_from>Night_01B_up.png</init_from>
+      <init_from>totality_up.png</init_from>
     </image>
   </library_images>
   <library_effects>

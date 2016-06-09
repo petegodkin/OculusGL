@@ -19,7 +19,7 @@ public:
 	Mesh(std::vector<glm::vec3>* vd, std::vector<glm::vec3>* nd, std::vector<GLuint>* id, aiMaterial* material,
 		std::vector<TextureData>* td = NULL, std::vector<glm::vec2>* tc = NULL, std::vector<aiBone>* boneData = NULL,
 		std::vector<glm::ivec4>* boneIdData1 = NULL, std::vector<glm::vec4>* boneWeightData1 = NULL,
-		std::vector<aiAnimation*>* animationData = NULL);
+		std::vector<aiAnimation*>* animationData = NULL, glm::vec3 diffuse = glm::vec3(1));
 	~Mesh();
 	GLuint VAO;
 	GLuint VBO;
@@ -54,6 +54,9 @@ public:
 	virtual void unbindVAO() const { glBindVertexArray(0); }
 
 	void draw() const;
+
+	glm::vec3 diffuse;
+
 private:
 	bool checkError(std::string msg);
 	utility::BoundingBox m_boundingBox;

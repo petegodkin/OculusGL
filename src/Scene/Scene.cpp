@@ -79,21 +79,10 @@ int Scene::finalTexture() const {
 	return m_deferred->finalTexture();
 }
 
+
 void Scene::_InitObjAttributes()
 {
 	std::string resourcePath = "../resources/";
-
-	// light
-	MeshSet *light_shape = new MeshSet(resourcePath, "Sphere/UnitSphere.obj");
-	light_shape->setDiffuse(glm::vec3(1));
-	m_meshes.push_back(light_shape);
-
-	Light *light = new Light(glm::vec3(0, 0, 3), glm::vec3(1, 1, 1), 1000.0f, light_shape);
-	m_lights.push_back(light);
-
-	Entity *light_ent = new Entity(light_shape, glm::vec3(0, 0, 3));
-	light_ent->setBoundingRadius(1.5f);
-	m_ents.push_back(light_ent);
 
 	// grass
 	MeshSet *shape_grass = new MeshSet(resourcePath, "Grass_02.obj", 0.25f);
@@ -103,25 +92,19 @@ void Scene::_InitObjAttributes()
 	grass_ent->setBoundingRadius(1.0f);
 	m_ents.push_back(grass_ent);
 
-	// ground
-	MeshSet *ground_shape = new MeshSet(resourcePath, "ground.dae", 100.0f);
-	m_meshes.push_back(ground_shape);
-
-	Entity *ground = new Entity(ground_shape, glm::vec3(0, 0, 0));
-	//ground->setBoundingRadius(1.0f);
-	m_ents.push_back(ground);
+	addGround();
 
 	// pc-31
-	MeshSet *shape = new MeshSet(resourcePath, "PC31.obj", 0.25f);
+	/*MeshSet *shape = new MeshSet(resourcePath, "PC31.obj", 0.25f);
 	m_meshes.push_back(shape);
 
 	MorphableEntity *dude = new MorphableEntity(shape, glm::vec3(0, 0, 1));
 	dude->addMorph(shape_grass);
 	dude->setBoundingRadius(1.0f);
-	m_ents.push_back(dude);
+	m_ents.push_back(dude);*/
 
 	// skybox
-	MeshSet *skybox_box = new MeshSet(resourcePath, "skybox.dae", 1.0f, GL_LINEAR, GL_CLAMP_TO_EDGE);
+	MeshSet *skybox_box = new MeshSet(resourcePath + "Skybox/", "skybox.dae", 1.0f, GL_LINEAR, GL_CLAMP_TO_EDGE);
 	m_meshes.push_back(skybox_box);
 
 	m_skybox = new Entity(skybox_box, glm::vec3(0));
@@ -130,8 +113,81 @@ void Scene::_InitObjAttributes()
 
 	m_deferred->setSkybox(m_skybox);
 
+	MeshSet *flower_mesh = new MeshSet(resourcePath + "flowers/", "plants1.obj", .001);
+	m_meshes.push_back(flower_mesh);
+
 	// more grass
-	drawStuff(shape_grass, 100.0, 100.0, 5.0);
+	//drawStuff(shape_grass, 100.0, 100.0, 5.0);
+	addEntities(shape_grass, 50, 50);
+	addMorphableEntities({ shape_grass, flower_mesh }, 50, 30);
+
+	// tree
+	MeshSet *tree_mesh = new MeshSet(resourcePath + "tree/", "Tree1.3ds", 0.25f);
+	m_meshes.push_back(tree_mesh);
+
+	//addEntities(tree_mesh, 20, 20);
+
+	addLights();
+}
+
+void Scene::addGround() {
+	// ground
+	MeshSet *ground_shape = new MeshSet("../resources/ground/", "ground.dae", 5.0f);
+	m_meshes.push_back(ground_shape);
+	for (int i = -10; i < 10; i++) {
+		for (int j = -10; j < 10; j++) {
+			Entity *ground = new Entity(ground_shape, glm::vec3(i, 0, j));
+			m_ents.push_back(ground);
+		}
+	}
+	//ground->setBoundingRadius(1.0f);
+}
+
+void Scene::addLights() {
+
+	// light
+	MeshSet *light_shape = new MeshSet("../resources/", "Sphere/UnitSphere.obj", .1f);
+	light_shape->setDiffuse(glm::vec3(1));
+	m_meshes.push_back(light_shape);
+
+	float radius = 20.0f;
+	//not really a radius but will do for now
+	for (int i = 0; i < 50; i++) {
+		float x = fmod(rand(), radius * 2.0f);
+		x -= radius;
+		float z = fmod(rand(), radius * 2.0f);
+		z -= radius;
+		m_lights.push_back(new Light(glm::vec3(x, 1.0f, z), glm::vec3(1, 1, 1), 10000.0f, light_shape));
+		m_ents.push_back(new Entity(light_shape, glm::vec3(x, 1.0f, z)));
+	}
+
+}
+
+void Scene::addEntities(MeshSet *mesh, float radius, int amount) {
+	//not really a radius but will do for now
+	for (int i = 0; i < amount; i++) {
+		float x = fmod(rand(), radius * 2);
+		x -= radius;
+		float z = fmod(rand(), radius * 2);
+		z -= radius;
+		m_ents.push_back(new Entity(mesh, glm::vec3(x, 0.0f, z)));
+	}
+}
+
+void Scene::addMorphableEntities(std::vector<MeshSet*> meshes, float radius, int amount) {
+	assert(meshes.size() > 0);
+
+	for (int i = 0; i < amount; i++) {
+		float x = fmod(rand(), radius * 2);
+		x -= radius;
+		float z = fmod(rand(), radius * 2);
+		z -= radius;
+		MorphableEntity *ent = new MorphableEntity(meshes[0], glm::vec3(x, 0.0f, z));
+		for (int j = 1; j < meshes.size(); j++) {
+			ent->addMorph(meshes[j]);
+		}
+		m_ents.push_back(ent);
+	}
 }
 
 
@@ -350,7 +406,7 @@ void Scene::DrawDude(
 	Camera camera(modelview, projection, center);
 
 	std::cout << "In view: " << inView.size() << std::endl;
-	m_deferred->draw(&camera, inView, m_lights);
+	m_deferred->draw(&camera, m_ents/*inView*/, m_lights);
 }
 
 

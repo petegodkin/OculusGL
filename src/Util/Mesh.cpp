@@ -23,8 +23,10 @@ bool Mesh::checkError(std::string msg)
 Mesh::Mesh(std::vector<glm::vec3>* vertexData, std::vector<glm::vec3>* normalData, std::vector<GLuint>* indexData, aiMaterial* material,
 	std::vector<TextureData>* textureData, std::vector<glm::vec2>* textureCoordinates, std::vector<aiBone>* boneData,
 	std::vector<glm::ivec4>* boneIdData1, std::vector<glm::vec4>* boneWeightData1,
-	std::vector<aiAnimation*> *animationData)
+	std::vector<aiAnimation*> *animationData, glm::vec3 diffuse)
 {
+	this->diffuse = diffuse;
+
 	verts = *vertexData;
 	normals = *normalData;
 	indices = *indexData;

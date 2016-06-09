@@ -1,0 +1,72 @@
+newmtl coreopsi_1InfInt
+illum 4
+Kd 0.20 0.39 0.20
+Ka 0.20 0.39 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.20 0.39 0.20
+Ns 0.06
+newmtl coreopsi_1Pdcel
+illum 4
+Kd 0.20 0.39 0.20
+Ka 0.20 0.39 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.20 0.39 0.20
+Ns 0.06
+newmtl coreopsi_1Pdncle
+illum 4
+Kd 0.20 0.39 0.20
+Ka 0.20 0.39 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.20 0.39 0.20
+Ns 0.06
+newmtl coreopsi_1Petal1
+illum 4
+Kd 1.00 0.70 0.85
+Ka 1.00 0.70 0.85
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 1.00 0.70 0.85
+Ns 0.06
+newmtl coreopsi_1stLeaf
+illum 4
+Kd 0.20 0.39 0.20
+Ka 0.20 0.39 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.20 0.39 0.20
+Ns 0.06
+newmtl coreopsi_1stPetiole
+illum 4
+Kd 0.20 0.39 0.20
+Ka 0.20 0.39 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.20 0.39 0.20
+Ns 0.06
+newmtl coreopsi_Intrnd
+illum 4
+Kd 0.20 0.39 0.20
+Ka 0.20 0.39 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.20 0.39 0.20
+Ns 0.06
+newmtl coreopsi_Leaf
+illum 4
+Kd 0.20 0.78 0.20
+Ka 0.20 0.78 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.20 0.78 0.20
+Ns 0.06
+newmtl coreopsi_Petiole
+illum 4
+Kd 0.20 0.39 0.20
+Ka 0.20 0.39 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.20 0.39 0.20
+Ns 0.06

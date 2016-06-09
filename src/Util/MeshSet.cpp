@@ -125,7 +125,8 @@ void MeshSet::processMesh(aiMesh *mesh, const aiScene *scene, GLuint texInterpol
 		glm::normalize(boneWeights[i]);
 	}
 	// Add mesh to set
-	meshes.push_back(new Mesh(&verts, &normals, &indices, mat, &textures, &texCoords, &bones, &boneIds, &boneWeights, &animations));
+	meshes.push_back(new Mesh(&verts, &normals, &indices, mat, &textures,
+		&texCoords, &bones, &boneIds, &boneWeights, &animations, defaultColor));
 }
 
 MeshSet::MeshSet(std::string path, std::string filename, float scale, GLuint texInterpolation, GLuint texWrap) {
