@@ -10,48 +10,50 @@
 
 MorphableEntity::MorphableEntity() : Entity()
 {
-	init();
 	m_bIsMorphable = false;
 	m_nBaseDelay = 0;
 	m_nCurDelay = 0;
 
 	m_curShape = nullptr;//new MeshSet();
 	m_vecMorphs.push_back(m_curShape);
+	init();
+
 }
 
 MorphableEntity::MorphableEntity(const MeshSet* start, glm::vec3 pos) : Entity(start, pos)
 {
-	init();
 	m_bIsMorphable = false;
 	m_nBaseDelay = N_DEFAULT_DELAY;
 	m_nCurDelay = N_DEFAULT_DELAY;
 
 	m_curShape = start;
 	m_vecMorphs.push_back(m_curShape);
+	init();
+
 }
 
 MorphableEntity::MorphableEntity(const MeshSet* start, glm::vec3 pos, glm::vec3 orient) : Entity(start, pos)
 {
-	init();
 	m_bIsMorphable = false;
 	m_nBaseDelay = N_DEFAULT_DELAY;
 	m_nCurDelay = N_DEFAULT_DELAY;
 
 	m_curShape = start;
 	m_vecMorphs.push_back(m_curShape);
+	init();
 }
 
 MorphableEntity::MorphableEntity(std::vector<const MeshSet *> morphs)
 {
 	assert(morphs.size() > 0);
 
-	init();
 	m_vecMorphs = morphs;
 
 	if (morphs.size() > 0)
 	{
 		m_curShape = m_vecMorphs[m_nCurMorph];
 	}
+	init();
 }
 
 void MorphableEntity::init()
@@ -60,6 +62,7 @@ void MorphableEntity::init()
 	m_bIsVisible = false;
 	m_nCurMorph = 0;
 	m_biggestRadius = 0.0;
+
 	calcBiggestRadius();
 
 	//Entity::setShape(m_curShape);
@@ -106,25 +109,38 @@ void MorphableEntity::setStartMorph(const MeshSet *start)
 float MorphableEntity::getBoundingSphereRadius()
 {
 	return m_biggestRadius;
+
+	std::cout << "Getting Biggest Radius: " << m_biggestRadius << std::endl;
 }
 
+const MeshSet* MorphableEntity::getCurMesh()
+{
+	return m_curShape;
+}
+
+//Scales each radius based on the scale of the mesh!!!
 void MorphableEntity::calcBiggestRadius(bool isSingleAdd)
 {
+
 	float curMax = getBoundingSphereRadius();
 
 	if (isSingleAdd)
 	{
-		curMax = std::fmax(m_vecMorphs[m_vecMorphs.size() - 1]->calcBoundingBox().getRadius(), curMax);
+		const MeshSet *last = m_vecMorphs[m_vecMorphs.size() - 1];
+		curMax = std::fmax(last->calcBoundingBox().getRadius() * last->getScale(), curMax);
 	}
 	else
 	{
 		for (const MeshSet *mesh : m_vecMorphs)
 		{
-			curMax = std::fmax(mesh->calcBoundingBox().getRadius(), curMax);
+			curMax = std::fmax(mesh->calcBoundingBox().getRadius() * mesh->getScale(), curMax);
 		}
 	}
 
 	m_biggestRadius = curMax;
+
+	std::cout << "CALCULATING BIGGEST RADIUS FOR " << m_vecMorphs[m_nCurMorph]->m_fileName << ": " << m_biggestRadius << std::endl;
+
 }
 
 

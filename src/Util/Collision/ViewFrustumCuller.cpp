@@ -29,8 +29,16 @@ std::vector<Entity *> ViewFrustumCuller::getVisibleObjects(
         enclosedObjects = node->getEnclosedObjects();
         
         for (int i = 0; i < (int) enclosedObjects.size(); i++) {
-			if (frustum.enclosesSphere(enclosedObjects[i]->getCenter(),
-				enclosedObjects[i]->getBoundingSphereRadius()))
+			float rad = enclosedObjects[i]->getBoundingSphereRadius();
+
+			if (MorphableEntity *morpher = dynamic_cast<MorphableEntity *>(enclosedObjects[i]))
+			{
+				rad = morpher->getBoundingSphereRadius();
+				std::cout << "Bounding Radius of MORPHER " << morpher->getCurMesh()->m_fileName << ": " << rad << std::endl;
+			}
+
+
+			if (frustum.enclosesSphere(enclosedObjects[i]->getCenter(), rad))
 			//if (frustum.enclosesBox(enclosedObjects[i]->getBoundingBox()))
 			{
 				if (MorphableEntity *morpher = dynamic_cast<MorphableEntity *>(enclosedObjects[i]))

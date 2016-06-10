@@ -273,6 +273,12 @@ const MeshSet* Entity::shape() {
 	return _shape;
 }
 
+float Entity::getScale() const
+{
+	//Note: this assumes a uniform scale across x, y, and z!
+	return _scale.x;
+}
+
 void Entity::setShape(const MeshSet *shape)
 {
 	_shape = shape;

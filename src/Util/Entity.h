@@ -141,6 +141,7 @@ public:
 	void setShape(const MeshSet *shape);
 	glm::mat4 modelMat();
 	void setScale(float entScale);
+	float getScale() const;
 	
 	glm::vec3 getCenter();
 	//void calcCenter();
