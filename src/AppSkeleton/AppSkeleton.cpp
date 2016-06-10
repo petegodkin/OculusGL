@@ -295,7 +295,7 @@ void AppSkeleton::_drawSceneMono() const
 
     const glm::ivec2 vp = getRTSize();
     const glm::mat4 persp = glm::perspective(
-        90.0f,
+        (float)M_PI/2.0f, //Changed this from 90? Says it's in radians, so 90 didn't make sense
         static_cast<float>(vp.x)/static_cast<float>(vp.y),
         0.004f,
         1000.0f);

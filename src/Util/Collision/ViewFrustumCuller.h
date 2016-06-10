@@ -21,6 +21,8 @@ public:
     std::vector<Entity *> getVisibleObjects(utility::ViewFrustum frustum,
      OctTree * node);
 
+	void setTree(OctTree *tree);
+
 };
 
 

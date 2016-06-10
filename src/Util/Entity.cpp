@@ -225,12 +225,12 @@ Entity::Entity(const MeshSet* shape, glm::vec3 pos) {
 
 	configBoundingBox();
 
-	//	std::cout << "Center in Entity(): " << GUtils::vecToString(_shape->getCenter()) << std::endl;
-	std::cout << "BoundingBox in Entity() for " << _shape->m_fileName << ":\n\tmin: "
-		<< GUtils::vecToString(m_boundingBox.getStart()) //BBPrint
-		<< "\n\tmax: " << GUtils::vecToString(m_boundingBox.getEnd()) 
-		<< "\n\tradius: "<< getBoundingRadius()
-		<< "\n\tposition: " << GUtils::vecToString(body.getPosition()) << std::endl;
+	//std::cout << "BoundingBox in Entity() for " << _shape->m_fileName << ":\n\tmin: "
+	//	<< GUtils::vecToString(m_boundingBox.getStart()) //BBPrint
+	//	<< "\n\tmax: " << GUtils::vecToString(m_boundingBox.getEnd()) 
+	//	<< "\n\tradius: "<< getBoundingRadius()
+	//	<< "\n\tposition: " << GUtils::vecToString(body.getPosition()) 
+	//	<< "\n\tcenter: " << GUtils::vecToString(m_center) << std::endl;
 
 	allowDrawing = true;
 	collisionMask = Entity::kStaticBody;
@@ -243,6 +243,7 @@ void Entity::configBoundingBox()
 	createBoundingBoxFromMeshSet();
 	m_boundingBox.scaleBox(_scale);
 	m_boundingBox.moveToPosition(m_position);
+	m_center = m_boundingBox.getCenter();
 
 	body.setBoundingSphereRadius(m_boundingBox.getRadius());
 }
@@ -259,6 +260,11 @@ void Entity::createBoundingBoxFromMeshSet()
 	}*/
 
 	m_boundingBox = _shape->calcBoundingBox();
+}
+
+glm::vec3 Entity::getCenter()
+{
+	return m_center;
 }
 
 const MeshSet* Entity::shape() {

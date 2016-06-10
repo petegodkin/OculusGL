@@ -67,11 +67,11 @@ void ViewFrustum::extractPlanes(bool normalize) {
     planes[PLANE_RIGHT] = Plane(row.x, row.y, row.z, row.w);
 
     //Bottom plane
-	row = getRow(3, PV) - getRow(1, PV);
+	row = getRow(3, PV) + getRow(1, PV);
     planes[PLANE_BOTTOM] = Plane(row.x, row.y, row.z, row.w);
 
     //Top plane
-	row = getRow(3, PV) + getRow(1, PV);
+	row = getRow(3, PV) - getRow(1, PV);
     planes[PLANE_TOP] = Plane(row.x, row.y, row.z, row.w);
 
     //Near plane
@@ -85,10 +85,10 @@ void ViewFrustum::extractPlanes(bool normalize) {
 	//std::cout << "Pre Normalized: \n" << toString() << std::endl;
 
 
-    if (normalize) {
-        for (int i = 0; i < kNumPlanes; i++)
-            planes[i].normalize();
-    }
+    //if (normalize) {
+    //    for (int i = 0; i < kNumPlanes; i++)
+    //        planes[i].normalize();
+    //}
 
 	//std::cout << "POST Normalized: \n" << toString() << std::endl;
 

@@ -85,6 +85,7 @@ protected:
 	void addLights(float radius, int amount);
 
 	OctTree* m_oct;
+	ViewFrustumCuller* m_culler;
 
 public:
     float m_amplitude;

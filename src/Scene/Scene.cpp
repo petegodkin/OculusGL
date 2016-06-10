@@ -132,7 +132,7 @@ void Scene::_InitObjAttributes()
 
 	addEntities(bush_mesh, 20, 20);
 
-	addLights(20.f, 20);
+	addLights(10.f, 10);
 
 	//LAST
 	m_oct = new OctTree(utility::BoundingBox(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1)), 1);
@@ -140,6 +140,8 @@ void Scene::_InitObjAttributes()
 	{
 		m_oct->insert(m_ents[i]);
 	}
+
+	m_culler = new ViewFrustumCuller(m_oct);
 }
 
 void Scene::addGround() {
@@ -392,8 +394,8 @@ void Scene::DrawDude(
 	Camera camera(modelview, projection, center);
 
 	utility::ViewFrustum frustum(projection * modelview);
-	ViewFrustumCuller vfc(m_oct);
-	std::vector<Entity *> inView = vfc.getVisibleObjects(frustum);
+	m_culler->setTree(m_oct);
+	std::vector<Entity *> inView = m_culler->getVisibleObjects(frustum);
 	
 	//std::cout << frustum.toString() << std::endl;
 	std::cout << "In view: " << inView.size() << std::endl;

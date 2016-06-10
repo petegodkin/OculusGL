@@ -141,6 +141,9 @@ public:
 	void setShape(const MeshSet *shape);
 	glm::mat4 modelMat();
 	void setScale(float entScale);
+	
+	glm::vec3 getCenter();
+	//void calcCenter();
 	//void setTexture(Texture* texture);
 	//Texture* texture();
 
@@ -155,6 +158,7 @@ private:
 	glm::vec3 _scale;
 	glm::vec3 rotations;
 	glm::vec3 m_position;
+	glm::vec3 m_center;
 
 	utility::BoundingBox m_boundingBox;
 	//Texture* _texture = nullptr;

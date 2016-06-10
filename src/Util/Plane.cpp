@@ -53,8 +53,8 @@ void Plane::normalize() {
 //}
 
 float Plane::distanceTo(glm::vec3 point) {
-    normalize();
-    return point.x * a() + point.y * b() + point.z * c() + d();
+	return glm::dot(point, abc()) + d();
+	// return point.x * a() + point.y * b() + point.z * c() + d();
 }
 
 std::string Plane::description(std::string label) {

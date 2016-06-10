@@ -29,7 +29,7 @@ std::vector<Entity *> ViewFrustumCuller::getVisibleObjects(
         enclosedObjects = node->getEnclosedObjects();
         
         for (int i = 0; i < (int) enclosedObjects.size(); i++) {
-			if (frustum.enclosesSphere(enclosedObjects[i]->getPosition(),
+			if (frustum.enclosesSphere(enclosedObjects[i]->getCenter(),
 				enclosedObjects[i]->getBoundingSphereRadius()))
 			//if (frustum.enclosesBox(enclosedObjects[i]->getBoundingBox()))
 			{
@@ -73,6 +73,11 @@ std::vector<Entity *> ViewFrustumCuller::getVisibleObjects(
     }
     
     return intersections;
+}
+
+void ViewFrustumCuller::setTree(OctTree *tree)
+{
+	this->tree = tree;
 }
 
 
