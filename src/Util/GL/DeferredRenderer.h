@@ -18,6 +18,8 @@ public:
 private:
 	void pointLightPass(Camera* camera, Light* light) const;
 
+	void allLightsPass(Camera* camera, std::vector<Light*> lights) const;
+
 	glm::vec3 lightDir;
 
 	const GBuffer* gbuffer;

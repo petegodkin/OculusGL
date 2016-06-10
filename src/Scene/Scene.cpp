@@ -96,12 +96,15 @@ void Scene::_InitObjAttributes()
 
 	addGround();
 
+	MeshSet *cena_mesh = new MeshSet(resourcePath + "john-cena/", "john-cena.dae", 0.03f);
+	m_meshes.push_back(cena_mesh);
+
 	// pc-31
-	MeshSet *shape = new MeshSet(resourcePath, "PC31.obj", 0.25f);
+	MeshSet *shape = new MeshSet(resourcePath, "PC31.obj", 0.1f);
 	m_meshes.push_back(shape);
 
 	MorphableEntity *dude = new MorphableEntity(shape, glm::vec3(0, 0, 1));
-	dude->addMorph(shape_grass);
+	dude->addMorph(cena_mesh);
 	m_ents.push_back(dude);
 
 	// skybox
@@ -132,7 +135,7 @@ void Scene::_InitObjAttributes()
 
 	addEntities(bush_mesh, 20, 20);
 
-	addLights(10.f, 10);
+	addLights(8.f, 10);
 
 	//LAST
 	m_oct = new OctTree(utility::BoundingBox(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1)), 1);
@@ -175,11 +178,16 @@ void Scene::addLights(float radius, int amount) {
 		glm::vec3 pos(x, 1.0f, z);
 		Light* light = new Light(light_shape, pos,
 			glm::vec3(0.0, fmod(rand() / 255.f, 1.0f), fmod(rand() / 255.f, 1.0f)),
-			2.0f, light_shape);
+			11.0f, light_shape);
 		m_lights.push_back(light);
 		m_ents.push_back(light);
 	}
 
+	Light* light = new Light(light_shape, glm::vec3(0, 3, 1),
+		glm::vec3(0.0, fmod(rand() / 255.f, 1.0f), fmod(rand() / 255.f, 1.0f)),
+		11.0f, light_shape);
+	m_lights.push_back(light);
+	m_ents.push_back(light);
 }
 
 void Scene::addEntities(MeshSet *mesh, float radius, int amount) {

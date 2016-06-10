@@ -40,6 +40,62 @@ void DeferredRenderer::setGBuffer(GBuffer* gbuffer) {
 	toast = "SOOO set";
 }
 
+void DeferredRenderer::allLightsPass(Camera* camera, std::vector<Light*> lights) const {
+	gbuffer->BindForLightPass();
+
+
+	glUseProgram(prog());
+
+	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendEquation(GL_FUNC_ADD);
+	glBlendFunc(GL_ONE, GL_ONE);
+
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
+
+	assert(lights[0]->sphere->getMeshes().size() == 1);
+	Mesh* mesh = lights[0]->sphere->getMeshes()[0];
+	mesh->bindVAO();
+
+	glUniform1i(pos_map_handle, GBuffer::GBUFFER_TEXTURE_TYPE_POSITION);
+	glUniform1i(color_map_handle, GBuffer::GBUFFER_TEXTURE_TYPE_DIFFUSE);
+	glUniform1i(normal_map_handle, GBuffer::GBUFFER_TEXTURE_TYPE_NORMAL);
+
+	vec3 eye = camera->position();
+	glUniform3f(eye_handle, eye.x, eye.y, eye.z);
+	glUniform2f(size_handle, (float)SCREEN_WIDTH, (float)SCREEN_HEIGHT);
+
+	glUniform1f(exp_handle, (float)EXP_AT);
+	glUniform1f(linear_handle, (float)LINEAR_AT);
+
+	glUniformMatrix4fv(view_handle, 1, GL_FALSE, glm::value_ptr(camera->view()));
+	glUniformMatrix4fv(proj_handle, 1, GL_FALSE, glm::value_ptr(camera->proj()));
+
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->IND);
+
+	for (Light* light : lights) {
+
+		vec3 light_pos = light->getPosition();
+		vec3 light_color = light->color;
+		glUniform3f(light_pos_handle, light_pos.x, light_pos.y, light_pos.z);
+		glUniform3f(light_color_handle, light_color.x, light_color.y, light_color.z);
+		glUniform1f(intensity_handle, light->intensity);
+		glUniformMatrix4fv(model_handle, 1, GL_FALSE, value_ptr(light->transform()));
+
+		mesh->draw();
+	}
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glUseProgram(0);
+
+	glCullFace(GL_BACK);
+	glDisable(GL_BLEND);
+}
+
 void DeferredRenderer::pointLightPass(Camera* camera, Light* light) const
 {
 
@@ -104,5 +160,7 @@ void DeferredRenderer::draw(Camera* camera, std::vector<Light*> lights) const
 		stencilShader.stencilPass(camera, gbuffer, lights[i]);
 		pointLightPass(camera, lights[i]);
 	}
+
+	//allLightsPass(camera, lights);
 	glDisable(GL_STENCIL_TEST);
 }
