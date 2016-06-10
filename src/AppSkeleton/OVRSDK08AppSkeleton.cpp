@@ -520,9 +520,9 @@ glm::mat4 OVRSDK08AppSkeleton::makeViewMatrix() {
 		return AppSkeleton::makeViewMatrix();
 	}
 	else {
-		const ovrPosef& eyePose = m_eyePoses[0]; //left eye view mat will do
+		const ovrPosef& eyePose = m_eyePoses[ovrEyeType::ovrEye_Left]; //left eye view mat will do
 		const glm::mat4 viewLocal = makeMatrixFromPose(eyePose);
-		return makeWorldToChassisMatrix() * viewLocal;
+		return glm::inverse(makeWorldToChassisMatrix() * viewLocal);
 	}
 }
 
