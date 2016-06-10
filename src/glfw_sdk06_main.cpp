@@ -205,10 +205,46 @@ void keyboard(GLFWwindow* pWindow, int key, int codes, int action, int mods)
     const glm::vec3 right(1.f, 0.f, 0.f);
     // Handle keyboard movement(WASD keys)
     glm::vec3 keyboardMove(0.0f, 0.0f, 0.0f);
-    if (m_keyStates['W'] != GLFW_RELEASE) { keyboardMove += forward; }
-    if (m_keyStates['S'] != GLFW_RELEASE) { keyboardMove -= forward; }
-    if (m_keyStates['A'] != GLFW_RELEASE) { keyboardMove -= right; }
-    if (m_keyStates['D'] != GLFW_RELEASE) { keyboardMove += right; }
+	if (action == GLFW_PRESS) {
+		if (key == GLFW_KEY_W) {
+			g_app.keys[0] = true;
+		} else if (key == GLFW_KEY_A) {
+			g_app.keys[1] = true;
+		} else if (key == GLFW_KEY_S) {
+			g_app.keys[2] = true;
+		} else if (key == GLFW_KEY_D) {
+			g_app.keys[3] = true;
+		}
+	} else if (action == GLFW_RELEASE) {
+		if (key == GLFW_KEY_W) {
+			g_app.keys[0] = false;
+		}
+		else if (key == GLFW_KEY_A) {
+			g_app.keys[1] = false;
+		}
+		else if (key == GLFW_KEY_S) {
+			g_app.keys[2] = false;
+		}
+		else if (key == GLFW_KEY_D) {
+			g_app.keys[3] = false;
+		}
+	}
+    if (m_keyStates['W'] != GLFW_RELEASE) {
+		//keyboardMove += forward;
+		//g_app.moveForward();
+	}
+    if (m_keyStates['S'] != GLFW_RELEASE) {
+		//keyboardMove -= forward;
+		//g_app.moveBackward();
+	}
+    if (m_keyStates['A'] != GLFW_RELEASE) {
+		//keyboardMove -= right;
+		//g_app.moveLeft();
+	}
+    if (m_keyStates['D'] != GLFW_RELEASE) {
+		//keyboardMove += right;
+		//g_app.moveRight();
+	}
     if (m_keyStates['Q'] != GLFW_RELEASE) { keyboardMove -= up; }
     if (m_keyStates['E'] != GLFW_RELEASE) { keyboardMove += up; }
     if (m_keyStates[GLFW_KEY_UP] != GLFW_RELEASE) { keyboardMove += forward; }

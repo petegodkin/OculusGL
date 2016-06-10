@@ -43,13 +43,7 @@ void DeferredRenderer::setGBuffer(GBuffer* gbuffer) {
 void DeferredRenderer::pointLightPass(Camera* camera, Light* light) const
 {
 
-	if (DEBUG_MODE)
-		check_gl_error("before light binding");
-
 	gbuffer->BindForLightPass();
-
-	if (DEBUG_MODE)
-		check_gl_error("after light bind");
 
 
 	glUseProgram(prog());
@@ -64,8 +58,8 @@ void DeferredRenderer::pointLightPass(Camera* camera, Light* light) const
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
 
-	assert(light->shape->getMeshes().size() == 1);
-	Mesh* mesh = light->shape->getMeshes()[0];
+	assert(light->sphere->getMeshes().size() == 1);
+	Mesh* mesh = light->sphere->getMeshes()[0];
 	mesh->bindVAO();
 
 	glUniform1i(pos_map_handle, GBuffer::GBUFFER_TEXTURE_TYPE_POSITION);
@@ -73,7 +67,7 @@ void DeferredRenderer::pointLightPass(Camera* camera, Light* light) const
 	glUniform1i(normal_map_handle, GBuffer::GBUFFER_TEXTURE_TYPE_NORMAL);
 
 	vec3 eye = camera->position();
-	vec3 light_pos = light->pos;
+	vec3 light_pos = light->getPosition();
 	vec3 light_color = light->color;
 	glUniform3f(eye_handle, eye.x, eye.y, eye.z);
 	glUniform3f(light_pos_handle, light_pos.x, light_pos.y, light_pos.z);
@@ -91,14 +85,7 @@ void DeferredRenderer::pointLightPass(Camera* camera, Light* light) const
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->IND);
 
-	if (DEBUG_MODE)
-		check_gl_error("rend before");
-
 	mesh->draw();
-
-	if (DEBUG_MODE)
-		check_gl_error("rend after");
-
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

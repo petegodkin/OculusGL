@@ -168,9 +168,9 @@ std::string Entity::description() {
     return "(Entity) {pos: " + GUtils::vecToString(getPosition()) + "}";
 }
 
-
-glm::vec3 Entity::getPosition() {return getBody().getPosition();}
-
+glm::vec3 Entity::getPosition() const {
+	return body.getPosition();
+}
 void Entity::setPosition(glm::vec3 pos) {getBody().setPosition(pos);}
 bool Entity::positionChanged() {return getBody().positionChanged();}
 void Entity::setPositionChanged(bool changed) {

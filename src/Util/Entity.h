@@ -118,7 +118,7 @@ public:
     
     virtual std::string description();
     
-    virtual glm::vec3 getPosition();
+    virtual glm::vec3 getPosition() const;
     virtual void setPosition(glm::vec3 pos);
     virtual bool positionChanged();
     virtual void setPositionChanged(bool changed);

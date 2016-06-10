@@ -19,7 +19,7 @@
         virtual unsigned int getCollisionMask() = 0;
         
         virtual void setPosition(glm::vec3 pos) = 0;
-        virtual glm::vec3 getPosition() = 0;
+        virtual glm::vec3 getPosition() const = 0;
     };
 
 #endif

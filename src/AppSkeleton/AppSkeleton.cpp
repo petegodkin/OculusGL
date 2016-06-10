@@ -7,6 +7,8 @@
 #endif
 #include <GL/glew.h>
 
+#define MOVE_SPEED 7
+
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <algorithm>
@@ -17,6 +19,8 @@
 
 #include "AppSkeleton.h"
 #include "MatrixFunctions.h"
+
+using namespace glm;
 
 //#include "Collision/ViewFrustumCuller.h"
 
@@ -246,14 +250,37 @@ glm::vec3 findLookAtPt(float pitch, float yaw)
 	return glm::vec3(x, y, z);
 }
 
-glm::mat4 getView(glm::vec3 position, float pitch, float yaw) {
-	if (pitch > 1.3)
-		pitch = 1.3;
-	else if (pitch < -1.3)
-		pitch = -1.3;
+glm::mat4 AppSkeleton::getView(glm::vec3 position) const {
+	//if (m_pitch > 1.3)
+	//	m_pitch = 1.3;
+	//else if (m_pitch < -1.3)
+	//	m_pitch = -1.3;
 
-	return glm::lookAt(position, position + findLookAtPt(pitch, yaw),
+	return glm::lookAt(position, position + findLookAtPt(m_pitch, m_yaw),
 		glm::vec3(0.0, 1.0, 0.0));
+}
+
+void AppSkeleton::moveForward(double dt) {
+	vec3 lookAtPt = findLookAtPt(m_pitch, m_yaw);
+	lookAtPt = glm::normalize(vec3(lookAtPt.x, 0.0, lookAtPt.z));
+	lookAtPt *= MOVE_SPEED * dt;
+	m_chassisPos += lookAtPt;
+}
+void AppSkeleton::moveBackward(double dt) {
+	vec3 lookAtPt = findLookAtPt(m_pitch, m_yaw);
+	lookAtPt = glm::normalize(vec3(lookAtPt.x, 0.0, lookAtPt.z));
+	lookAtPt *= MOVE_SPEED * dt;
+	m_chassisPos -= lookAtPt;
+}
+void AppSkeleton::moveLeft(double dt) {
+	vec3 dir = glm::normalize(glm::cross(findLookAtPt(m_pitch, m_yaw), vec3(0.0, 1.0, 0.0)));
+	dir *= MOVE_SPEED * dt;
+	m_chassisPos -= dir;
+}
+void AppSkeleton::moveRight(double dt) {
+	vec3 dir = glm::normalize(glm::cross(findLookAtPt(m_pitch, m_yaw), vec3(0.0, 1.0, 0.0)));
+	dir *= MOVE_SPEED * dt;
+	m_chassisPos += dir;
 }
 
 void AppSkeleton::_drawSceneMono() const
@@ -263,7 +290,7 @@ void AppSkeleton::_drawSceneMono() const
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // This line make no noticeable difference
 
     const glm::mat4 mvLocal = glm::mat4(1.f);
-	const glm::mat4 mvWorld = mvLocal * getView(m_chassisPos, m_pitch, m_yaw);
+	const glm::mat4 mvWorld = mvLocal * getView(m_chassisPos);
         //glm::inverse(makeWorldToChassisMatrix());
 
     const glm::ivec2 vp = getRTSize();
@@ -359,6 +386,19 @@ void AppSkeleton::timestep(double absTime, double dt)
         DismissHealthAndSafetyWarning();
     }
 #endif
+
+	if (keys[0]) {
+		moveForward(dt);
+	}
+	if (keys[1]) {
+		moveLeft(dt);
+	}
+	if (keys[2]) {
+		moveBackward(dt);
+	}
+	if (keys[3]) {
+		moveRight(dt);
+	}
 
     // Move in the direction the viewer is facing.
     const glm::vec3 move_dt = (m_keyboardMove + m_joystickMove + m_mouseMove + hydraMove) * static_cast<float>(dt);

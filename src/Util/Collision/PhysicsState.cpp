@@ -50,13 +50,13 @@ void PhysicsState::setOrientation(glm::quat orient) {
 
 
 float PhysicsState::getVelocity() {return velocity;}
-glm::vec3 PhysicsState::getPosition() {return position;}
+glm::vec3 PhysicsState::getPosition() const {return position;}
 void PhysicsState::setPosition(glm::vec3 pos) {
     position = pos;
     setPositionChanged(true);
 }
 bool PhysicsState::positionChanged() {return positionHasChanged;}
-void PhysicsState::setPositionChanged(bool changed) {positionHasChanged = true;}
+void PhysicsState::setPositionChanged(bool changed) {positionHasChanged = true;} //<-- this is stupid
 uint32_t PhysicsState::getCollisionMask() {return 0;}
 
 glm::vec3 PhysicsState::getNewPosition(float dt) {return position

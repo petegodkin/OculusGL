@@ -132,15 +132,22 @@ void Scene::_InitObjAttributes()
 
 	addEntities(bush_mesh, 20, 20);
 
-	addLights();
+	addLights(20.f, 20);
+
+	//LAST
+	m_oct = new OctTree(utility::BoundingBox(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1)), 1);
+	for (int i = 0; i < m_ents.size(); i++)
+	{
+		m_oct->insert(m_ents[i]);
+	}
 }
 
 void Scene::addGround() {
 	// ground
 	MeshSet *ground_shape = new MeshSet("../resources/ground/", "ground.dae", 5.0f);
 	m_meshes.push_back(ground_shape);
-	for (int i = -10; i < 10; i++) {
-		for (int j = -10; j < 10; j++) {
+	for (int i = -20; i < 20; i++) {
+		for (int j = -20; j < 20; j++) {
 			Entity *ground = new Entity(ground_shape, glm::vec3(i * 5.0f, 0, j * 5.0f));
 			m_ents.push_back(ground);
 		}
@@ -148,27 +155,27 @@ void Scene::addGround() {
 	//ground->setBoundingRadius(1.0f);
 }
 
-void Scene::addLights() {
+void Scene::addLights(float radius, int amount) {
 
 	// light
-	MeshSet *light_shape = new MeshSet("../resources/", "Sphere/UnitSphere.obj", .1f);
+	MeshSet *light_shape = new MeshSet("../resources/Sphere/", "UnitSphere.obj", .1f);
 	light_shape->setDiffuse(glm::vec3(1));
 	m_meshes.push_back(light_shape);
 
-	float radius = 10.0f;
 	//not really a radius but will do for now
 
-	for (int i = 0; i < 50; i++) {
+	for (int i = 0; i < amount; i++) {
 		float x = fmod(rand()/1000.f, radius * 2.0f);
 		x -= radius;
 		float z = fmod(rand()/1000.f, radius * 2.0f);
 		z -= radius;
 
 		glm::vec3 pos(x, 1.0f, z);
-		m_lights.push_back(new Light(pos,
+		Light* light = new Light(light_shape, pos,
 			glm::vec3(0.0, fmod(rand() / 255.f, 1.0f), fmod(rand() / 255.f, 1.0f)),
-			2.0f, light_shape));
-		m_ents.push_back(new Entity(light_shape, pos));
+			2.0f, light_shape);
+		m_lights.push_back(light);
+		m_ents.push_back(light);
 	}
 
 }
@@ -210,12 +217,9 @@ Scene::~Scene()
 	for (Entity* ent : m_ents) {
 		delete ent;
 	}
-	for (Light* ent : m_lights) {
-		delete ent;
-	}
 	delete m_skybox;
 	delete m_deferred;
-
+	delete m_oct;
 }
 
 void Scene::initGL()
@@ -231,7 +235,7 @@ void Scene::initGL()
     _InitPlaneAttributes();
     glBindVertexArray(0);*/
 	GLSL::printError("Boo0");
-	m_deferred = new DeferredShader("deferred.vert", "deferred.frag", 1814, 2052);//SCREEN_WIDTH, SCREEN_HEIGHT);
+	m_deferred = new DeferredShader("deferred.vert", "deferred.frag", SCREEN_WIDTH, SCREEN_HEIGHT);
 	_InitObjAttributes();
 	check_gl_error("Before deferred");
 	//system("PAUSE");
@@ -385,18 +389,10 @@ void Scene::DrawDude(
 	const glm::mat4& projection,
 	glm::vec3 center) const
 {
-	std::shared_ptr<OctTree> oct = std::shared_ptr<OctTree>(new OctTree(
-		utility::BoundingBox(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1)), 1));
-
-	for (int i = 0; i < m_ents.size(); i++)
-	{
-		oct->insert(m_ents[i]);
-	}	
-
 	Camera camera(modelview, projection, center);
 
 	utility::ViewFrustum frustum(projection * modelview);
-	ViewFrustumCuller vfc(oct.get());
+	ViewFrustumCuller vfc(m_oct);
 	std::vector<Entity *> inView = vfc.getVisibleObjects(frustum);
 	
 	//std::cout << frustum.toString() << std::endl;
@@ -492,6 +488,7 @@ void Scene::timestep(double /*absTime*/, double dt)
 
 		light->update();
 	}
+	m_oct->checkAndUpdateAllObjects();
 }
 
 // Check for hits against floor plane

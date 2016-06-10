@@ -82,7 +82,9 @@ protected:
 	void addEntities(MeshSet *mesh, float radius, int amount);
 	void addMorphableEntities(std::vector<MeshSet*> meshes, float radius, int amount);
 	void addGround();
-	void addLights();
+	void addLights(float radius, int amount);
+
+	OctTree* m_oct;
 
 public:
     float m_amplitude;

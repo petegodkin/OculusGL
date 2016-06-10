@@ -66,7 +66,7 @@ public:
     void setVelocity(float v) {velocity = v;}
         
     /// Returns the current position.
-    glm::vec3 getPosition();
+    glm::vec3 getPosition() const;
     /// Sets the current position.
     void setPosition(glm::vec3 pos);
         

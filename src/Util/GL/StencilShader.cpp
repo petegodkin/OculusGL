@@ -22,8 +22,8 @@ void StencilShader::stencilPass(Camera* camera, const GBuffer* gbuffer, Light* l
 	// Disable color/depth write and enable stencil
 	gbuffer->BindForStencilPass();
 
-	assert(light->shape->getMeshes().size() == 1);
-	Mesh* mesh = light->shape->getMeshes()[0];
+	assert(light->sphere->getMeshes().size() == 1);
+	Mesh* mesh = light->sphere->getMeshes()[0];
 	mesh->bindVAO();
 
 	glEnable(GL_DEPTH_TEST);

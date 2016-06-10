@@ -66,8 +66,8 @@ void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents) const
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+	glDisable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
 
 	glUniformMatrix4fv(uViewMatrixHandle, 1, GL_FALSE, value_ptr(camera->view()));
 	glUniformMatrix4fv(uProjMatrixHandle, 1, GL_FALSE, value_ptr(camera->proj()));

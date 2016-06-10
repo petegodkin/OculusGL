@@ -104,6 +104,8 @@ protected:
 
 	float m_pitch = 0;
 	float m_yaw = 0;
+	glm::mat4 AppSkeleton::getView(glm::vec3 position) const;
+
 
 public:
     FlyingMouse m_fm;
@@ -115,6 +117,12 @@ public:
     float m_mouseDeltaYaw;
     float m_keyboardDeltaPitch;
     float m_keyboardDeltaRoll;
+
+	void moveForward(double dt);
+	void moveBackward(double dt);
+	void moveLeft(double dt);
+	void moveRight(double dt);
+	bool keys[4];
 
 private: // Disallow copy ctor and assignment operator
     AppSkeleton(const AppSkeleton&);

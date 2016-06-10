@@ -4,12 +4,10 @@
 
 #include <glm/glm.hpp>
 
-Light::Light(glm::vec3 pos) : pos(pos) {
 
-}
+Light::Light(const MeshSet* mesh, glm::vec3 pos, glm::vec3 color, float intensity,
+	const MeshSet* sphere) : Entity(mesh, pos), color(color), intensity(intensity), sphere(sphere) {
 
-Light::Light(glm::vec3 pos, glm::vec3 color, float intensity, const MeshSet* shape) : pos(pos), color(color), intensity(intensity),
-shape(shape) {
 	_scale = calc_scale_mat();
 	_transform = glm::translate(glm::mat4(1.0f), pos) * _scale;
 	default_pos = pos;
@@ -17,7 +15,7 @@ shape(shape) {
 
 glm::mat4 Light::transform()
 {
-	return glm::translate(glm::mat4(1.0f), pos) * _scale;//_transform;
+	return glm::translate(glm::mat4(1.0f), body.getPosition()) * _scale;//_transform;
 }
 
 //calculate how big the size needs to be based on intensity
@@ -37,6 +35,11 @@ glm::mat4 Light::calc_scale_mat()
 
 void Light::update() {
 	total += fmod(rand()/10000.f, .05f);
+	glm::vec3 pos;
 	pos.x = default_pos.x + cos(total);
+	pos.y = default_pos.y;
 	pos.z = default_pos.z + sin(total);
+
+	body.setPosition(pos);
+	body.setPositionChanged(true);
 }
