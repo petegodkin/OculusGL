@@ -433,7 +433,7 @@ void AppSkeleton::timestep(double absTime, double dt)
     // Move in the direction the viewer is facing.
     const glm::vec3 move_dt = (m_keyboardMove + m_joystickMove + m_mouseMove + hydraMove) * static_cast<float>(dt);
     const glm::vec4 mv4 = makeWorldToEyeMatrix() * glm::vec4(move_dt, 0.0f);
-    //m_chassisPos += glm::vec3(mv4);
+    m_chassisPos += glm::vec3(mv4);
     m_chassisYaw += (m_keyboardYaw + m_joystickYaw + m_mouseDeltaYaw) * static_cast<float>(dt);
     m_chassisPitch += m_keyboardDeltaPitch * static_cast<float>(dt);
     m_chassisRoll += m_keyboardDeltaRoll * static_cast<float>(dt);

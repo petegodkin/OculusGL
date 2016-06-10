@@ -129,9 +129,11 @@ void Scene::_InitObjAttributes()
 	addEntities(shape_grass, 50, 50);
 	addMorphableEntities({ bush_mesh, flower_mesh }, 50, 30);
 
-	// tree
-	//MeshSet *tree_mesh = new MeshSet(resourcePath + "tree/", "Tree1.3ds", 0.25f);
-	//m_meshes.push_back(tree_mesh);
+	// rock
+	MeshSet *rock_mesh = new MeshSet(resourcePath + "rock/", "obj.obj", 0.05f);
+	m_meshes.push_back(rock_mesh);
+	//m_ents.push_back(new Entity(rock_mesh, glm::vec3(0, 0, 0)));
+	addEntities(rock_mesh, 20, 10, -.3f);
 
 	addEntities(bush_mesh, 20, 20);
 
@@ -190,14 +192,14 @@ void Scene::addLights(float radius, int amount) {
 	m_ents.push_back(light);
 }
 
-void Scene::addEntities(MeshSet *mesh, float radius, int amount) {
+void Scene::addEntities(MeshSet *mesh, float radius, int amount, float depth) {
 	//not really a radius but will do for now
 	for (int i = 0; i < amount; i++) {
 		float x = fmod(rand(), radius * 2);
 		x -= radius;
 		float z = fmod(rand(), radius * 2);
 		z -= radius;
-		m_ents.push_back(new Entity(mesh, glm::vec3(x, 0.0f, z)));
+		m_ents.push_back(new Entity(mesh, glm::vec3(x, depth, z)));
 	}
 }
 

@@ -34,7 +34,7 @@ std::vector<Entity *> ViewFrustumCuller::getVisibleObjects(
 			if (MorphableEntity *morpher = dynamic_cast<MorphableEntity *>(enclosedObjects[i]))
 			{
 				rad = morpher->getBoundingSphereRadius();
-				std::cout << "Bounding Radius of MORPHER " << morpher->getCurMesh()->m_fileName << ": " << rad << std::endl;
+				//std::cout << "Bounding Radius of MORPHER " << morpher->getCurMesh()->m_fileName << ": " << rad << std::endl;
 			}
 
 
