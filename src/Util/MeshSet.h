@@ -41,6 +41,9 @@ public:
 	void calcBoundingBox();
 	utility::BoundingBox getBoundingBox();
 	float getBoundingRadius() const;
+
+	glm::vec3 rotations = glm::vec3(0);
+
 private:
 	void recursiveProcess(aiNode* node, const aiScene* scene, GLuint texInterpolation, GLuint texWrap);
 	void processMesh(aiMesh* mesh, const aiScene* scene, GLuint texInterpolation, GLuint texWrap);

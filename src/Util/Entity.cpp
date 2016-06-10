@@ -117,23 +117,6 @@ void Entity::init(PhysicsState pstat) {
     drawOffset = glm::vec3(0, 0, 0);
 }
 
-//void Entity::draw(nsgl::Program & prog) {
-//    if (model != NULL && allowDrawing) {
-//        material.send(prog, "UaColor", "UdColor", "UsColor", "Ushine");
-//        if (model->isSkinned()) {
-//            if (inverseBindPose.size() != 0) {
-//                prog.glSendUniform("invBindPose", inverseBindPose[0],
-//                 inverseBindPose.size());
-//            }
-//            if (currentSkinningPose.size() != 0) {
-//                prog.glSendUniform("boneFrame", currentSkinningPose[0],
-//                 currentSkinningPose.size());
-//            }
-//        }
-//        model->draw(prog);
-//    }
-//}
-
 void Entity::update(float dt) {
     body.update(dt);
 	//AAnimator.update(dt);
@@ -269,7 +252,7 @@ void Entity::setShape(const MeshSet *shape)
 //}
 
 glm::mat4 Entity::modelMat() {
-	return glm::translate(glm::scale(_modelMat, _scale), body.getPosition()) * getRotMat();
+	return  glm::scale(glm::translate(_modelMat, body.getPosition()) * getRotMat(), _scale);
 }
 
 void Entity::setScale(float entScale)
@@ -279,9 +262,10 @@ void Entity::setScale(float entScale)
 
 glm::mat4 Entity::getRotMat()
 {
-	mat4 model_rot_x = rotate(mat4(1.0f), rotations.x, vec3(1.f, 0.f, 0.f));
-	mat4 model_rot_y = rotate(mat4(1.0f), rotations.y, vec3(0.f, 1.f, 0.f));
-	mat4 model_rot_z = rotate(mat4(1.0f), rotations.z, vec3(0.f, 0.f, 1.f));
+	glm::vec3 def = _shape->rotations;
+	mat4 model_rot_x = rotate(mat4(1.0f), def.x + rotations.x, vec3(1.f, 0.f, 0.f));
+	mat4 model_rot_y = rotate(mat4(1.0f), def.y + rotations.y, vec3(0.f, 1.f, 0.f));
+	mat4 model_rot_z = rotate(mat4(1.0f), def.z + rotations.z, vec3(0.f, 0.f, 1.f));
 
 	return model_rot_y * model_rot_z * model_rot_x;
 }

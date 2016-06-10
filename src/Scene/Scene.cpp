@@ -13,6 +13,9 @@
 #endif
 
 #define _USE_MATH_DEFINES
+
+#define HALF_PI 1.570796
+
 #include <math.h>
 
 #include <stdlib.h>
@@ -108,10 +111,14 @@ void Scene::_InitObjAttributes()
 	m_meshes.push_back(skybox_box);
 
 	m_skybox = new Entity(skybox_box, glm::vec3(0));
-	m_skybox->setRotations(glm::vec3(-1.570796, 0.0f, 0.0f));
+	m_skybox->setRotations(glm::vec3(-HALF_PI, 0.0f, 0.0f));
 	m_skybox->setScale(80.f);
 
 	m_deferred->setSkybox(m_skybox);
+
+	MeshSet *bush_mesh = new MeshSet(resourcePath + "Bush/", "Bush1.dae", .5);
+	bush_mesh->rotations = glm::vec3(-HALF_PI, 0.0f, 0.0f);
+	m_meshes.push_back(bush_mesh);
 
 	MeshSet *flower_mesh = new MeshSet(resourcePath + "flowers/", "plants1.obj", .001);
 	m_meshes.push_back(flower_mesh);
@@ -119,13 +126,13 @@ void Scene::_InitObjAttributes()
 	// more grass
 	//drawStuff(shape_grass, 100.0, 100.0, 5.0);
 	addEntities(shape_grass, 50, 50);
-	addMorphableEntities({ shape_grass, flower_mesh }, 50, 30);
+	addMorphableEntities({ bush_mesh, flower_mesh }, 50, 30);
 
 	// tree
-	MeshSet *tree_mesh = new MeshSet(resourcePath + "tree/", "Tree1.3ds", 0.25f);
-	m_meshes.push_back(tree_mesh);
+	//MeshSet *tree_mesh = new MeshSet(resourcePath + "tree/", "Tree1.3ds", 0.25f);
+	//m_meshes.push_back(tree_mesh);
 
-	//addEntities(tree_mesh, 20, 20);
+	addEntities(bush_mesh, 20, 20);
 
 	addLights();
 }
@@ -136,7 +143,7 @@ void Scene::addGround() {
 	m_meshes.push_back(ground_shape);
 	for (int i = -10; i < 10; i++) {
 		for (int j = -10; j < 10; j++) {
-			Entity *ground = new Entity(ground_shape, glm::vec3(i, 0, j));
+			Entity *ground = new Entity(ground_shape, glm::vec3(i * 5.0f, 0, j * 5.0f));
 			m_ents.push_back(ground);
 		}
 	}
@@ -153,12 +160,14 @@ void Scene::addLights() {
 	float radius = 20.0f;
 	//not really a radius but will do for now
 	for (int i = 0; i < 50; i++) {
-		float x = fmod(rand(), radius * 2.0f);
+		float x = fmod(rand()/1000.f, radius * 2.0f);
 		x -= radius;
-		float z = fmod(rand(), radius * 2.0f);
+		float z = fmod(rand()/1000.f, radius * 2.0f);
 		z -= radius;
 		glm::vec3 pos(x, 1.0f, z);
-		m_lights.push_back(new Light(pos, glm::vec3(1, 1, 1), 1.0f, light_shape));
+		m_lights.push_back(new Light(pos,
+			glm::vec3(0.0, fmod(rand() / 255.f, 1.0f), fmod(rand() / 255.f, 1.0f)),
+			2.0f, light_shape));
 		m_ents.push_back(new Entity(light_shape, pos));
 	}
 
@@ -227,20 +236,6 @@ void Scene::initGL()
 	check_gl_error("Before deferred");
 	//system("PAUSE");
 	//glBindVertexArray(0);
-}
-
-void Scene::drawStuff(MeshSet *mesh, float width, float length, float thickness)
-{
-	for (float w = -width / 2.0f; w < width / 2.0f; w += thickness)
-	{
-		for (float l = -length / 2.0f; l < length / 2.0f; l += thickness)
-		{
-			MorphableEntity *grass = new MorphableEntity(mesh, glm::vec3(w, 0.0f, l));
-			grass->setBoundingRadius(1.0f);
-
-			m_ents.push_back(grass);
-		}
-	}
 }
 
 ///@brief While the basic VAO is bound, gen and bind all buffers and attribs.
@@ -407,7 +402,7 @@ void Scene::DrawDude(
 	Camera camera(modelview, projection, center);
 
 	std::cout << "In view: " << inView.size() << std::endl;
-	m_deferred->draw(&camera, inView, m_lights);
+	m_deferred->draw(&camera, m_ents/*inView*/, m_lights);
 }
 
 
@@ -493,6 +488,11 @@ void Scene::RenderForOneEye(const float* pMview, const float* pPersp) const
 void Scene::timestep(double /*absTime*/, double dt)
 {
     m_phaseVal += static_cast<float>(dt);
+
+	for (Light* light : m_lights) {
+
+		light->update();
+	}
 }
 
 // Check for hits against floor plane

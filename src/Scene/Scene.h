@@ -86,7 +86,6 @@ protected:
 
 public:
     float m_amplitude;
-	void drawStuff(MeshSet *mesh, float width, float length, float thickness);
 
 	int width() const;
 	int height() const;
