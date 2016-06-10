@@ -515,6 +515,17 @@ void OVRSDK08AppSkeleton::_DrawToSecondQuad() const
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+glm::mat4 OVRSDK08AppSkeleton::makeViewMatrix() {
+	if (m_Hmd == NULL) {
+		return AppSkeleton::makeViewMatrix();
+	}
+	else {
+		const ovrPosef& eyePose = m_eyePoses[0]; //left eye view mat will do
+		const glm::mat4 viewLocal = makeMatrixFromPose(eyePose);
+		return makeWorldToChassisMatrix() * viewLocal;
+	}
+}
+
 void OVRSDK08AppSkeleton::display_sdk() const
 {
     const ovrHmd hmd = m_Hmd;
@@ -599,38 +610,6 @@ void OVRSDK08AppSkeleton::display_sdk() const
     // Submit layers to HMD for display
     std::vector<const ovrLayerHeader*> layers;
     layers.push_back(&m_layerEyeFov.Header);
-    /*if (m_tweakbarQuad.m_showQuadInWorld)
-    {
-        _DrawToTweakbarQuad();
-
-        // Display is a const function, but we cast that away to
-        // be able to write quad's in-world pose each frame.
-        ///@todo Update this in a separate non-const function -
-        // it doesn't have to be as fresh as head pose does.
-        ovrPosef& qpc = const_cast<ovrPosef&>(m_tweakbarQuad.m_layerQuad.QuadPoseCenter);
-        const glm::vec3& qp = m_tweakbarQuad.m_quadLocation;
-        qpc.Position = { qp.x, qp.y, qp.z };
-        glm::quat qo = glm::quat();
-        qo = glm::rotate(qo, m_tweakbarQuad.m_quadRotation.x, glm::vec3(1.f, 0.f, 0.f));
-        qo = glm::rotate(qo, m_tweakbarQuad.m_quadRotation.y, glm::vec3(0.f, 1.f, 0.f));
-        qpc.Orientation = { qo.x, qo.y, qo.z, qo.w };
-
-        layers.push_back(&m_tweakbarQuad.m_layerQuad.Header);
-    }
-
-    if (m_secondQuad.m_showQuadInWorld)
-    {
-        _DrawToSecondQuad();
-        ovrPosef& qpc = const_cast<ovrPosef&>(m_secondQuad.m_layerQuad.QuadPoseCenter);
-        const glm::vec3& qp = m_secondQuad.m_quadLocation;
-        qpc.Position = { qp.x, qp.y, qp.z };
-        glm::quat qo = glm::quat();
-        qo = glm::rotate(qo, m_secondQuad.m_quadRotation.x, glm::vec3(1.f, 0.f, 0.f));
-        qo = glm::rotate(qo, m_secondQuad.m_quadRotation.y, glm::vec3(0.f, 1.f, 0.f));
-        qpc.Orientation = { qo.x, qo.y, qo.z, qo.w };
-
-        layers.push_back(&m_secondQuad.m_layerQuad.Header);
-    }*/
 
 
     ovrViewScaleDesc viewScaleDesc;

@@ -106,6 +106,7 @@ protected:
 	float m_yaw = 0;
 	glm::mat4 AppSkeleton::getView(glm::vec3 position) const;
 
+	virtual glm::mat4 makeViewMatrix();
 
 public:
     FlyingMouse m_fm;

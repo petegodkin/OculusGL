@@ -260,25 +260,55 @@ glm::mat4 AppSkeleton::getView(glm::vec3 position) const {
 		glm::vec3(0.0, 1.0, 0.0));
 }
 
+glm::mat4 AppSkeleton::makeViewMatrix() {
+	return glm::mat4(1.f) * getView(m_chassisPos);
+}
+
+vec3 viewMatrixBackward(mat4 viewMatrix)
+{
+	return vec3(viewMatrix[0][2], viewMatrix[1][2], viewMatrix[2][2]);
+}
+
+vec3 viewMatrixForward(mat4 viewMatrix)
+{
+	return -viewMatrixBackward(viewMatrix);
+}
+
+vec3 viewMatrixRight(mat4 viewMatrix)
+{
+	return vec3(viewMatrix[0][0], viewMatrix[1][0], viewMatrix[2][0]);
+}
+
+vec3 viewMatrixLeft(mat4 viewMatrix)
+{
+	return -viewMatrixRight(viewMatrix);
+}
+
 void AppSkeleton::moveForward(double dt) {
-	vec3 lookAtPt = findLookAtPt(m_pitch, m_yaw);
-	lookAtPt = glm::normalize(vec3(lookAtPt.x, 0.0, lookAtPt.z));
-	lookAtPt *= MOVE_SPEED * dt;
-	m_chassisPos += lookAtPt;
+	mat4 viewMat = makeViewMatrix();
+	vec3 dir = viewMatrixForward(viewMat);
+	dir = normalize(vec3(dir.x, 0, dir.z));
+	dir *= MOVE_SPEED * dt;
+	m_chassisPos += dir;
 }
 void AppSkeleton::moveBackward(double dt) {
-	vec3 lookAtPt = findLookAtPt(m_pitch, m_yaw);
-	lookAtPt = glm::normalize(vec3(lookAtPt.x, 0.0, lookAtPt.z));
-	lookAtPt *= MOVE_SPEED * dt;
-	m_chassisPos -= lookAtPt;
+	mat4 viewMat = makeViewMatrix();
+	vec3 dir = viewMatrixBackward(viewMat);
+	dir = normalize(vec3(dir.x, 0, dir.z));
+	dir *= MOVE_SPEED * dt;
+	m_chassisPos += dir;
 }
 void AppSkeleton::moveLeft(double dt) {
-	vec3 dir = glm::normalize(glm::cross(findLookAtPt(m_pitch, m_yaw), vec3(0.0, 1.0, 0.0)));
+	mat4 viewMat = makeViewMatrix();
+	vec3 dir = viewMatrixLeft(viewMat);
+	dir = normalize(vec3(dir.x, 0, dir.z));
 	dir *= MOVE_SPEED * dt;
-	m_chassisPos -= dir;
+	m_chassisPos += dir;
 }
 void AppSkeleton::moveRight(double dt) {
-	vec3 dir = glm::normalize(glm::cross(findLookAtPt(m_pitch, m_yaw), vec3(0.0, 1.0, 0.0)));
+	mat4 viewMat = makeViewMatrix();
+	vec3 dir = viewMatrixRight(viewMat);
+	dir = normalize(vec3(dir.x, 0, dir.z));
 	dir *= MOVE_SPEED * dt;
 	m_chassisPos += dir;
 }

@@ -97,6 +97,8 @@ protected:
 
     glm::vec2 m_pointerCoords;
     ShaderWithVariables m_cursorShader;
+
+	virtual glm::mat4 makeViewMatrix() override;
 public:
     worldQuad m_tweakbarQuad;
     worldQuad m_secondQuad;
