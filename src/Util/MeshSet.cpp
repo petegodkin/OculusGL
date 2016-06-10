@@ -133,6 +133,7 @@ MeshSet::MeshSet(std::string path, std::string filename, float scale, GLuint tex
 	
 	m_path = path;
 
+	m_fileName = filename;
 	std::string filepath = path + filename;
 
 	const aiScene* scene = aiImportFile(filepath.c_str(), aiProcess_GenNormals | aiProcess_GenSmoothNormals | aiProcess_Triangulate | aiProcess_FlipUVs /*| aiProcess_LimitBoneWeights*/ | aiProcess_JoinIdenticalVertices | aiProcess_CalcTangentSpace);
@@ -152,7 +153,13 @@ MeshSet::MeshSet(std::string path, std::string filename, float scale, GLuint tex
 	recursiveProcess(scene->mRootNode, scene, texInterpolation, texWrap);
 	m_nDefaultScale = scale;
 
-	calcBoundingBox();
+	//for (Mesh *mesh : meshes)
+	//{
+	//	mesh->calcBoundingBox();
+	//}
+
+	//calcBoundingBox();
+	//m_boundingBox.scaleBox(glm::vec3(m_nDefaultScale));
 }
 
 void MeshSet::processBones(aiNode* node)
@@ -176,6 +183,12 @@ void MeshSet::processAnimations()
 	}
 }
 
+std::vector<Mesh *> MeshSet::getMeshes()
+{
+	return meshes;
+}
+
+
 MeshSet::~MeshSet() {
 	for (int i = 0; i < meshes.size(); i++)
 		delete meshes[i];
@@ -193,16 +206,19 @@ std::vector<aiAnimation*>& MeshSet::getAnimations()
 }
 
 /* Determine the overarching boundingBox for all meshes in the mesh set*/
-void MeshSet::calcBoundingBox()
+utility::BoundingBox MeshSet::calcBoundingBox() const
 {
+	utility::BoundingBox bb;
+
 	if (meshes.size() > 1)
 	{
-		glm::vec3 mins = meshes[0]->getBoundingBox().getStart();
-		glm::vec3 maxs = meshes[0]->getBoundingBox().getEnd();
+		utility::BoundingBox bbFirst = meshes[0]->calcBoundingBox();
+		glm::vec3 mins = bbFirst.getStart();
+		glm::vec3 maxs = bbFirst.getEnd();
 
 		for (int i = 1; i < 0; i++)
 		{
-			utility::BoundingBox box = meshes[i]->getBoundingBox();
+			utility::BoundingBox box = meshes[i]->calcBoundingBox();
 			glm::vec3 boxMin = box.getStart();
 			glm::vec3 boxMax = box.getEnd();
 
@@ -213,28 +229,40 @@ void MeshSet::calcBoundingBox()
 			}
 		}
 
-		m_boundingBox = utility::BoundingBox(mins, maxs, true);
+//		std::cout << "Calculating min: " << GUtils::vecToString(mins)
+//				<< "\n\tmax: " << GUtils::vecToString(mins) << std::endl;
+		bb = utility::BoundingBox(mins, maxs, true);
 	}
 	else if (meshes.size() == 1)
 	{
-		m_boundingBox = meshes[0]->getBoundingBox();
+		bb = meshes[0]->calcBoundingBox();
 	}
 	else
 	{
 		std::cout << "Error: no mesh in meshset!" << std::endl;
-		m_boundingBox = utility::BoundingBox();
+		bb = utility::BoundingBox();
 	}
+
+	//std::cout << "Calculating MeshSet BOX: min: " << GUtils::vecToString(m_boundingBox.getStart())
+	//	<< "\n\tmax: " << GUtils::vecToString(m_boundingBox.getEnd()) << std::endl;
+
+	return bb;
 }
 
-utility::BoundingBox MeshSet::getBoundingBox()
-{
-	return m_boundingBox;
-}
+//utility::BoundingBox MeshSet::getBoundingBox() const
+//{
+//	return m_boundingBox;
+//}
 
-float MeshSet::getBoundingRadius() const
-{
-	return m_boundingBox.getRadius();
-}
+//float MeshSet::getBoundingRadius() const
+//{
+//	return m_boundingBox.getRadius();
+//}
+//
+//glm::vec3 MeshSet::getCenter() const
+//{
+//	return m_boundingBox.getCenter();
+//}
 
 float MeshSet::getScale() const
 {

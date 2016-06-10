@@ -41,9 +41,14 @@ glm::vec4 ViewFrustum::getRow(int ndx, glm::mat4 mat)
 glm::vec3 ViewFrustum::getRow(int ndx, glm::mat3 mat)
 {
 	return glm::vec3(
+		mat[0][ndx],
+		mat[1][ndx],
+		mat[2][ndx]);
+
+	/*return glm::vec3(
 		mat[ndx][0],
 		mat[ndx][1],
-		mat[ndx][2]);
+		mat[ndx][2])*/
 }
 
 void ViewFrustum::extractPlanes(bool normalize) {
@@ -62,11 +67,11 @@ void ViewFrustum::extractPlanes(bool normalize) {
     planes[PLANE_RIGHT] = Plane(row.x, row.y, row.z, row.w);
 
     //Bottom plane
-	row = getRow(3, PV) + getRow(1, PV);
+	row = getRow(3, PV) - getRow(1, PV);
     planes[PLANE_BOTTOM] = Plane(row.x, row.y, row.z, row.w);
 
     //Top plane
-	row = getRow(3, PV) - getRow(1, PV);
+	row = getRow(3, PV) + getRow(1, PV);
     planes[PLANE_TOP] = Plane(row.x, row.y, row.z, row.w);
 
     //Near plane
@@ -77,36 +82,33 @@ void ViewFrustum::extractPlanes(bool normalize) {
 	row = getRow(3, PV) - getRow(2, PV);
     planes[PLANE_FAR] = Plane(row.x, row.y, row.z, row.w);
     
-	std::vector<std::string> labels = {"Left: ", "Right: ", "Bott: ", "Top: ", "Near: ", "Far: "};
+	//std::cout << "Pre Normalized: \n" << toString() << std::endl;
 
-	/*std::cout << "Current Planes:" << std::endl;
-	for (int i = 0; i < kNumPlanes; i++)
-	{
-<<<<<<< HEAD
-		Plane pl = planes[i];
-		std::cout << "\t" << labels[i] << "\t(" <<  
-							 pl.a() << ", " << 
-							 pl.b() << ", " <<
-						   	 pl.c() << ", " <<
-							 pl.d() << ")" << std::endl;
-=======
-		std::cout << "\t" << planes[i].description(labels[i]);
->>>>>>> 8879dc75c56498bec3c7e238831dcb9fbb39c58a
-	}*/
 
     if (normalize) {
         for (int i = 0; i < kNumPlanes; i++)
             planes[i].normalize();
     }
 
-	/*std::cout << "Current Normalized Planes:" << std::endl;
-	for (int i = 0; i < kNumPlanes; i++)
-	{
-		std::cout << "\t" << planes[i].description(labels[i]);
-	}*/
+	//std::cout << "POST Normalized: \n" << toString() << std::endl;
+
     
     for (int i = 0; i < kNumCorners; i++)
         corners[i] = calculateCorner(i);
+}
+
+std::string ViewFrustum::toString()
+{
+	std::vector<std::string> labels = { "Left: ", "Right: ", "Bott: ", "Top: ", "Near: ", "Far: " };
+	std::stringstream output = std::stringstream();
+
+	for (int i = 0; i < kNumPlanes; i++)
+	{
+		Plane pl = planes[i];
+		output << "\t" << planes[i].description(labels[i]);
+	}
+
+	return output.str();
 }
 
 glm::vec3 ViewFrustum::getCorner(int whichCorner) {

@@ -122,7 +122,7 @@ public:
     virtual void setPosition(glm::vec3 pos);
     virtual bool positionChanged();
     virtual void setPositionChanged(bool changed);
-	virtual void setBoundingRadius(float rad);
+	//virtual void setBoundingRadius(float rad);
     virtual float getBoundingSphereRadius();
 
 	virtual void setBoundingBox(glm::vec3 start, glm::vec3 end);
@@ -146,12 +146,17 @@ public:
 
 	glm::mat4 Entity::getRotMat();
 	void Entity::setRotations(glm::vec3 rots);
+	void createBoundingBoxFromMeshSet();
+	void configBoundingBox();
 
 private:
 	const MeshSet* _shape;
 	glm::mat4 _modelMat;
 	glm::vec3 _scale;
 	glm::vec3 rotations;
+	glm::vec3 m_position;
+
+	utility::BoundingBox m_boundingBox;
 	//Texture* _texture = nullptr;
 };
 

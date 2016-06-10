@@ -21,6 +21,27 @@ BoundingBox::BoundingBox(glm::vec3 s, glm::vec3 e, bool bMinMax) {
 		start = s;
 		end = e;
 	}
+
+	//std::cout << "BoundingBox() CONSTRUCTOR: min: " << GUtils::vecToString(start)
+	//	<< "\n\tmax: " << GUtils::vecToString(end) << std::endl;
+}
+
+void BoundingBox::scaleBox(glm::vec3 scale)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		start[i] *= scale[i];
+		end[i] *= scale[i];
+	}
+
+///	std::cout << "BoundingBox() SCALE: min: " << GUtils::vecToString(start)
+//		<< "\n\tmax: " << GUtils::vecToString(end) << std::endl;
+}
+
+void BoundingBox::moveToPosition(glm::vec3 pos)
+{
+	start += pos;
+	end += pos;
 }
 
 glm::vec3 BoundingBox::getStart() {return start;}

@@ -31,7 +31,7 @@ std::vector<Entity *> ViewFrustumCuller::getVisibleObjects(
         for (int i = 0; i < (int) enclosedObjects.size(); i++) {
 			if (frustum.enclosesSphere(enclosedObjects[i]->getPosition(),
 				enclosedObjects[i]->getBoundingSphereRadius()))
-			//if (frustum.enclosesBox)
+			//if (frustum.enclosesBox(enclosedObjects[i]->getBoundingBox()))
 			{
 				if (MorphableEntity *morpher = dynamic_cast<MorphableEntity *>(enclosedObjects[i]))
 				{
@@ -55,7 +55,7 @@ std::vector<Entity *> ViewFrustumCuller::getVisibleObjects(
 						morpher->setIsVisible(false);
 						morpher->setIsMorphable(true);
 
-						std::cout << "No longer visible, morphable is true!" << std::endl;
+						//std::cout << "No longer visible, morphable is true!" << std::endl;
 					}
 				}
 			}

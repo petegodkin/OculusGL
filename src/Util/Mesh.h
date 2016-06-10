@@ -41,8 +41,8 @@ public:
 	std::vector<glm::vec4> boneWeights;
 	std::vector<aiAnimation*>* animations;
 
-	void calcBoundingBox();
-	utility::BoundingBox getBoundingBox();
+	utility::BoundingBox calcBoundingBox() const;
+	//utility::BoundingBox getBoundingBox();
 
 
 	Material mat;
@@ -59,6 +59,6 @@ public:
 
 private:
 	bool checkError(std::string msg);
-	utility::BoundingBox m_boundingBox;
+	//utility::BoundingBox m_boundingBox;
 	std::vector<glm::mat4> boneTransformations;
 };

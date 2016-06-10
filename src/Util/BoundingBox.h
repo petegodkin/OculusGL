@@ -27,7 +27,10 @@ namespace utility {
         /// all axes) and `end` will become the "greatest" point of the box
         /// (closest to infinitiy on all axes).
         BoundingBox(glm::vec3 s = glm::vec3(0.0), glm::vec3 e = glm::vec3(0.0), bool bMinMax = false);
+
+		void scaleBox(glm::vec3 scale);
         
+		void moveToPosition(glm::vec3 pos);
         glm::vec3 getStart();
         glm::vec3 getEnd() const;
         glm::vec3 getDimensions();

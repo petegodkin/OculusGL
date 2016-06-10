@@ -49,6 +49,8 @@ namespace utility {
 		bool enclosesSphere(glm::vec3 center, float rad);
         //bool partiallyOverlaps(BoundingBox box);
         int numEnclosedCorners(BoundingBox box);
+
+		std::string toString();
         
     private:
         Plane planes[kNumPlanes];

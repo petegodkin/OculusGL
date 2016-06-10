@@ -13,7 +13,6 @@
 #endif
 
 #define _USE_MATH_DEFINES
-
 #define HALF_PI 1.570796
 
 #include <math.h>
@@ -92,19 +91,18 @@ void Scene::_InitObjAttributes()
 	m_meshes.push_back(shape_grass);
 
 	MorphableEntity *grass_ent = new MorphableEntity(shape_grass, glm::vec3(10.0f, 0, 0));
-	grass_ent->setBoundingRadius(1.0f);
+	//grass_ent->setBoundingRadius(1.0f);
 	m_ents.push_back(grass_ent);
 
 	addGround();
 
 	// pc-31
-	/*MeshSet *shape = new MeshSet(resourcePath, "PC31.obj", 0.25f);
+	MeshSet *shape = new MeshSet(resourcePath, "PC31.obj", 0.25f);
 	m_meshes.push_back(shape);
 
 	MorphableEntity *dude = new MorphableEntity(shape, glm::vec3(0, 0, 1));
 	dude->addMorph(shape_grass);
-	dude->setBoundingRadius(1.0f);
-	m_ents.push_back(dude);*/
+	m_ents.push_back(dude);
 
 	// skybox
 	MeshSet *skybox_box = new MeshSet(resourcePath + "Skybox/", "skybox.dae", 1.0f, GL_LINEAR, GL_CLAMP_TO_EDGE);
@@ -157,13 +155,15 @@ void Scene::addLights() {
 	light_shape->setDiffuse(glm::vec3(1));
 	m_meshes.push_back(light_shape);
 
-	float radius = 20.0f;
+	float radius = 10.0f;
 	//not really a radius but will do for now
+
 	for (int i = 0; i < 50; i++) {
 		float x = fmod(rand()/1000.f, radius * 2.0f);
 		x -= radius;
 		float z = fmod(rand()/1000.f, radius * 2.0f);
 		z -= radius;
+
 		glm::vec3 pos(x, 1.0f, z);
 		m_lights.push_back(new Light(pos,
 			glm::vec3(0.0, fmod(rand() / 255.f, 1.0f), fmod(rand() / 255.f, 1.0f)),
@@ -391,18 +391,17 @@ void Scene::DrawDude(
 	for (int i = 0; i < m_ents.size(); i++)
 	{
 		oct->insert(m_ents[i]);
-	}
+	}	
+
+	Camera camera(modelview, projection, center);
 
 	utility::ViewFrustum frustum(projection * modelview);
 	ViewFrustumCuller vfc(oct.get());
 	std::vector<Entity *> inView = vfc.getVisibleObjects(frustum);
-
 	
-
-	Camera camera(modelview, projection, center);
-
+	//std::cout << frustum.toString() << std::endl;
 	std::cout << "In view: " << inView.size() << std::endl;
-	m_deferred->draw(&camera, m_ents/*inView*/, m_lights);
+	m_deferred->draw(&camera, inView, m_lights);
 }
 
 

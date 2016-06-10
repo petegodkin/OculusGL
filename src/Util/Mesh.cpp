@@ -5,6 +5,7 @@
 #include <iostream>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "GraphicsUtil.h"
 
 using namespace glm;
 using namespace std;
@@ -55,6 +56,9 @@ Mesh::Mesh(std::vector<glm::vec3>* vertexData, std::vector<glm::vec3>* normalDat
 	aiGetMaterialColor(material, AI_MATKEY_COLOR_SPECULAR, &color);
 	mat.specular = vec3(color.r, color.g, color.b);
 	bMat = mat;
+
+	//calcBoundingBox();
+
 
 	aiGetMaterialFloat(material, AI_MATKEY_SHININESS, &(mat.shininess));
 
@@ -127,31 +131,37 @@ Mesh::~Mesh()
 	glDeleteBuffers(1, &IND);
 }
 
-void Mesh::calcBoundingBox()
+utility::BoundingBox Mesh::calcBoundingBox() const
 {
 	float min_x, max_x,
 		min_y, max_y,
 		min_z, max_z;
-	min_x = max_x = verts.at(0).x;
-	min_y = max_y = verts.at(0).y;
-	min_z = max_z = verts.at(0).z;
-	for (int i = 0; i < verts.size(); i++)
+	//min_x = max_x = 
+	//min_y = max_y = 0.0;
+	min_z = max_z = 0.0;
+
+	min_x = max_x = verts[0].x;
+	min_y = max_y = verts[0].y;
+	min_z = max_z = verts[0].z;
+	for (int i = 1; i < verts.size(); i++)
 	{
-		if (verts.at(i).x < min_x) min_x = verts.at(i).x;
-		if (verts.at(i).x > max_x) max_x = verts.at(i).x;
-		if (verts.at(i).y < min_y) min_y = verts.at(i).y;
-		if (verts.at(i).y > max_y) max_y = verts.at(i).y;
-		if (verts.at(i).z < min_z) min_z = verts.at(i).z;
-		if (verts.at(i).z > max_z) max_z = verts.at(i).z;
+		if (verts[i].x < min_x) min_x = verts[i].x;
+		if (verts[i].x > max_x) max_x = verts[i].x;
+		if (verts[i].y < min_y) min_y = verts[i].y;
+		if (verts[i].y > max_y) max_y = verts[i].y;
+		if (verts[i].z < min_z) min_z = verts[i].z;
+		if (verts[i].z > max_z) max_z = verts[i].z;
 	}
 
-	m_boundingBox = utility::BoundingBox(glm::vec3(min_x, min_y, min_z), glm::vec3(max_x, max_y, max_z));
+	return utility::BoundingBox(glm::vec3(min_x, min_y, min_z), glm::vec3(max_x, max_y, max_z), true);
+//	std::cout << "MESH BB: min: " << GUtils::vecToString(m_boundingBox.getStart())
+//		<< "\n\tmax: " << GUtils::vecToString(m_boundingBox.getEnd()) << std::endl;
 }
 
-utility::BoundingBox Mesh::getBoundingBox()
-{
-	return m_boundingBox;
-}
+//utility::BoundingBox Mesh::getBoundingBox()
+//{
+//	return m_boundingBox;
+//}
 
 
 std::vector<glm::mat4> Mesh::getBoneTransformations() {

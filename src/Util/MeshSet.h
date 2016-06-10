@@ -9,6 +9,7 @@
 #include "tdogl/Texture.h"
 #include "tdogl/Bitmap.h"
 #include "BoundingBox.h"
+#include "GraphicsUtil.h"
 
 struct BoneInfo
 {
@@ -35,14 +36,21 @@ public:
 
 	aiNode *bone_tree;
 	aiMatrix4x4 inverseMat;
+
 	float getScale() const;
 	void setDiffuse(glm::vec3 diffuse);
 	glm::vec3 getDiffuse() const;
-	void calcBoundingBox();
-	utility::BoundingBox getBoundingBox();
+
+	std::vector<Mesh *> getMeshes();
+
+	utility::BoundingBox calcBoundingBox() const;
+	//utility::BoundingBox getBoundingBox() const;
 	float getBoundingRadius() const;
 
 	glm::vec3 rotations = glm::vec3(0);
+	glm::vec3 getCenter() const;
+
+	std::string m_fileName;
 
 private:
 	void recursiveProcess(aiNode* node, const aiScene* scene, GLuint texInterpolation, GLuint texWrap);
@@ -54,7 +62,7 @@ private:
 	std::vector<tdogl::Texture*> texturesToDel;
 	static std::map<std::string, GLuint> savedTextures;
 	
-	utility::BoundingBox m_boundingBox;
+	//utility::BoundingBox m_boundingBox;
 
 	float m_nDefaultScale;
 	glm::vec3 m_diffuse;

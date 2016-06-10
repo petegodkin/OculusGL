@@ -435,8 +435,8 @@ void AppSkeleton::OnMouseMove(int x, int y)
 
 	static glm::vec2 oldPos = glm::vec2(x, y);
 
-	m_pitch += (y - oldPos.y) * .005;
-	m_yaw -= (x - oldPos.x) * .005;
+	m_pitch -= (y - oldPos.y) * .005;
+	m_yaw += (x - oldPos.x) * .005;
 	oldPos = glm::vec2(x, y);
 
 }

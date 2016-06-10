@@ -89,7 +89,6 @@ void DeferredShader::geomPass(Camera* camera, std::vector<Entity*> ents) const
 			}
 
 			glUniform3fv(UdColorHandle, 1, value_ptr(mesh->diffuse));
-
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh->IND);
 
 			for (auto entity : meshset.second)
