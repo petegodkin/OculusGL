@@ -1,7 +1,7 @@
 #pragma once
 
-#define SCREEN_WIDTH 1000//1814
-#define SCREEN_HEIGHT 800//2052
+#define SCREEN_WIDTH 1814 //1000//1814
+#define SCREEN_HEIGHT 2052 //800//2052
 
 #include <cassert>
 #include <iostream>
