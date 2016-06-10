@@ -176,6 +176,7 @@ bool Entity::positionChanged() {return getBody().positionChanged();}
 void Entity::setPositionChanged(bool changed) {
     getBody().setPositionChanged(changed);
 }
+
 float Entity::getBoundingSphereRadius() {
     return getBody().getBoundingSphereRadius();
 }
@@ -261,6 +262,7 @@ void Entity::createBoundingBoxFromMeshSet()
 
 	m_boundingBox = _shape->calcBoundingBox();
 }
+
 
 glm::vec3 Entity::getCenter()
 {

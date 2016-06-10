@@ -85,10 +85,10 @@ void ViewFrustum::extractPlanes(bool normalize) {
 	//std::cout << "Pre Normalized: \n" << toString() << std::endl;
 
 
-    //if (normalize) {
-    //    for (int i = 0; i < kNumPlanes; i++)
-    //        planes[i].normalize();
-    //}
+    if (normalize) {
+        for (int i = 0; i < kNumPlanes; i++)
+            planes[i].normalize();
+    }
 
 	//std::cout << "POST Normalized: \n" << toString() << std::endl;
 

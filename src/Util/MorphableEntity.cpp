@@ -59,6 +59,8 @@ void MorphableEntity::init()
 	m_bIsMorphable = false;
 	m_bIsVisible = false;
 	m_nCurMorph = 0;
+	m_biggestRadius = 0.0;
+	calcBiggestRadius();
 
 	//Entity::setShape(m_curShape);
 }
@@ -101,7 +103,36 @@ void MorphableEntity::setStartMorph(const MeshSet *start)
 	m_curShape = m_vecMorphs[m_nCurMorph];
 }
 
-void MorphableEntity::addMorph(const MeshSet *toAdd) { m_vecMorphs.push_back(toAdd); }
+float MorphableEntity::getBoundingSphereRadius()
+{
+	return m_biggestRadius;
+}
+
+void MorphableEntity::calcBiggestRadius(bool isSingleAdd)
+{
+	float curMax = getBoundingSphereRadius();
+
+	if (isSingleAdd)
+	{
+		curMax = std::fmax(m_vecMorphs[m_vecMorphs.size() - 1]->calcBoundingBox().getRadius(), curMax);
+	}
+	else
+	{
+		for (const MeshSet *mesh : m_vecMorphs)
+		{
+			curMax = std::fmax(mesh->calcBoundingBox().getRadius(), curMax);
+		}
+	}
+
+	m_biggestRadius = curMax;
+}
+
+
+void MorphableEntity::addMorph(const MeshSet *toAdd) 
+{ 
+	m_vecMorphs.push_back(toAdd);
+	calcBiggestRadius(true);
+}
 
 bool MorphableEntity::getIsVisible() { return m_bIsVisible; }
 void MorphableEntity::setIsVisible(bool change) { m_bIsVisible = change; }

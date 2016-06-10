@@ -34,17 +34,21 @@ float & Plane::d() {return coefficients.w;}
 glm::vec3 Plane::abc() { return glm::vec3(coefficients); }
 
 void Plane::normalize() {
-    glm::vec3 nor = glm::vec3(coefficients);
-	//std::cout << "Non normalized: " << GUtils::vecToString(nor) << std::endl;
-	nor = glm::normalize(nor);
+	float mag = sqrt(a() * a() + b() * b() + c() * c());
 
-	//std::cout << "NORMALIZED: " << GUtils::vecToString(nor) << std::endl;
+	coefficients = coefficients / mag;
 
-	coefficients = glm::vec4(nor, coefficients.w);
+ //   glm::vec3 nor = glm::vec3(coefficients);
+	////std::cout << "Non normalized: " << GUtils::vecToString(nor) << std::endl;
+	//nor = glm::normalize(nor);
 
-    //what should happen if this is 0?
-    /*if ( != 0)
-        coefficients /= nor.norm();*/
+	////std::cout << "NORMALIZED: " << GUtils::vecToString(nor) << std::endl;
+
+	//coefficients = glm::vec4(nor, coefficients.w);
+
+ //   //what should happen if this is 0?
+ //   /*if ( != 0)
+ //       coefficients /= nor.norm();*/
 }
 
 //Plane Plane::normalized() {

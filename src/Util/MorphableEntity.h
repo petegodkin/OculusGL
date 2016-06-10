@@ -19,6 +19,9 @@ public:
 	void setStartMorph(const MeshSet *start);
 	void addMorph(const MeshSet *toAdd);
 
+	float getBoundingSphereRadius();
+	void calcBiggestRadius(bool isSingleAdd = false);
+
 	bool getIsVisible();
 	void setIsVisible(bool change);
 
@@ -46,6 +49,7 @@ private:
 	int m_nCurMorph;
 	bool m_bIsVisible = false;
 	bool m_bIsMorphable;
+	float m_biggestRadius;
 
 };
 
