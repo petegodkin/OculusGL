@@ -70,7 +70,7 @@ void MorphableEntity::init()
 
 bool MorphableEntity::morph()
 {
-	std::cout << "Morphing from original index " << m_nCurMorph << "!" << std::endl;
+	//std::cout << "Morphing from original index " << m_nCurMorph << "!" << std::endl;
 
 	bool bSuccess = true;
 
@@ -93,7 +93,7 @@ bool MorphableEntity::morph()
 	setShape(m_curShape);
 	m_bIsMorphable = false;
 
-	std::cout << "Morphed to  " << m_nCurMorph << "!" << std::endl;
+	//std::cout << "Morphed to  " << m_nCurMorph << "!" << std::endl;
 
 	return bSuccess;
 }
@@ -139,7 +139,7 @@ void MorphableEntity::calcBiggestRadius(bool isSingleAdd)
 
 	m_biggestRadius = curMax;
 
-	std::cout << "CALCULATING BIGGEST RADIUS FOR " << m_vecMorphs[m_nCurMorph]->m_fileName << ": " << m_biggestRadius << std::endl;
+	//std::cout << "CALCULATING BIGGEST RADIUS FOR " << m_vecMorphs[m_nCurMorph]->m_fileName << ": " << m_biggestRadius << std::endl;
 
 }
 

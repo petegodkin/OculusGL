@@ -80,7 +80,7 @@ protected:
 	Entity *m_skybox;
 
 	void addEntities(MeshSet *mesh, float radius, int amount, float depth = 0.f);
-	void addMorphableEntities(std::vector<MeshSet*> meshes, float radius, int amount);
+	void addMorphableEntities(std::vector<MeshSet*> meshes, float radius, int amount, float depth = 0.f);
 	void addGround();
 	void addLights(float radius, int amount);
 

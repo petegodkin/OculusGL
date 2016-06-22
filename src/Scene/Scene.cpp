@@ -103,7 +103,7 @@ void Scene::_InitObjAttributes()
 	MeshSet *shape = new MeshSet(resourcePath, "PC31.obj", 0.1f);
 	m_meshes.push_back(shape);
 
-	MorphableEntity *dude = new MorphableEntity(shape, glm::vec3(0, 0, 1));
+	MorphableEntity *dude = new MorphableEntity(shape, glm::vec3(0, 0, 8));
 	dude->addMorph(cena_mesh);
 	m_ents.push_back(dude);
 
@@ -126,18 +126,27 @@ void Scene::_InitObjAttributes()
 
 	// more grass
 	//drawStuff(shape_grass, 100.0, 100.0, 5.0);
-	addEntities(shape_grass, 50, 50);
-	addMorphableEntities({ bush_mesh, flower_mesh }, 50, 30);
+	addEntities(shape_grass, 60, 100);
+	addMorphableEntities({ bush_mesh, flower_mesh }, 40, 80);
 
 	// rock
-	MeshSet *rock_mesh = new MeshSet(resourcePath + "rock/", "obj.obj", 0.05f);
+	MeshSet *rock_mesh = new MeshSet(resourcePath + "rock/", "obj.obj", 0.03f);
 	m_meshes.push_back(rock_mesh);
 	//m_ents.push_back(new Entity(rock_mesh, glm::vec3(0, 0, 0)));
-	addEntities(rock_mesh, 20, 10, -.3f);
+
+	//
+	MeshSet *barrel = new MeshSet(resourcePath + "OilBarrel/", "oildrum.obj", 1.0f);
+	m_meshes.push_back(barrel);
+
+	addMorphableEntities({ rock_mesh, barrel }, 25, 20, -0.3f);
+
+	// tree
+	//MeshSet *tree_mesh = new MeshSet(resourcePath + "tree/", "Tree1.3ds", 0.25f);
+	//m_meshes.push_back(tree_mesh);
 
 	addEntities(bush_mesh, 20, 20);
 
-	addLights(8.f, 10);
+	addLights(15.f, 10);
 
 	//LAST
 	m_oct = new OctTree(utility::BoundingBox(glm::vec3(-1, -1, -1), glm::vec3(1, 1, 1)), 1);
@@ -180,14 +189,20 @@ void Scene::addLights(float radius, int amount) {
 		glm::vec3 pos(x, 1.0f, z);
 		Light* light = new Light(light_shape, pos,
 			glm::vec3(0.0, fmod(rand() / 255.f, 1.0f), fmod(rand() / 255.f, 1.0f)),
-			11.0f, light_shape);
+			22.0f, light_shape);
 		m_lights.push_back(light);
 		m_ents.push_back(light);
 	}
 
-	Light* light = new Light(light_shape, glm::vec3(0, 3, 1),
-		glm::vec3(0.0, fmod(rand() / 255.f, 1.0f), fmod(rand() / 255.f, 1.0f)),
-		11.0f, light_shape);
+	Light* light = new Light(light_shape, glm::vec3(0, 3, 8),
+		glm::vec3(1.0f, 0.0f, 0.0f),
+		15.0f, light_shape);
+	m_lights.push_back(light);
+	m_ents.push_back(light);
+
+	light = new Light(light_shape, glm::vec3(8, 10, 1),
+		glm::vec3(1.0f, 1.0f, 1.0f),
+		200.0f, light_shape);
 	m_lights.push_back(light);
 	m_ents.push_back(light);
 }
@@ -203,7 +218,7 @@ void Scene::addEntities(MeshSet *mesh, float radius, int amount, float depth) {
 	}
 }
 
-void Scene::addMorphableEntities(std::vector<MeshSet*> meshes, float radius, int amount) {
+void Scene::addMorphableEntities(std::vector<MeshSet*> meshes, float radius, int amount, float depth/* = 0.f*/) {
 	assert(meshes.size() > 0);
 
 	for (int i = 0; i < amount; i++) {
@@ -211,7 +226,7 @@ void Scene::addMorphableEntities(std::vector<MeshSet*> meshes, float radius, int
 		x -= radius;
 		float z = fmod(rand(), radius * 2);
 		z -= radius;
-		MorphableEntity *ent = new MorphableEntity(meshes[0], glm::vec3(x, 0.0f, z));
+		MorphableEntity *ent = new MorphableEntity(meshes[0], glm::vec3(x, depth, z));
 		for (int j = 1; j < meshes.size(); j++) {
 			ent->addMorph(meshes[j]);
 		}
@@ -407,8 +422,7 @@ void Scene::DrawDude(
 	m_culler->setTree(m_oct);
 	std::vector<Entity *> inView = m_culler->getVisibleObjects(frustum);
 	
-	//std::cout << frustum.toString() << std::endl;
-	std::cout << "In view: " << inView.size() << std::endl;
+	//std::cout << "In view: " << inView.size() << std::endl;
 	m_deferred->draw(&camera, inView, m_lights);
 }
 
